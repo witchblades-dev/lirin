@@ -1,597 +1,652 @@
-
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>LIRIN TOOLS</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LIRIN — Metin2 Tools</title>
+  <meta name="description" content="LIRIN brings together refined Metin2 tools for upgrades, farming and planning.">
+  <meta name="theme-color" content="#0f1013">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230f1013'/%3E%3Cpath d='M20 14v36h26' fill='none' stroke='%23c7a76b' stroke-width='5' stroke-linecap='square'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --site-primary: #c5a15a;
+      --site-on-primary: #17130d;
+      --site-secondary: #e4c27e;
+      --site-on-secondary: #ffffff;
+      --site-background: #303238;
+      --site-on-background: #f5f5f5;
+      --site-font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --site-font-heading: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --site-heading-scale: 1;
+      --site-spacing-scale: 1;
+      --site-radius-scale: 1;
+      --site-decoration-opacity: 1;
+      color-scheme: light dark;
+    }
 
-<style>
-:root{color-scheme:dark;--bg:#0a0a10;--panel:#1d2026;--head:#3a3e47;--pill:#23262d;--text:#f2f2f2;--muted:#9aa0aa;--gold:#ffc400;--green:#22d44a;--red:#e8321e}
-*{box-sizing:border-box}
-html,body{margin:0}
-body{
-display:flex;
-min-height:100vh;
-font-family:Poppins,"Segoe UI",system-ui,sans-serif;
-color:var(--text);
-background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.45)),url("images/background.jpg") center center / cover no-repeat fixed
-}
-button{font:inherit;color:inherit}
-.side{width:230px;flex:none;position:sticky;top:0;height:100vh;background:#13151af2;border-right:1px solid #ffffff14;padding:22px 14px}
-.brand{
-display:block;
-font-weight:700;
-font-size:20px;
-color:#fff;
-text-decoration:none;
-padding:0 8px 18px;
-text-shadow:0 0 5px #ff8c00,0 0 10px #ff8c00,0 0 20px #ff8c00
-}
-.brand:hover{color:#fff}
-.nav{display:block;width:100%;text-align:left;padding:14px 16px;border:0;border-radius:6px;background:transparent;color:var(--muted);font-weight:600;letter-spacing:.06em;cursor:pointer;text-decoration:none}
-.nav:hover{background:#ffffff0d;color:var(--text)}
-.nav.active{background:var(--red);color:#fff}
-.grp{display:flex;justify-content:space-between;align-items:center}
-.grp.open{color:var(--gold)}
-.sub{padding:4px 0 0 14px}
-.sub .nav{font-size:14px;padding:11px 14px}
-main{flex:1;min-width:0;padding:26px 28px 60px;max-width:1120px;margin:0 auto}
-.welcome{margin-top:30vh;text-align:center;color:var(--muted);font-size:18px}
-h1{margin:0;text-align:center;font-size:32px;letter-spacing:.04em;text-shadow:0 0 14px #ffc40088}
-.line{height:2px;margin:12px auto 22px;max-width:620px;background:linear-gradient(90deg,transparent,var(--gold),transparent);box-shadow:0 0 10px #ffc40099}
-.info{background:#0d2a22;border:1px solid #1e6b52;border-radius:6px;padding:14px 18px;font-size:14px;line-height:1.6}
-.bar{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:18px 0}
-.btn{padding:9px 18px;border:1px solid #ffffff22;border-radius:6px;background:#2a2d35;cursor:pointer;font-weight:500}
-.btn:hover{background:#353944}
-.btn.red{background:var(--red);border-color:var(--red)}
-.btn.red:hover{background:#ff4a33}
-.btn.on{border-color:var(--gold);color:var(--gold)}
-.btn.sm{padding:6px 14px;font-size:14px}
-.chap{margin-top:18px;background:var(--panel);border-radius:6px;overflow:hidden}
-.chead{display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--head);cursor:pointer;font-size:19px;font-weight:600}
-.cnt{margin-left:auto;font-size:13px;font-weight:400;color:var(--muted)}
-.cnt.full{display:inline-flex;align-items:center;color:var(--green);font-weight:600}
-.tick{position:relative;display:inline-block;width:20px;height:20px;margin-right:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px #22d44a88}
-.tick::after{content:"";position:absolute;left:6px;top:2px;width:5px;height:10px;border:solid #06240d;border-width:0 2px 2px 0;transform:rotate(45deg)}
-.chead .cnt+.ib,.shead .cnt+.ib{margin-left:6px}
-.cbody{padding:6px 14px 16px}
-.shead{display:flex;align-items:center;gap:8px;padding:12px 6px 8px;margin-top:6px;cursor:pointer;color:var(--gold);font-weight:600;border-bottom:1px solid #ffffff14}
-.allrow{text-align:center;margin-top:12px}
-.pills{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:14px 4px 6px}
-.empty{width:100%;text-align:center;color:var(--muted);font-size:14px}
-.pill{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;background:var(--pill);border:2px solid transparent;border-radius:8px;cursor:pointer;font-size:15px;user-select:none}
-.pill:hover{background:#2e323a}
-.pill.all{color:#8fe06a}
-.pill.done{border-color:var(--green);color:var(--green);box-shadow:0 0 10px #22d44a55}
-.ci{position:relative;width:18px;height:18px;flex:none;border-radius:50%;border:2px solid #cfd3da}
-.done .ci{background:var(--green);border-color:var(--green)}
-.done .ci::after{content:"";position:absolute;left:4px;top:1px;width:5px;height:9px;border:solid #06240d;border-width:0 2px 2px 0;transform:rotate(45deg)}
-.ib{cursor:pointer;opacity:.6;padding:0 4px;font-size:14px;font-weight:400}
-.ib:hover{opacity:1;color:var(--gold)}
-.add{display:flex;gap:8px;justify-content:center;margin:10px 0 4px}
-.add input{width:min(320px,60%);padding:7px 12px;border-radius:6px;border:1px solid #ffffff2e;background:#12141a;color:var(--text);font:inherit;font-size:14px}
-.add input:focus,.btn:focus-visible,.nav:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
-.foot{text-align:center;margin-top:12px}
-.tw{overflow-x:auto;margin-top:8px}
-.ct{width:100%;border-collapse:collapse;font-size:14px}
-.ct th{color:var(--muted);font-weight:500;text-align:left;padding:8px 6px;border-bottom:1px solid #ffffff14;white-space:nowrap}
-.ct td{padding:5px 4px}
-.ct input,.cin{width:100%;min-width:72px;padding:7px 9px;border-radius:6px;border:1px solid #ffffff22;background:#12141a;color:var(--text);font:inherit;font-size:14px}
-.ct td:nth-child(2) input{min-width:150px}
-.cin{width:120px}
-.ct input:focus,.cin:focus{outline:2px solid var(--gold);outline-offset:0}
-.ct td.rk{width:34px;text-align:center;color:var(--muted);font-weight:600}
-.ct td.rt{text-align:right;white-space:nowrap;font-weight:600;padding-right:10px}
-.ct tr.top{background:#22d44a14}
-.ct tr.top .rk,.ct tr.top .rt{color:var(--green)}
-.best{margin:12px 6px 0;font-size:14px;line-height:1.9}
-.add.ia{flex-wrap:wrap}
-.add.ia input{width:auto;flex:1 1 90px;max-width:200px}
-.add.ia input:first-child{flex:2 1 160px;max-width:300px}
-@media(max-width:720px){
-body{flex-direction:column}
-.side{position:static;width:100%;height:auto;padding:12px}
-.brand{padding-bottom:8px}
-main{padding:18px 12px 50px}
-h1{font-size:24px}
-}
-</style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      font-family: var(--site-font-body);
+      background: var(--site-background);
+      color: var(--site-on-background);
+    }
+
+    .app-root {
+      position: relative;
+      display: flex;
+      min-height: 100svh;
+      width: 100%;
+      overflow: hidden;
+      border-radius: 0;
+      isolation: isolate;
+      background-color: light-dark(#303238, var(--site-background));
+      color: light-dark(#f5f5f5, var(--site-on-background));
+    }
+
+    .animated-backdrop {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at 72% 28%, rgba(228, 194, 126, 0.10), transparent 38%),
+        radial-gradient(ellipse at 42% 78%, rgba(197, 161, 90, 0.12), transparent 42%),
+        linear-gradient(135deg, #292b30 0%, #383a41 48%, #25272d 100%);
+    }
+
+    .animated-backdrop::before,
+    .animated-backdrop::after {
+      content: "";
+      position: absolute;
+      width: 58vw;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: calc(0.55 * var(--site-decoration-opacity));
+      animation: drift 19s ease-in-out infinite alternate;
+    }
+
+    .animated-backdrop::before {
+      top: -22%;
+      left: 34%;
+      background: radial-gradient(circle, rgba(228, 194, 126, 0.16), transparent 68%);
+    }
+
+    .animated-backdrop::after {
+      right: -14%;
+      bottom: -38%;
+      background: radial-gradient(circle, rgba(197, 161, 90, 0.2), transparent 68%);
+      animation-delay: -9s;
+    }
+
+    @keyframes drift {
+      from { transform: translate3d(-4%, -2%, 0) scale(0.92); }
+      to { transform: translate3d(7%, 6%, 0) scale(1.12); }
+    }
+
+    .sidebar {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex: 0 0 260px;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 100svh;
+      padding: 34px 18px;
+      border-right: 1px solid rgba(197, 161, 90, 0.28);
+      background: linear-gradient(180deg, rgba(32, 34, 40, 0.99), rgba(43, 45, 51, 0.98));
+      box-shadow: 16px 0 54px rgba(0, 0, 0, 0.48), inset -1px 0 0 rgba(255, 255, 255, 0.045);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav-label {
+      display: flex;
+      align-items: center;
+      margin: 0 12px 18px;
+      padding: 0 0 13px;
+      border-bottom: 1px solid rgba(197, 161, 90, 0.2);
+      color: #dfbd79;
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-shadow:
+        0 0 6px rgba(228, 194, 126, 0.65),
+        0 0 16px rgba(197, 161, 90, 0.48),
+        0 0 28px rgba(197, 161, 90, 0.22);
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      min-height: 48px;
+      gap: 12px;
+      padding: 0 14px;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      color: rgba(245, 245, 245, 0.78);
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      text-decoration: none;
+      transition: color 160ms ease, background 160ms ease, border-color 160ms ease;
+    }
+
+    .nav-item::before {
+      content: "✧";
+      flex: 0 0 14px;
+      color: var(--site-primary);
+      font-size: 1.12rem;
+      line-height: 1;
+      text-align: center;
+      text-shadow: 0 0 10px rgba(197, 161, 90, 0.28);
+      transition: color 160ms ease, text-shadow 160ms ease;
+    }
+
+    .nav-item:hover {
+      border-color: rgba(197, 161, 90, 0.2);
+      background: rgba(197, 161, 90, 0.07);
+      color: #ffffff;
+    }
+
+    .nav-item:hover::before {
+      color: #e4c27e;
+      text-shadow: 0 0 12px rgba(197, 161, 90, 0.55);
+    }
+
+    .home-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-width: 0;
+      min-height: 100svh;
+      padding: clamp(42px, 8vh, 88px) clamp(22px, 4vw, 64px) 56px;
+      gap: clamp(34px, 5vh, 56px);
+    }
+
+    .ambient-glow {
+      position: absolute;
+      z-index: -1;
+      width: min(68vw, 720px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(197, 161, 90, 0.10) 0%, rgba(228, 194, 126, 0.055) 34%, transparent 70%);
+      filter: blur(24px);
+      opacity: var(--site-decoration-opacity);
+      pointer-events: none;
+    }
+
+    .brand {
+      position: relative;
+      margin: 0;
+      padding: 0 0.12em 0.12em;
+      color: #ffffff;
+      font-family: var(--site-font-heading);
+      font-size: clamp(3.5rem, 10vw, 7rem);
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      line-height: 1;
+      text-indent: 0.16em;
+      text-align: center;
+      text-shadow:
+        0 0 8px rgba(255, 255, 255, 0.82),
+        0 0 22px rgba(255, 255, 255, 0.48),
+        0 0 48px rgba(255, 255, 255, 0.22),
+        0 0 42px rgba(197, 161, 90, 0.24),
+        0 0 90px rgba(197, 161, 90, 0.16);
+      user-select: none;
+    }
+
+    .brand::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -20px;
+      width: 72px;
+      height: 2px;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg, transparent, #c5a15a, #e4c27e, #c5a15a, transparent);
+      box-shadow: 0 0 14px rgba(197, 161, 90, 0.48);
+    }
+
+    .tool-cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+      width: min(100%, 1120px);
+    }
+
+    .tool-card {
+      position: relative;
+      display: flex;
+      min-height: 230px;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 30px 28px;
+      overflow: hidden;
+      border: 1px solid rgba(197, 161, 90, 0.34);
+      border-radius: 16px;
+      background: linear-gradient(145deg, rgba(69, 71, 79, 0.98), rgba(43, 45, 52, 0.98));
+      box-shadow: 0 22px 54px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.09), inset 0 0 34px rgba(197, 161, 90, 0.025);
+      text-decoration: none;
+      transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+    }
+
+    .tool-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 28px;
+      width: 54px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--site-primary), rgba(197, 161, 90, 0));
+    }
+
+    .tool-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(197, 161, 90, 0.58);
+      box-shadow: 0 24px 58px rgba(0, 0, 0, 0.42), 0 0 28px rgba(197, 161, 90, 0.08);
+    }
+
+    .tool-card h2 {
+      margin: 5px 0 16px;
+      color: #f5e6c7;
+      font-size: clamp(1.15rem, 1.7vw, 1.45rem);
+      font-weight: 700;
+      letter-spacing: 0.015em;
+    }
+
+    .tool-card p {
+      margin: 0;
+      color: rgba(235, 231, 224, 0.7);
+      font-size: 0.94rem;
+      line-height: 1.75;
+    }
+
+    @media (max-width: 480px) {
+      .brand { letter-spacing: 0.11em; text-indent: 0.11em; }
+    }
+
+    @media (max-width: 700px) {
+      .app-root { flex-direction: column; }
+      .sidebar {
+        flex: 0 0 auto;
+        min-height: auto;
+        padding: 16px 14px;
+        border-right: 0;
+        border-bottom: 1px solid rgba(197, 161, 90, 0.18);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16);
+      }
+      .nav-label { margin: 0 8px 4px; }
+      .nav-item { min-height: 42px; }
+      .home-content { min-height: 68svh; padding: 42px 18px; gap: 30px; }
+      .tool-cards { grid-template-columns: 1fr; gap: 14px; }
+      .tool-card { min-height: auto; padding: 24px 22px; }
+    }
+
+    /* LIRIN visual system */
+    :root {
+      --site-primary: #c7a76b;
+      --site-secondary: #e6d2a7;
+      --site-background: #0f1013;
+      --site-on-background: #f3f0e9;
+      --site-font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+      --site-font-heading: "Cormorant Garamond", Georgia, serif;
+      color-scheme: dark;
+      scrollbar-color: #414149 #101115;
+    }
+
+    html, body { background: #0f1013; color: #f3f0e9; }
+    .app-root {
+      overflow: clip;
+      background: #0f1013;
+      color: #f3f0e9;
+    }
+    .animated-backdrop {
+      background: linear-gradient(138deg, #121318 0%, #191a20 50%, #0e0f12 100%);
+    }
+    .animated-backdrop::before,
+    .animated-backdrop::after { display: none; animation: none; }
+
+    .app-root::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      align-self: flex-start;
+      height: 100svh;
+      min-height: 100svh;
+      background: #121318;
+      border-right: 1px solid rgba(255, 255, 255, 0.065);
+      box-shadow: 12px 0 34px rgba(0, 0, 0, 0.24);
+      backdrop-filter: none;
+    }
+    .nav-label {
+      color: #a9a7a0;
+      font-weight: 600;
+      letter-spacing: 0.17em;
+      text-shadow: none;
+      border-bottom-color: rgba(255, 255, 255, 0.08);
+    }
+    .nav-item {
+      gap: 11px;
+      color: #aaaab0;
+      border-color: transparent;
+      transition: color 180ms ease, background 180ms ease, border-color 180ms ease;
+    }
+    .nav-item::before { display: none; }
+    .nav-icon {
+      width: 17px;
+      height: 17px;
+      flex: 0 0 17px;
+      color: #777982;
+      transition: color 180ms ease;
+    }
+    .nav-item:hover,
+    .nav-item.is-active {
+      color: #f1e8d7;
+      border-color: rgba(199, 167, 107, 0.16);
+      background: rgba(199, 167, 107, 0.075);
+    }
+    .nav-item:hover .nav-icon,
+    .nav-item.is-active .nav-icon { color: #c7a76b; }
+
+    .home-content {
+      min-height: 100svh;
+      padding: clamp(48px, 8vh, 84px) clamp(22px, 4vw, 64px) 28px;
+      gap: 12px;
+    }
+    .ambient-glow { display: none; }
+    .brand {
+      color: #e8d9b9;
+      background: linear-gradient(180deg, #f5eddd 5%, #d6bd8c 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-family: var(--site-font-heading);
+      font-size: clamp(4.5rem, 10vw, 7.2rem);
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-indent: 0.2em;
+      text-shadow: 0 3px 26px rgba(0, 0, 0, 0.3);
+    }
+    .brand::after { display: none; }
+    .tagline {
+      margin: 0;
+      color: #929198;
+      font-size: 0.82rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-align: center;
+    }
+    .tool-cards {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: clamp(22px, 4vh, 38px);
+    }
+    .tool-card {
+      min-height: 252px;
+      padding: 27px 25px 23px;
+      border: 1px solid rgba(255, 255, 255, 0.075);
+      border-radius: 13px;
+      background: linear-gradient(145deg, #202127 0%, #191a1f 72%, #17181d 100%);
+      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.035);
+      transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+    }
+    .tool-card::before {
+      left: 25px;
+      width: 62px;
+      height: 1px;
+      opacity: 0;
+      transition: opacity 220ms ease;
+    }
+    .tool-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0;
+      background: radial-gradient(340px circle at var(--pointer-x, 50%) var(--pointer-y, 50%), rgba(199, 167, 107, 0.105), transparent 74%);
+      transition: opacity 220ms ease;
+    }
+    .tool-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(199, 167, 107, 0.34);
+      box-shadow: 0 22px 48px rgba(0, 0, 0, 0.34), 0 0 22px rgba(199, 167, 107, 0.045);
+    }
+    .tool-card:hover::before,
+    .tool-card:hover::after { opacity: 1; }
+    .card-icon {
+      position: relative;
+      z-index: 1;
+      width: 25px;
+      height: 25px;
+      margin-bottom: 18px;
+      color: #a5a3a0;
+      stroke: currentColor;
+      transition: color 180ms ease;
+    }
+    .tool-card:hover .card-icon { color: #c7a76b; }
+    .tool-card h2 {
+      position: relative;
+      z-index: 1;
+      margin: 0 0 12px;
+      color: #e8e2d6;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      font-size: clamp(1.35rem, 1.8vw, 1.65rem);
+      font-weight: 600;
+      letter-spacing: 0.015em;
+    }
+    .tool-card p {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      color: #a3a2a4;
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+    .card-open {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 22px;
+      color: #85858b;
+      font-size: 0.76rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 180ms ease, gap 180ms ease;
+    }
+    .tool-card:hover .card-open { gap: 12px; color: #d2b77f; }
+    .site-footer {
+      width: min(100%, 1120px);
+      margin-top: auto;
+      padding-top: 34px;
+      color: #66666e;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    :focus-visible {
+      outline: 2px solid #d8bd83;
+      outline-offset: 4px;
+    }
+    ::-webkit-scrollbar { width: 10px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #101115; }
+    ::-webkit-scrollbar-thumb { background: #414149; border-radius: 10px; }
+
+    @media (max-width: 1050px) {
+      .tool-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 700px) {
+      .sidebar {
+        position: relative;
+        top: auto;
+        width: 100%;
+        height: auto;
+        min-height: 0;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 12px;
+        overflow-x: auto;
+        border-right: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.2);
+      }
+      .nav-label {
+        flex: 0 0 auto;
+        margin: 0 8px 0 2px;
+        padding: 0;
+        border: 0;
+        font-size: 0.7rem;
+      }
+      .nav-item {
+        flex: 0 0 auto;
+        min-height: 36px;
+        gap: 7px;
+        padding: 0 9px;
+        font-size: 0.78rem;
+        white-space: nowrap;
+      }
+      .nav-icon { width: 15px; height: 15px; flex-basis: 15px; }
+      .home-content { min-height: 100svh; padding: 42px 18px 24px; gap: 10px; }
+      .brand { font-size: clamp(4rem, 16vw, 5.4rem); }
+      .tagline { font-size: 0.7rem; letter-spacing: 0.08em; }
+      .tool-cards { grid-template-columns: 1fr; gap: 13px; margin-top: 24px; }
+      .tool-card { min-height: 222px; padding: 23px 21px 20px; }
+      .site-footer { padding-top: 28px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
 </head>
-
 <body>
-<aside class="side">
-    <a class="brand" href="/">L I R I N</a>
+  <main class="app-root">
+    <div class="animated-backdrop" aria-hidden="true"></div>
+    <nav class="sidebar" aria-label="Main navigation">
+      <p class="nav-label">Lirin Tools</p>
+      <a class="nav-item" href="#upgrade-cost"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 10l7-7 7 7"/><path d="M5 15h14"/></svg>Upgrade Cost</a>
+      <a class="nav-item" href="#special-upgrade-cost"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.2 5.3L20 10l-5.8 1.7L12 17l-2.2-5.3L4 10l5.8-1.7L12 3Z"/><path d="M19 16v5M16.5 18.5h5"/></svg>Special Upgrade Cost</a>
+      <a class="nav-item" href="#sash-absorption"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7c4-3 12-3 16 0l-2 10c-4 3-8 3-12 0L4 7Z"/><path d="M7 9c3 2 7 2 10 0M8 14c2 1 6 1 8 0"/></svg>Sash Absorption</a>
+      <a class="nav-item" href="#metin-simulator"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="m4.5 7.8 7.5 4.4 7.5-4.4M12 12.2V21"/></svg>Metin Simulator</a>
+      <a class="nav-item" href="#sample-todo"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5h12M8 12h12M8 19h12"/><path d="m3 5 1 1 2-2M3 12l1 1 2-2M3 19l1 1 2-2"/></svg>Sample Todo</a>
+      <a class="nav-item" href="#coin-calculator"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5c-.7-.8-1.8-1.2-3.2-1.2-1.6 0-2.7.8-2.7 2 0 3.2 6.1 1.2 6.1 4.5 0 1.4-1.3 2.4-3.2 2.4-1.5 0-2.8-.5-3.7-1.5M12 5.5v13"/></svg>Coin Calculator</a>
+    </nav>
+    <section class="home-content" aria-label="Homepage LIRIN">
+      <h1 class="brand">LIRIN</h1>
+      <p class="tagline">Metin2 tools, built for a more precise grind.</p>
+      <div class="tool-cards">
+        <a class="tool-card" id="upgrade-cost" href="#upgrade-cost">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 10l7-7 7 7M5 15h14"/></svg>
+          <h2>Upgrade Cost</h2>
+          <p>Pick a weapon or armour, toggle only the +0 to +9 steps you need, and see the exact materials, pity counts and Yang total.</p>
+          <span class="card-open">Open <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="tool-card" id="special-upgrade-cost" href="#special-upgrade-cost">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.2 5.3L20 10l-5.8 1.7L12 17l-2.2-5.3L4 10l5.8-1.7L12 3Z"/><path d="M19 16v5M16.5 18.5h5"/></svg>
+          <h2>Special Upgrade Cost</h2>
+          <p>Work out the materials and Yang required for special equipment upgrades.</p>
+          <span class="card-open">Open <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="tool-card" id="sash-absorption" href="#sash-absorption">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7c4-3 12-3 16 0l-2 10c-4 3-8 3-12 0L4 7Z"/><path d="M7 9c3 2 7 2 10 0M8 14c2 1 6 1 8 0"/></svg>
+          <h2>Sash Absorption</h2>
+          <p>Compare sash absorption values and plan the stats you want to transfer.</p>
+          <span class="card-open">Open <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="tool-card" id="metin-simulator" href="#metin-simulator">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="m4.5 7.8 7.5 4.4 7.5-4.4M12 12.2V21"/></svg>
+          <h2>Metin Simulator</h2>
+          <p>Pick two metins, set your average DPS and the walk between them, then see what each of them drops and which one is worth the trip.</p>
+          <span class="card-open">Open <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="tool-card" id="sample-todo" href="#sample-todo">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5h12M8 12h12M8 19h12"/><path d="m3 5 1 1 2-2M3 12l1 1 2-2M3 19l1 1 2-2"/></svg>
+          <h2>Sample Todo</h2>
+          <p>Plan your next upgrades, keep track of the materials you need, and organise your Metin farming goals in one place.</p>
+          <span class="card-open">Open <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="tool-card" id="coin-calculator" href="#coin-calculator">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5c-.7-.8-1.8-1.2-3.2-1.2-1.6 0-2.7.8-2.7 2 0 3.2 6.1 1.2 6.1 4.5 0 1.4-1.3 2.4-3.2 2.4-1.5 0-2.8-.5-3.7-1.5M12 5.5v13"/></svg>
+          <h2>Coin Calculator</h2>
+          <p>Calculate coin values and compare exchange totals for your trades.</p>
+          <span class="card-open">Open <span aria-hidden="true">→</span></span>
+        </a>
+      </div>
+      <footer class="site-footer">© 2026 LIRIN · Metin2 Tools</footer>
+    </section>
+  </main>
+  <script>
+    const navLinks = [...document.querySelectorAll(".nav-item")];
+    const toolCards = [...document.querySelectorAll(".tool-card")];
 
-    <button class="nav grp" id="guide" data-a="guide">
-        <span>GUIDE</span><span id="gch">▸</span>
-    </button>
-
-    <div class="sub" id="sub" hidden>
-        <a class="nav" id="nav" href="/sampletodo">SAMPLE TODO</a>
-        <a class="nav" id="navc" href="/coincalculator">COIN CALCULATOR</a>
-    </div>
-</aside>
-
-<main id="main"></main>
-
-<script>
-const KEY='sampleTodoV1';
-const uid=()=>Math.random().toString(36).slice(2,9);
-const T=t=>({id:uid(),text:t,done:false});
-const stop=(n,t=[])=>({id:uid(),name:n,open:true,tasks:t.map(T)});
-
-const def=()=>({
-    chapters:[
-        {
-            id:uid(),name:'Chapter 1',open:true,stops:[
-                stop('Level 1–60',['Exemplu: termină misiunea principală','Exemplu: echipează armura nouă']),
-                stop('Level 61–75'),
-                stop('Level 76–85'),
-                stop('Level 86–94'),
-                stop('Level 95–100'),
-                stop('Level 101–105')
-            ]
-        },
-        {
-            id:uid(),name:'Chapter 2',open:true,
-            stops:[stop('Level 106–110')]
-        }
-    ]
-});
-
-function load(){
-    try{
-        const r=localStorage.getItem(KEY);
-        if(r)return JSON.parse(r);
-    }catch(e){}
-    return def();
-}
-
-function save(){
-    try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
-}
-
-const currentPath=location.pathname.replace(/\/+$/,'')||'/';
-
-let S=load(),
-    edit=false,
-    view=currentPath==='/sampletodo'?'todo':
-         currentPath==='/coincalculator'?'calc':false,
-    guideOpen=currentPath!=='/',
-    busy=false;
-
-if(!S.shops)S.shops=[
-    {
-        id:uid(),name:'Floral Trent Coin 1',open:true,coins:null,
-        items:[
-            {id:uid(),name:'White Pearl',cost:1,value:null,limit:null},
-            {id:uid(),name:'Pet Skill Book',cost:3,value:null,limit:null}
-        ]
-    }
-];
-
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'
-}[c]));
-
-const d=(c,s,t)=>` data-c="${c||''}" data-s="${s||''}" data-t="${t||''}"`;
-
-const ib=(a,ic,c,s,t)=>
-    `<b class="ib" data-a="${a}"${d(c,s,t)}>${ic}</b>`;
-
-function render(){
-    const m=document.getElementById('main');
-
-    document.getElementById('nav').classList.toggle('active',view==='todo');
-    document.getElementById('navc').classList.toggle('active',view==='calc');
-    document.getElementById('sub').hidden=!guideOpen;
-    document.getElementById('guide').classList.toggle('open',guideOpen);
-    document.getElementById('gch').textContent=guideOpen?'▾':'▸';
-
-    if(!view){
-        m.innerHTML='<div class="welcome">Deschide <b>GUIDE</b> din meniul din stânga și alege o pagină.</div>';
-        return;
+    function setActiveNavigation(id) {
+      navLinks.forEach((link) => {
+        const active = link.getAttribute("href") === `#${id}`;
+        link.classList.toggle("is-active", active);
+        if (active) link.setAttribute("aria-current", "page");
+        else link.removeAttribute("aria-current");
+      });
     }
 
-    if(view==='calc'){
-        m.innerHTML=renderCalc();
-        return;
-    }
-
-    let h=`
-        <h1>SAMPLE TODO LIST</h1>
-        <div class="line"></div>
-        <div class="info">Ce bifezi se salvează automat în browser. Apasă „Mod editare” ca să adaugi, modifici sau ștergi taskuri, etape și Chapter-e.</div>
-        <div class="bar">
-            <button class="btn red" data-a="reset">RESETEAZĂ TOT</button>
-            <button class="btn ${edit?'on':''}" data-a="edit">${edit?'✔ Mod editare activ':'✎ Mod editare'}</button>
-        </div>`;
-
-    S.chapters.forEach(c=>{
-        const all=c.stops.flatMap(s=>s.tasks);
-        const dn=all.filter(t=>t.done).length;
-        const full=all.length>0&&dn===all.length;
-
-        h+=`<section class="chap">
-            <div class="chead" data-a="tC"${d(c.id)}>
-                <span>${c.open?'▾':'▸'}</span>${esc(c.name)}
-                <span class="cnt${full?' full':''}">${full?'<i class="tick" title="Chapter terminat"></i>':''}${dn}/${all.length}</span>
-                ${edit?ib('renC','✎',c.id)+ib('delC','✕',c.id):''}
-            </div>`;
-
-        if(c.open){
-            h+='<div class="cbody">';
-
-            c.stops.forEach(s=>{
-                const sd=s.tasks.filter(t=>t.done).length;
-
-                h+=`<div class="shead" data-a="tS"${d(c.id,s.id)}>
-                    <span>${s.open?'▾':'▸'}</span>${esc(s.name)}
-                    <span class="cnt">${sd}/${s.tasks.length}</span>
-                    ${edit?ib('renS','✎',c.id,s.id)+ib('delS','✕',c.id,s.id):''}
-                </div>`;
-
-                if(s.open){
-                    if(s.tasks.length){
-                        h+=`<div class="allrow">
-                            <div class="pill all ${sd===s.tasks.length?'done':''}" data-a="allS"${d(c.id,s.id)}>
-                                <i class="ci"></i>Bifează toate
-                            </div>
-                        </div>`;
-                    }
-
-                    h+='<div class="pills">';
-
-                    if(!s.tasks.length){
-                        h+='<div class="empty">Niciun task încă.'+(edit?'':' Activează „Mod editare” ca să adaugi.')+'</div>';
-                    }
-
-                    s.tasks.forEach(t=>{
-                        h+=`<div class="pill ${t.done?'done':''}" data-a="tT"${d(c.id,s.id,t.id)}>
-                            <i class="ci"></i>
-                            <span>${esc(t.text)}</span>
-                            ${edit?ib('renT','✎',c.id,s.id,t.id)+ib('delT','✕',c.id,s.id,t.id):''}
-                        </div>`;
-                    });
-
-                    h+='</div>';
-
-                    if(edit){
-                        h+=`<div class="add">
-                            <input data-in="${s.id}" maxlength="120" placeholder="Task nou…">
-                            <button class="btn sm" data-a="addT"${d(c.id,s.id)}>+ Adaugă task</button>
-                        </div>`;
-                    }
-                }
-            });
-
-            if(edit){
-                h+=`<div class="foot">
-                    <button class="btn sm" data-a="addS"${d(c.id)}>+ Adaugă etapă (interval level)</button>
-                </div>`;
-            }
-
-            h+='</div>';
-        }
-
-        h+='</section>';
+    navLinks.forEach((link) => {
+      link.addEventListener("click", () => setActiveNavigation(link.getAttribute("href").slice(1)));
     });
 
-    if(edit){
-        h+='<div class="foot"><button class="btn" data-a="addC">+ Adaugă Chapter</button></div>';
+    if ("IntersectionObserver" in window) {
+      const cardObserver = new IntersectionObserver((entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActiveNavigation(visible.target.id);
+      }, { rootMargin: "-18% 0px -58% 0px", threshold: [0, 0.2, 0.45, 0.7] });
+      toolCards.forEach((card) => cardObserver.observe(card));
     }
 
-    m.innerHTML=h;
-}
-
-const shop=id=>S.shops.find(x=>x.id===id);
-const ratio=it=>it.cost>0&&it.value!=null?it.value/it.cost:null;
-
-/* Acceptă 1450, 1.45k, 2.3kk, 3.12kkk.
-   k = mie, kk = milion, kkk = miliard. */
-const parseMoney=s=>{
-    const m=String(s).trim().toLowerCase().replace(/\s/g,'').replace(/,/g,'.').match(/^(\d+(?:\.\d+)?)(k{0,3})$/);
-    return m?+(parseFloat(m[1])*Math.pow(1000,m[2].length)).toFixed(4):null;
-};
-
-const fmt=n=>{
-    if(!Number.isFinite(n))return'—';
-    const a=Math.abs(n);
-    const u=a>=1e9?[1e9,'kkk']:a>=1e6?[1e6,'kk']:a>=1e3?[1e3,'k']:[1,''];
-    return +(n/u[0]).toFixed(3)+u[1];
-};
-
-const nv=v=>v==null?'':v;
-
-function renderCalc(){
-    let h=`
-        <h1>COIN CALCULATOR</h1>
-        <div class="line"></div>
-        <div class="info">Adaugă un shop (ex. „Floral Trent Coin 1”) și itemele lui. Pentru fiecare item pune costul în coini și cât valorează (ex. prețul de vânzare). Clasamentul e sortat după valoare per coin: cu cât e mai sus, cu atât e mai rentabil. Limita (cât poți cumpăra maxim) e opțională. Sumele se pot scrie scurt: 1450, 1.45k, 2.3kk, 3.12kkk (k = mie, kk = milion, kkk = miliard).</div>
-        <div class="bar"><button class="btn" data-a="addH">+ Adaugă shop</button></div>`;
-
-    if(!S.shops.length){
-        h+='<div class="welcome" style="margin-top:40px">Niciun shop încă.</div>';
-    }
-
-    S.shops.forEach(sh=>{
-        const L=[...sh.items].sort((a,b)=>(ratio(b)??-1)-(ratio(a)??-1));
-        const id=`data-h="${sh.id}"`;
-
-        h+=`<section class="chap">
-            <div class="chead" data-a="tH" ${id}>
-                <span>${sh.open?'▾':'▸'}</span>${esc(sh.name)}
-                <span class="cnt">${sh.items.length} itemi</span>
-                <b class="ib" data-a="renH" ${id}>✎</b>
-                <b class="ib" data-a="delH" ${id}>✕</b>
-            </div>`;
-
-        if(sh.open){
-            h+='<div class="cbody"><div class="tw"><table class="ct"><thead><tr><th>#</th><th>Item</th><th>Coini</th><th>Valoare</th><th>Limită</th><th>Valoare/coin</th><th></th></tr></thead><tbody>';
-
-            L.forEach((it,k)=>{
-                const r=ratio(it);
-                const f=(fld,t)=>`<input ${t?'':'inputmode="decimal" '}data-f="${fld}" ${id} data-i="${it.id}" value="${esc(t?it[fld]:it[fld]==null?'':fmt(it[fld]))}">`;
-
-                h+=`<tr class="${r!==null&&!k?'top':''}">
-                    <td class="rk">${r!==null?k+1:'–'}</td>
-                    <td>${f('name',1)}</td>
-                    <td>${f('cost')}</td>
-                    <td>${f('value')}</td>
-                    <td>${f('limit')}</td>
-                    <td class="rt">${r!==null?fmt(r):'—'}</td>
-                    <td><b class="ib" data-a="delI" ${id} data-i="${it.id}">✕</b></td>
-                </tr>`;
-            });
-
-            h+='</tbody></table></div>';
-
-            if(L[0]&&ratio(L[0])!==null){
-                h+=`<div class="best">Cel mai rentabil: <b>${esc(L[0].name)}</b> (${fmt(ratio(L[0]))} valoare per coin)</div>`;
-            }
-
-            let plan='';
-
-            if(sh.coins>0){
-                let rem=sh.coins,tot=0;
-                const parts=[];
-
-                L.forEach(it=>{
-                    if(!(ratio(it)>0))return;
-                    let q=Math.floor(rem/it.cost);
-                    if(it.limit!=null)q=Math.min(q,it.limit);
-
-                    if(q>0){
-                        rem-=q*it.cost;
-                        tot+=q*it.value;
-                        parts.push(q+'× '+esc(it.name));
-                    }
-                });
-
-                plan=parts.length
-                    ?`→ Plan: ${parts.join(', ')} · valoare totală <b>${fmt(tot)}</b> (rămân ${fmt(rem)} coini)`
-                    :'→ Nu ai ce cumpăra cu suma asta (completează costul și valoarea).';
-            }
-
-            h+=`<div class="add ia">
-                <input data-in="${sh.id}" maxlength="80" placeholder="Item nou">
-                <input data-in="${sh.id}" inputmode="decimal" placeholder="Coini">
-                <input data-in="${sh.id}" inputmode="decimal" placeholder="Valoare (ex. 2.3kk)">
-                <button class="btn sm" data-a="addI" ${id}>+ Adaugă item</button>
-            </div>`;
-
-            h+=`<div class="best">Coini disponibili:
-                <input class="cin" inputmode="decimal" data-f="coins" ${id} value="${sh.coins==null?'':fmt(sh.coins)}">
-                ${plan}
-            </div>`;
-
-            h+='</div>';
-        }
-
-        h+='</section>';
+    toolCards.forEach((card) => {
+      card.addEventListener("pointermove", (event) => {
+        const bounds = card.getBoundingClientRect();
+        card.style.setProperty("--pointer-x", `${event.clientX - bounds.left}px`);
+        card.style.setProperty("--pointer-y", `${event.clientY - bounds.top}px`);
+      });
     });
-
-    return h;
-}
-
-const ask=(q,v)=>{
-    const n=prompt(q,v||'');
-    return n&&n.trim()?n.trim():null;
-};
-
-document.addEventListener('click',e=>{
-    const el=e.target.closest('[data-a]');
-    if(!el)return;
-
-    const a=el.dataset.a;
-    const c=S.chapters.find(x=>x.id===el.dataset.c);
-    const s=c&&c.stops.find(x=>x.id===el.dataset.s);
-    const t=s&&s.tasks.find(x=>x.id===el.dataset.t);
-
-    let focus=null,n;
-
-    switch(a){
-        case 'guide':
-            guideOpen=!guideOpen;
-            break;
-
-        case 'addH':
-            if(n=ask('Nume shop:','Shop '+(S.shops.length+1))){
-                S.shops.push({id:uid(),name:n,open:true,coins:null,items:[]});
-            }
-            break;
-
-        case 'renH':{
-            const h=shop(el.dataset.h);
-            if(n=ask('Nume shop:',h.name))h.name=n;
-            break;
-        }
-
-        case 'delH':{
-            const h=shop(el.dataset.h);
-            if(confirm('Ștergi shopul „'+h.name+'” cu toate itemele?')){
-                S.shops=S.shops.filter(x=>x!==h);
-            }
-            break;
-        }
-
-        case 'tH':{
-            const h=shop(el.dataset.h);
-            h.open=!h.open;
-            break;
-        }
-
-        case 'delI':{
-            const h=shop(el.dataset.h);
-            h.items=h.items.filter(x=>x.id!==el.dataset.i);
-            break;
-        }
-
-        case 'addI':{
-            const h=shop(el.dataset.h);
-            const i=el.parentElement.querySelectorAll('input');
-            const p=x=>parseMoney(x.value);
-
-            if(i[0].value.trim()){
-                h.items.push({
-                    id:uid(),
-                    name:i[0].value.trim(),
-                    cost:p(i[1]),
-                    value:p(i[2]),
-                    limit:null
-                });
-            }
-
-            focus=h.id;
-            break;
-        }
-
-        case 'edit':
-            edit=!edit;
-            break;
-
-        case 'reset':
-            if(confirm('Debifezi toate taskurile?')){
-                S.chapters.forEach(c=>c.stops.forEach(s=>s.tasks.forEach(t=>t.done=false)));
-            }
-            break;
-
-        case 'tC':
-            c.open=!c.open;
-            break;
-
-        case 'tS':
-            s.open=!s.open;
-            break;
-
-        case 'tT':
-            t.done=!t.done;
-            break;
-
-        case 'allS':{
-            const v=!s.tasks.every(t=>t.done);
-            s.tasks.forEach(t=>t.done=v);
-            break;
-        }
-
-        case 'renC':
-            if(n=ask('Nume Chapter:',c.name))c.name=n;
-            break;
-
-        case 'renS':
-            if(n=ask('Interval level:',s.name))s.name=n;
-            break;
-
-        case 'renT':
-            if(n=ask('Modifică taskul:',t.text))t.text=n;
-            break;
-
-        case 'delC':
-            if(confirm('Ștergi „'+c.name+'” cu tot ce conține?')){
-                S.chapters=S.chapters.filter(x=>x!==c);
-            }
-            break;
-
-        case 'delS':
-            if(confirm('Ștergi „'+s.name+'” cu toate taskurile?')){
-                c.stops=c.stops.filter(x=>x!==s);
-            }
-            break;
-
-        case 'delT':
-            s.tasks=s.tasks.filter(x=>x!==t);
-            break;
-
-        case 'addC':
-            if(n=ask('Nume Chapter nou:','Chapter '+(S.chapters.length+1))){
-                S.chapters.push({id:uid(),name:n,open:true,stops:[]});
-            }
-            break;
-
-        case 'addS':
-            if(n=ask('Interval nou (ex: Level 111–115):')){
-                c.stops.push(stop(n));
-            }
-            break;
-
-        case 'addT':{
-            const v=el.parentElement.querySelector('input').value.trim();
-            if(v)s.tasks.push(T(v));
-            focus=s.id;
-            break;
-        }
-    }
-
-    save();
-    render();
-
-    if(focus){
-        const i=document.querySelector('[data-in="'+focus+'"]');
-        if(i)i.focus();
-    }
-});
-
-document.addEventListener('keydown',e=>{
-    if(e.key==='Enter'&&e.target.dataset&&e.target.dataset.in){
-        const b=e.target.parentElement.querySelector('button');
-        if(b)b.click();
-    }else if(e.key==='Enter'&&e.target.dataset&&e.target.dataset.f){
-        e.target.blur();
-    }
-});
-
-document.addEventListener('focusout',e=>{
-    const el=e.target;
-    const f=el.dataset&&el.dataset.f;
-
-    if(!f||busy||el.value===el.defaultValue)return;
-
-    const h=shop(el.dataset.h);
-    if(!h)return;
-
-    const it=h.items.find(x=>x.id===el.dataset.i);
-    const t=el.value.trim();
-    const n=t?parseMoney(t):null;
-    const bad=f!=='name'&&t&&n===null;
-
-    if(f==='name'){
-        if(it&&t)it.name=t;
-    }else if(!bad){
-        if(f==='coins')h.coins=n;
-        else if(it)it[f]=n;
-    }
-
-    save();
-
-    if(!e.relatedTarget||bad){
-        busy=true;
-        render();
-        busy=false;
-    }
-});
-
-render();
-</script>
+  </script>
 </body>
 </html>
