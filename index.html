@@ -8,7 +8,8 @@
 :root{color-scheme:dark;--bg:#0a0a10;--panel:#1d2026;--head:#3a3e47;--pill:#23262d;--text:#f2f2f2;--muted:#9aa0aa;--gold:#ffc400;--green:#22d44a;--red:#e8321e}
 *{box-sizing:border-box}
 html,body{margin:0}
-body{display:flex;min-height:100vh;font-family:Poppins,"Segoe UI",system-ui,sans-serif;color:var(--text);background:radial-gradient(1.5px 1.5px at 20px 30px,#ffffff77,transparent),radial-gradient(1px 1px at 90px 130px,#ffffff55,transparent),radial-gradient(2px 2px at 150px 70px,#ffffff44,transparent),radial-gradient(circle at 25% 0,#17172a,transparent 55%),var(--bg);background-size:190px 190px,190px 190px,190px 190px,100% 100%,100% 100%}
+body{display:flex;min-height:100vh;font-family:Poppins,"Segoe UI",system-ui,sans-serif;color:var(--text);
+background:radial-gradient(1.5px 1.5px at 20px 30px,#ffffff77,transparent),radial-gradient(1px 1px at 90px 130px,#ffffff55,transparent),radial-gradient(2px 2px at 150px 70px,#ffffff44,transparent),radial-gradient(circle at 25% 0,#17172a,transparent 55%),var(--bg);background-size:190px 190px,190px 190px,190px 190px,100% 100%,100% 100%}
 button{font:inherit;color:inherit}
 .side{width:230px;flex:none;position:sticky;top:0;height:100vh;background:#13151af2;border-right:1px solid #ffffff14;padding:22px 14px}
 .brand{font-weight:700;font-size:20px;color:var(--gold);padding:0 8px 18px;text-shadow:0 0 12px #ffc40066}
@@ -56,6 +57,22 @@ h1{margin:0;text-align:center;font-size:32px;letter-spacing:.04em;text-shadow:0 
 .add input{width:min(320px,60%);padding:7px 12px;border-radius:6px;border:1px solid #ffffff2e;background:#12141a;color:var(--text);font:inherit;font-size:14px}
 .add input:focus,.btn:focus-visible,.nav:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
 .foot{text-align:center;margin-top:12px}
+.tw{overflow-x:auto;margin-top:8px}
+.ct{width:100%;border-collapse:collapse;font-size:14px}
+.ct th{color:var(--muted);font-weight:500;text-align:left;padding:8px 6px;border-bottom:1px solid #ffffff14;white-space:nowrap}
+.ct td{padding:5px 4px}
+.ct input,.cin{width:100%;min-width:72px;padding:7px 9px;border-radius:6px;border:1px solid #ffffff22;background:#12141a;color:var(--text);font:inherit;font-size:14px}
+.ct td:nth-child(2) input{min-width:150px}
+.cin{width:120px}
+.ct input:focus,.cin:focus{outline:2px solid var(--gold);outline-offset:0}
+.ct td.rk{width:34px;text-align:center;color:var(--muted);font-weight:600}
+.ct td.rt{text-align:right;white-space:nowrap;font-weight:600;padding-right:10px}
+.ct tr.top{background:#22d44a14}
+.ct tr.top .rk,.ct tr.top .rt{color:var(--green)}
+.best{margin:12px 6px 0;font-size:14px;line-height:1.9}
+.add.ia{flex-wrap:wrap}
+.add.ia input{width:auto;flex:1 1 90px;max-width:200px}
+.add.ia input:first-child{flex:2 1 160px;max-width:300px}
 @media(max-width:720px){body{flex-direction:column}.side{position:static;width:100%;height:auto;padding:12px}.brand{padding-bottom:8px}main{padding:18px 12px 50px}h1{font-size:24px}}
 </style>
 </head>
@@ -63,7 +80,7 @@ h1{margin:0;text-align:center;font-size:32px;letter-spacing:.04em;text-shadow:0 
 <aside class="side">
   <div class="brand">Todo Hub</div>
   <button class="nav grp" id="guide" data-a="guide"><span>GUIDE</span><span id="gch">▸</span></button>
-  <div class="sub" id="sub" hidden><button class="nav" id="nav" data-a="nav">SAMPLE TODO</button></div>
+  <div class="sub" id="sub" hidden><button class="nav" id="nav" data-a="nav">SAMPLE TODO</button><button class="nav" id="navc" data-a="calcnav">COIN CALCULATOR</button></div>
 </aside>
 <main id="main"></main>
 <script>
@@ -79,18 +96,21 @@ const def=()=>({chapters:[
 ]});
 function load(){try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r)}catch(e){}return def()}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
-let S=load(),edit=false,view=false,guideOpen=false;
+let S=load(),edit=false,view=false,guideOpen=false,busy=false;
+if(!S.shops)S.shops=[{id:uid(),name:'Floral Trent Coin 1',open:true,coins:null,items:[{id:uid(),name:'White Pearl',cost:1,value:null,limit:null},{id:uid(),name:'Pet Skill Book',cost:3,value:null,limit:null}]}];
 const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const d=(c,s,t)=>` data-c="${c||''}" data-s="${s||''}" data-t="${t||''}"`;
 const ib=(a,ic,c,s,t)=>`<b class="ib" data-a="${a}"${d(c,s,t)}>${ic}</b>`;
-
+ 
 function render(){
   const m=document.getElementById('main');
-  document.getElementById('nav').classList.toggle('active',view);
+  document.getElementById('nav').classList.toggle('active',view==='todo');
+  document.getElementById('navc').classList.toggle('active',view==='calc');
   document.getElementById('sub').hidden=!guideOpen;
   document.getElementById('guide').classList.toggle('open',guideOpen);
   document.getElementById('gch').textContent=guideOpen?'▾':'▸';
-  if(!view){m.innerHTML='<div class="welcome">Alege <b>Sample Todo</b> din meniul din stânga.</div>';return}
+  if(!view){m.innerHTML='<div class="welcome">Deschide <b>GUIDE</b> din meniul din stânga și alege o pagină.</div>';return}
+  if(view==='calc'){m.innerHTML=renderCalc();return}
   let h=`<h1>SAMPLE TODO LIST</h1><div class="line"></div>
   <div class="info">Ce bifezi se salvează automat în browser. Apasă „Mod editare” ca să adaugi, modifici sau ștergi taskuri, etape și Chapter-e.</div>
   <div class="bar"><button class="btn red" data-a="reset">RESETEAZĂ TOT</button>
@@ -120,7 +140,46 @@ function render(){
   if(edit)h+='<div class="foot"><button class="btn" data-a="addC">+ Adaugă Chapter</button></div>';
   m.innerHTML=h;
 }
-
+ 
+const shop=id=>S.shops.find(x=>x.id===id);
+const ratio=it=>it.cost>0&&it.value!=null?it.value/it.cost:null;
+/* Bani: acceptă 1450, 1.45k, 2.3kk, 3.12kkk (k=mie, kk=milion, kkk=miliard). Folosește parseMoney pentru ORICE câmp nou de bani. */
+const parseMoney=s=>{
+  const m=String(s).trim().toLowerCase().replace(/\s/g,'').replace(/,/g,'.').match(/^(\d*\.?\d+|\d+\.)(k{0,3})$/);
+  return m?+(parseFloat(m[1])*Math.pow(1000,m[2].length)).toFixed(4):null;
+};
+const fmt=n=>{if(!Number.isFinite(n))return'—';const a=Math.abs(n),u=a>=1e9?[1e9,'kkk']:a>=1e6?[1e6,'kk']:a>=1e3?[1e3,'k']:[1,''];return +(n/u[0]).toFixed(3)+u[1]};
+const nv=v=>v==null?'':v;
+function renderCalc(){
+  let h=`<h1>COIN CALCULATOR</h1><div class="line"></div>
+  <div class="info">Adaugă un shop (ex. „Floral Trent Coin 1”) și itemele lui. Pentru fiecare item pune costul în coini și cât valorează (ex. prețul de vânzare). Clasamentul e sortat după valoare per coin: cu cât e mai sus, cu atât e mai rentabil. Limita (cât poți cumpăra maxim) e opțională. Sumele se pot scrie scurt: 1450, 1.45k, 2.3kk, 3.12kkk (k = mie, kk = milion, kkk = miliard).</div>
+  <div class="bar"><button class="btn" data-a="addH">+ Adaugă shop</button></div>`;
+  if(!S.shops.length)h+='<div class="welcome" style="margin-top:40px">Niciun shop încă.</div>';
+  S.shops.forEach(sh=>{
+    const L=[...sh.items].sort((a,b)=>(ratio(b)??-1)-(ratio(a)??-1)),id=`data-h="${sh.id}"`;
+    h+=`<section class="chap"><div class="chead" data-a="tH" ${id}><span>${sh.open?'▾':'▸'}</span>${esc(sh.name)}<span class="cnt">${sh.items.length} itemi</span><b class="ib" data-a="renH" ${id}>✎</b><b class="ib" data-a="delH" ${id}>✕</b></div>`;
+    if(sh.open){
+      h+='<div class="cbody"><div class="tw"><table class="ct"><thead><tr><th>#</th><th>Item</th><th>Coini</th><th>Valoare</th><th>Limită</th><th>Valoare/coin</th><th></th></tr></thead><tbody>';
+      L.forEach((it,k)=>{
+        const r=ratio(it),f=(fld,t)=>`<input ${t?'':'inputmode="decimal" '}data-f="${fld}" ${id} data-i="${it.id}" value="${esc(t?it[fld]:it[fld]==null?'':fmt(it[fld]))}">`;
+        h+=`<tr class="${r!==null&&!k?'top':''}"><td class="rk">${r!==null?k+1:'–'}</td><td>${f('name',1)}</td><td>${f('cost')}</td><td>${f('value')}</td><td>${f('limit')}</td><td class="rt">${r!==null?fmt(r):'—'}</td><td><b class="ib" data-a="delI" ${id} data-i="${it.id}">✕</b></td></tr>`;
+      });
+      h+='</tbody></table></div>';
+      if(L[0]&&ratio(L[0])!==null)h+=`<div class="best">Cel mai rentabil: <b>${esc(L[0].name)}</b> (${fmt(ratio(L[0]))} valoare per coin)</div>`;
+      let plan='';
+      if(sh.coins>0){
+        let rem=sh.coins,tot=0;const parts=[];
+        L.forEach(it=>{if(!(ratio(it)>0))return;let q=Math.floor(rem/it.cost);if(it.limit!=null)q=Math.min(q,it.limit);if(q>0){rem-=q*it.cost;tot+=q*it.value;parts.push(q+'× '+esc(it.name))}});
+        plan=parts.length?`→ Plan: ${parts.join(', ')} · valoare totală <b>${fmt(tot)}</b> (rămân ${fmt(rem)} coini)`:'→ Nu ai ce cumpăra cu suma asta (completează costul și valoarea).';
+      }
+      h+=`<div class="add ia"><input data-in="${sh.id}" maxlength="80" placeholder="Item nou"><input data-in="${sh.id}" inputmode="decimal" placeholder="Coini"><input data-in="${sh.id}" inputmode="decimal" placeholder="Valoare (ex. 2.3kk)"><button class="btn sm" data-a="addI" ${id}>+ Adaugă item</button></div>`;
+      h+=`<div class="best">Coini disponibili: <input class="cin" inputmode="decimal" data-f="coins" ${id} value="${sh.coins==null?'':fmt(sh.coins)}"> ${plan}</div>`;
+      h+='</div>';
+    }
+    h+='</section>';
+  });
+  return h;
+}
 const ask=(q,v)=>{const n=prompt(q,v||'');return n&&n.trim()?n.trim():null};
 document.addEventListener('click',e=>{
   const el=e.target.closest('[data-a]');if(!el)return;
@@ -128,7 +187,15 @@ document.addEventListener('click',e=>{
   let focus=null,n;
   switch(a){
     case 'guide':guideOpen=!guideOpen;break;
-    case 'nav':view=true;break;
+    case 'nav':view='todo';break;
+    case 'calcnav':view='calc';break;
+    case 'addH':if(n=ask('Nume shop:','Shop '+(S.shops.length+1)))S.shops.push({id:uid(),name:n,open:true,coins:null,items:[]});break;
+    case 'renH':{const h=shop(el.dataset.h);if(n=ask('Nume shop:',h.name))h.name=n;break}
+    case 'delH':{const h=shop(el.dataset.h);if(confirm('Ștergi shopul „'+h.name+'” cu toate itemele?'))S.shops=S.shops.filter(x=>x!==h);break}
+    case 'tH':{const h=shop(el.dataset.h);h.open=!h.open;break}
+    case 'delI':{const h=shop(el.dataset.h);h.items=h.items.filter(x=>x.id!==el.dataset.i);break}
+    case 'addI':{const h=shop(el.dataset.h),i=el.parentElement.querySelectorAll('input'),p=x=>parseMoney(x.value);
+      if(i[0].value.trim())h.items.push({id:uid(),name:i[0].value.trim(),cost:p(i[1]),value:p(i[2]),limit:null});focus=h.id;break}
     case 'edit':edit=!edit;break;
     case 'reset':if(confirm('Debifezi toate taskurile?'))S.chapters.forEach(c=>c.stops.forEach(s=>s.tasks.forEach(t=>t.done=false)));break;
     case 'tC':c.open=!c.open;break;
@@ -149,9 +216,19 @@ document.addEventListener('click',e=>{
   if(focus){const i=document.querySelector('[data-in="'+focus+'"]');if(i)i.focus()}
 });
 document.addEventListener('keydown',e=>{
-  if(e.key==='Enter'&&e.target.dataset&&e.target.dataset.in){const b=e.target.parentElement.querySelector('button');if(b)b.click()}
+  if(e.key==='Enter'&&e.target.dataset&&e.target.dataset.in){const b=e.target.parentElement.querySelector('button');if(b)b.click()}else if(e.key==='Enter'&&e.target.dataset&&e.target.dataset.f)e.target.blur();
+});
+document.addEventListener('focusout',e=>{
+  const el=e.target,f=el.dataset&&el.dataset.f;if(!f||busy||el.value===el.defaultValue)return;
+  const h=shop(el.dataset.h);if(!h)return;
+  const it=h.items.find(x=>x.id===el.dataset.i),t=el.value.trim(),n=t?parseMoney(t):null,bad=f!=='name'&&t&&n===null;
+  if(f==='name'){if(it&&t)it.name=t}
+  else if(!bad){if(f==='coins')h.coins=n;else if(it)it[f]=n}
+  save();
+  if(!e.relatedTarget||bad){busy=true;render();busy=false}
 });
 render();
 </script>
 </body>
 </html>
+ 
