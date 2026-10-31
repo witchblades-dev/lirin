@@ -12,7 +12,18 @@ body{display:flex;min-height:100vh;font-family:Poppins,"Segoe UI",system-ui,sans
 background:radial-gradient(1.5px 1.5px at 20px 30px,#ffffff77,transparent),radial-gradient(1px 1px at 90px 130px,#ffffff55,transparent),radial-gradient(2px 2px at 150px 70px,#ffffff44,transparent),radial-gradient(circle at 25% 0,#17172a,transparent 55%),var(--bg);background-size:190px 190px,190px 190px,190px 190px,100% 100%,100% 100%}
 button{font:inherit;color:inherit}
 .side{width:230px;flex:none;position:sticky;top:0;height:100vh;background:#13151af2;border-right:1px solid #ffffff14;padding:22px 14px}
-.brand{font-weight:700;font-size:20px;color:var(--gold);padding:0 8px 18px;text-shadow:0 0 12px #ffc40066}
+.brand {
+    font-weight: 700;
+    font-size: 20px;
+    color: #ffc400;
+    padding: 0 8px 18px;
+    text-shadow:
+        0 0 5px #ffc400,
+        0 0 10px #ffc400,
+        0 0 20px #ffc400,
+        0 0 40px #ffc400,
+        0 0 60px #ffc400;
+}
 .nav{width:100%;text-align:left;padding:14px 16px;border:0;border-radius:6px;background:transparent;color:var(--muted);font-weight:600;letter-spacing:.06em;cursor:pointer}
 .nav:hover{background:#ffffff0d;color:var(--text)}
 .nav.active{background:var(--red);color:#fff}
@@ -78,7 +89,7 @@ h1{margin:0;text-align:center;font-size:32px;letter-spacing:.04em;text-shadow:0 
 </head>
 <body>
 <aside class="side">
-  <div class="brand">LIRIN2</div>
+  <div class="brand">LIRIN</div>
   <button class="nav grp" id="guide" data-a="guide"><span>GUIDE</span><span id="gch">▸</span></button>
   <div class="sub" id="sub" hidden><button class="nav" id="nav" data-a="nav">SAMPLE TODO</button><button class="nav" id="navc" data-a="calcnav">COIN CALCULATOR</button></div>
 </aside>
