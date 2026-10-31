@@ -1,652 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LIRIN — Metin2 Tools</title>
-  <meta name="description" content="LIRIN brings together refined Metin2 tools for upgrades, farming and planning.">
-  <meta name="theme-color" content="#0f1013">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230f1013'/%3E%3Cpath d='M20 14v36h26' fill='none' stroke='%23c7a76b' stroke-width='5' stroke-linecap='square'/%3E%3C/svg%3E">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --site-primary: #c5a15a;
-      --site-on-primary: #17130d;
-      --site-secondary: #e4c27e;
-      --site-on-secondary: #ffffff;
-      --site-background: #303238;
-      --site-on-background: #f5f5f5;
-      --site-font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      --site-font-heading: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      --site-heading-scale: 1;
-      --site-spacing-scale: 1;
-      --site-radius-scale: 1;
-      --site-decoration-opacity: 1;
-      color-scheme: light dark;
-    }
-
-    * { box-sizing: border-box; }
-
-    html, body {
-      width: 100%;
-      min-height: 100%;
-      margin: 0;
-    }
-
-    body {
-      font-family: var(--site-font-body);
-      background: var(--site-background);
-      color: var(--site-on-background);
-    }
-
-    .app-root {
-      position: relative;
-      display: flex;
-      min-height: 100svh;
-      width: 100%;
-      overflow: hidden;
-      border-radius: 0;
-      isolation: isolate;
-      background-color: light-dark(#303238, var(--site-background));
-      color: light-dark(#f5f5f5, var(--site-on-background));
-    }
-
-    .animated-backdrop {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      overflow: hidden;
-      pointer-events: none;
-      background:
-        radial-gradient(ellipse at 72% 28%, rgba(228, 194, 126, 0.10), transparent 38%),
-        radial-gradient(ellipse at 42% 78%, rgba(197, 161, 90, 0.12), transparent 42%),
-        linear-gradient(135deg, #292b30 0%, #383a41 48%, #25272d 100%);
-    }
-
-    .animated-backdrop::before,
-    .animated-backdrop::after {
-      content: "";
-      position: absolute;
-      width: 58vw;
-      aspect-ratio: 1;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: calc(0.55 * var(--site-decoration-opacity));
-      animation: drift 19s ease-in-out infinite alternate;
-    }
-
-    .animated-backdrop::before {
-      top: -22%;
-      left: 34%;
-      background: radial-gradient(circle, rgba(228, 194, 126, 0.16), transparent 68%);
-    }
-
-    .animated-backdrop::after {
-      right: -14%;
-      bottom: -38%;
-      background: radial-gradient(circle, rgba(197, 161, 90, 0.2), transparent 68%);
-      animation-delay: -9s;
-    }
-
-    @keyframes drift {
-      from { transform: translate3d(-4%, -2%, 0) scale(0.92); }
-      to { transform: translate3d(7%, 6%, 0) scale(1.12); }
-    }
-
-    .sidebar {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      flex: 0 0 260px;
-      flex-direction: column;
-      gap: 12px;
-      min-height: 100svh;
-      padding: 34px 18px;
-      border-right: 1px solid rgba(197, 161, 90, 0.28);
-      background: linear-gradient(180deg, rgba(32, 34, 40, 0.99), rgba(43, 45, 51, 0.98));
-      box-shadow: 16px 0 54px rgba(0, 0, 0, 0.48), inset -1px 0 0 rgba(255, 255, 255, 0.045);
-      backdrop-filter: blur(18px);
-    }
-
-    .nav-label {
-      display: flex;
-      align-items: center;
-      margin: 0 12px 18px;
-      padding: 0 0 13px;
-      border-bottom: 1px solid rgba(197, 161, 90, 0.2);
-      color: #dfbd79;
-      font-size: 0.82rem;
-      font-weight: 800;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      text-shadow:
-        0 0 6px rgba(228, 194, 126, 0.65),
-        0 0 16px rgba(197, 161, 90, 0.48),
-        0 0 28px rgba(197, 161, 90, 0.22);
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      min-height: 48px;
-      gap: 12px;
-      padding: 0 14px;
-      border: 1px solid transparent;
-      border-radius: 9px;
-      color: rgba(245, 245, 245, 0.78);
-      font-size: 0.9rem;
-      font-weight: 500;
-      letter-spacing: 0.01em;
-      text-decoration: none;
-      transition: color 160ms ease, background 160ms ease, border-color 160ms ease;
-    }
-
-    .nav-item::before {
-      content: "✧";
-      flex: 0 0 14px;
-      color: var(--site-primary);
-      font-size: 1.12rem;
-      line-height: 1;
-      text-align: center;
-      text-shadow: 0 0 10px rgba(197, 161, 90, 0.28);
-      transition: color 160ms ease, text-shadow 160ms ease;
-    }
-
-    .nav-item:hover {
-      border-color: rgba(197, 161, 90, 0.2);
-      background: rgba(197, 161, 90, 0.07);
-      color: #ffffff;
-    }
-
-    .nav-item:hover::before {
-      color: #e4c27e;
-      text-shadow: 0 0 12px rgba(197, 161, 90, 0.55);
-    }
-
-    .home-content {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex: 1;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-width: 0;
-      min-height: 100svh;
-      padding: clamp(42px, 8vh, 88px) clamp(22px, 4vw, 64px) 56px;
-      gap: clamp(34px, 5vh, 56px);
-    }
-
-    .ambient-glow {
-      position: absolute;
-      z-index: -1;
-      width: min(68vw, 720px);
-      aspect-ratio: 1;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(197, 161, 90, 0.10) 0%, rgba(228, 194, 126, 0.055) 34%, transparent 70%);
-      filter: blur(24px);
-      opacity: var(--site-decoration-opacity);
-      pointer-events: none;
-    }
-
-    .brand {
-      position: relative;
-      margin: 0;
-      padding: 0 0.12em 0.12em;
-      color: #ffffff;
-      font-family: var(--site-font-heading);
-      font-size: clamp(3.5rem, 10vw, 7rem);
-      font-weight: 800;
-      letter-spacing: 0.16em;
-      line-height: 1;
-      text-indent: 0.16em;
-      text-align: center;
-      text-shadow:
-        0 0 8px rgba(255, 255, 255, 0.82),
-        0 0 22px rgba(255, 255, 255, 0.48),
-        0 0 48px rgba(255, 255, 255, 0.22),
-        0 0 42px rgba(197, 161, 90, 0.24),
-        0 0 90px rgba(197, 161, 90, 0.16);
-      user-select: none;
-    }
-
-    .brand::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      bottom: -20px;
-      width: 72px;
-      height: 2px;
-      transform: translateX(-50%);
-      background: linear-gradient(90deg, transparent, #c5a15a, #e4c27e, #c5a15a, transparent);
-      box-shadow: 0 0 14px rgba(197, 161, 90, 0.48);
-    }
-
-    .tool-cards {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 20px;
-      width: min(100%, 1120px);
-    }
-
-    .tool-card {
-      position: relative;
-      display: flex;
-      min-height: 230px;
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 30px 28px;
-      overflow: hidden;
-      border: 1px solid rgba(197, 161, 90, 0.34);
-      border-radius: 16px;
-      background: linear-gradient(145deg, rgba(69, 71, 79, 0.98), rgba(43, 45, 52, 0.98));
-      box-shadow: 0 22px 54px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.09), inset 0 0 34px rgba(197, 161, 90, 0.025);
-      text-decoration: none;
-      transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
-    }
-
-    .tool-card::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 28px;
-      width: 54px;
-      height: 2px;
-      background: linear-gradient(90deg, var(--site-primary), rgba(197, 161, 90, 0));
-    }
-
-    .tool-card:hover {
-      transform: translateY(-6px);
-      border-color: rgba(197, 161, 90, 0.58);
-      box-shadow: 0 24px 58px rgba(0, 0, 0, 0.42), 0 0 28px rgba(197, 161, 90, 0.08);
-    }
-
-    .tool-card h2 {
-      margin: 5px 0 16px;
-      color: #f5e6c7;
-      font-size: clamp(1.15rem, 1.7vw, 1.45rem);
-      font-weight: 700;
-      letter-spacing: 0.015em;
-    }
-
-    .tool-card p {
-      margin: 0;
-      color: rgba(235, 231, 224, 0.7);
-      font-size: 0.94rem;
-      line-height: 1.75;
-    }
-
-    @media (max-width: 480px) {
-      .brand { letter-spacing: 0.11em; text-indent: 0.11em; }
-    }
-
-    @media (max-width: 700px) {
-      .app-root { flex-direction: column; }
-      .sidebar {
-        flex: 0 0 auto;
-        min-height: auto;
-        padding: 16px 14px;
-        border-right: 0;
-        border-bottom: 1px solid rgba(197, 161, 90, 0.18);
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16);
-      }
-      .nav-label { margin: 0 8px 4px; }
-      .nav-item { min-height: 42px; }
-      .home-content { min-height: 68svh; padding: 42px 18px; gap: 30px; }
-      .tool-cards { grid-template-columns: 1fr; gap: 14px; }
-      .tool-card { min-height: auto; padding: 24px 22px; }
-    }
-
-    /* LIRIN visual system */
-    :root {
-      --site-primary: #c7a76b;
-      --site-secondary: #e6d2a7;
-      --site-background: #0f1013;
-      --site-on-background: #f3f0e9;
-      --site-font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
-      --site-font-heading: "Cormorant Garamond", Georgia, serif;
-      color-scheme: dark;
-      scrollbar-color: #414149 #101115;
-    }
-
-    html, body { background: #0f1013; color: #f3f0e9; }
-    .app-root {
-      overflow: clip;
-      background: #0f1013;
-      color: #f3f0e9;
-    }
-    .animated-backdrop {
-      background: linear-gradient(138deg, #121318 0%, #191a20 50%, #0e0f12 100%);
-    }
-    .animated-backdrop::before,
-    .animated-backdrop::after { display: none; animation: none; }
-
-    .app-root::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: 4;
-      pointer-events: none;
-      opacity: 0.035;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
-    }
-
-    .sidebar {
-      position: sticky;
-      top: 0;
-      align-self: flex-start;
-      height: 100svh;
-      min-height: 100svh;
-      background: #121318;
-      border-right: 1px solid rgba(255, 255, 255, 0.065);
-      box-shadow: 12px 0 34px rgba(0, 0, 0, 0.24);
-      backdrop-filter: none;
-    }
-    .nav-label {
-      color: #a9a7a0;
-      font-weight: 600;
-      letter-spacing: 0.17em;
-      text-shadow: none;
-      border-bottom-color: rgba(255, 255, 255, 0.08);
-    }
-    .nav-item {
-      gap: 11px;
-      color: #aaaab0;
-      border-color: transparent;
-      transition: color 180ms ease, background 180ms ease, border-color 180ms ease;
-    }
-    .nav-item::before { display: none; }
-    .nav-icon {
-      width: 17px;
-      height: 17px;
-      flex: 0 0 17px;
-      color: #777982;
-      transition: color 180ms ease;
-    }
-    .nav-item:hover,
-    .nav-item.is-active {
-      color: #f1e8d7;
-      border-color: rgba(199, 167, 107, 0.16);
-      background: rgba(199, 167, 107, 0.075);
-    }
-    .nav-item:hover .nav-icon,
-    .nav-item.is-active .nav-icon { color: #c7a76b; }
-
-    .home-content {
-      min-height: 100svh;
-      padding: clamp(48px, 8vh, 84px) clamp(22px, 4vw, 64px) 28px;
-      gap: 12px;
-    }
-    .ambient-glow { display: none; }
-    .brand {
-      color: #e8d9b9;
-      background: linear-gradient(180deg, #f5eddd 5%, #d6bd8c 100%);
-      background-clip: text;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-family: var(--site-font-heading);
-      font-size: clamp(4.5rem, 10vw, 7.2rem);
-      font-weight: 600;
-      letter-spacing: 0.2em;
-      text-indent: 0.2em;
-      text-shadow: 0 3px 26px rgba(0, 0, 0, 0.3);
-    }
-    .brand::after { display: none; }
-    .tagline {
-      margin: 0;
-      color: #929198;
-      font-size: 0.82rem;
-      font-weight: 400;
-      letter-spacing: 0.12em;
-      text-align: center;
-    }
-    .tool-cards {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-      margin-top: clamp(22px, 4vh, 38px);
-    }
-    .tool-card {
-      min-height: 252px;
-      padding: 27px 25px 23px;
-      border: 1px solid rgba(255, 255, 255, 0.075);
-      border-radius: 13px;
-      background: linear-gradient(145deg, #202127 0%, #191a1f 72%, #17181d 100%);
-      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.035);
-      transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
-    }
-    .tool-card::before {
-      left: 25px;
-      width: 62px;
-      height: 1px;
-      opacity: 0;
-      transition: opacity 220ms ease;
-    }
-    .tool-card::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0;
-      background: radial-gradient(340px circle at var(--pointer-x, 50%) var(--pointer-y, 50%), rgba(199, 167, 107, 0.105), transparent 74%);
-      transition: opacity 220ms ease;
-    }
-    .tool-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(199, 167, 107, 0.34);
-      box-shadow: 0 22px 48px rgba(0, 0, 0, 0.34), 0 0 22px rgba(199, 167, 107, 0.045);
-    }
-    .tool-card:hover::before,
-    .tool-card:hover::after { opacity: 1; }
-    .card-icon {
-      position: relative;
-      z-index: 1;
-      width: 25px;
-      height: 25px;
-      margin-bottom: 18px;
-      color: #a5a3a0;
-      stroke: currentColor;
-      transition: color 180ms ease;
-    }
-    .tool-card:hover .card-icon { color: #c7a76b; }
-    .tool-card h2 {
-      position: relative;
-      z-index: 1;
-      margin: 0 0 12px;
-      color: #e8e2d6;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      font-size: clamp(1.35rem, 1.8vw, 1.65rem);
-      font-weight: 600;
-      letter-spacing: 0.015em;
-    }
-    .tool-card p {
-      position: relative;
-      z-index: 1;
-      margin: 0;
-      color: #a3a2a4;
-      font-size: 0.88rem;
-      line-height: 1.7;
-    }
-    .card-open {
-      position: relative;
-      z-index: 1;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: auto;
-      padding-top: 22px;
-      color: #85858b;
-      font-size: 0.76rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      transition: color 180ms ease, gap 180ms ease;
-    }
-    .tool-card:hover .card-open { gap: 12px; color: #d2b77f; }
-    .site-footer {
-      width: min(100%, 1120px);
-      margin-top: auto;
-      padding-top: 34px;
-      color: #66666e;
-      font-size: 0.7rem;
-      letter-spacing: 0.1em;
-      text-align: center;
-      text-transform: uppercase;
-    }
-
-    :focus-visible {
-      outline: 2px solid #d8bd83;
-      outline-offset: 4px;
-    }
-    ::-webkit-scrollbar { width: 10px; height: 8px; }
-    ::-webkit-scrollbar-track { background: #101115; }
-    ::-webkit-scrollbar-thumb { background: #414149; border-radius: 10px; }
-
-    @media (max-width: 1050px) {
-      .tool-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
-    @media (max-width: 700px) {
-      .sidebar {
-        position: relative;
-        top: auto;
-        width: 100%;
-        height: auto;
-        min-height: 0;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        align-items: center;
-        gap: 7px;
-        padding: 10px 12px;
-        overflow-x: auto;
-        border-right: 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.2);
-      }
-      .nav-label {
-        flex: 0 0 auto;
-        margin: 0 8px 0 2px;
-        padding: 0;
-        border: 0;
-        font-size: 0.7rem;
-      }
-      .nav-item {
-        flex: 0 0 auto;
-        min-height: 36px;
-        gap: 7px;
-        padding: 0 9px;
-        font-size: 0.78rem;
-        white-space: nowrap;
-      }
-      .nav-icon { width: 15px; height: 15px; flex-basis: 15px; }
-      .home-content { min-height: 100svh; padding: 42px 18px 24px; gap: 10px; }
-      .brand { font-size: clamp(4rem, 16vw, 5.4rem); }
-      .tagline { font-size: 0.7rem; letter-spacing: 0.08em; }
-      .tool-cards { grid-template-columns: 1fr; gap: 13px; margin-top: 24px; }
-      .tool-card { min-height: 222px; padding: 23px 21px 20px; }
-      .site-footer { padding-top: 28px; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        scroll-behavior: auto !important;
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LIRIN — Metin2 Tools</title>
+<meta name="description" content="LIRIN brings together refined Metin2 tools for upgrades, farming and planning.">
+<meta name="theme-color" content="#0f1013">
+<meta property="og:type" content="website">
+<meta property="og:title" content="LIRIN — Metin2 Tools">
+<meta property="og:description" content="Refined Metin2 tools for upgrades, farming and planning.">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230f1013'/%3E%3Cpath d='M20 14v36h26' fill='none' stroke='%23c7a76b' stroke-width='5' stroke-linecap='square'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#c7a76b;--bg:#0f1013;--line:rgba(255,255,255,.075);--text:#f3f0e9;--muted:#a6a5a8;--dim:#8a8a92;--serif:"Cormorant Garamond",Georgia,"Times New Roman",serif;--sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scrollbar-color:#414149 #101115}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.skip{position:absolute;left:-9999px;top:8px;z-index:20;padding:8px 14px;border-radius:6px;background:var(--gold);color:#17130d;font-weight:600}
+.skip:focus{left:8px}
+.ic{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.app-root{position:relative;display:flex;min-height:100svh;isolation:isolate;overflow:clip;background:linear-gradient(138deg,#121318 0%,#191a20 50%,#0e0f12 100%)}
+.app-root::after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E")}
+ 
+/* sidebar */
+.sidebar{position:sticky;top:0;z-index:2;flex:0 0 260px;align-self:flex-start;height:100svh;display:flex;flex-direction:column;gap:6px;padding:34px 18px;background:#121318;border-right:1px solid var(--line);box-shadow:12px 0 34px rgba(0,0,0,.24)}
+.nav-label{margin:0 12px 16px;padding-bottom:13px;border-bottom:1px solid rgba(255,255,255,.08);color:#a9a7a0;font-size:.8rem;font-weight:600;letter-spacing:.17em;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:11px;min-height:46px;padding:0 14px;border:1px solid transparent;border-radius:9px;color:#aaaab0;font-size:.9rem;font-weight:500;text-decoration:none;transition:color .18s,background .18s,border-color .18s}
+.nav-item .ic{width:17px;height:17px;flex:none;color:#777982;transition:color .18s}
+.nav-item:hover,.nav-item.is-active{color:#f1e8d7;border-color:rgba(199,167,107,.16);background:rgba(199,167,107,.075)}
+.nav-item:hover .ic,.nav-item.is-active .ic{color:var(--gold)}
+.nav-item.is-soon,.nav-item.is-soon:hover{color:#8d8d94;border-color:transparent;background:none;cursor:default}
+.nav-item.is-soon .ic,.nav-item.is-soon:hover .ic{color:#5f6169}
+.badge{margin-left:auto;padding:2px 8px;border:1px solid rgba(255,255,255,.12);border-radius:20px;color:var(--dim);font-size:.62rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+ 
+/* content */
+.home-content{position:relative;z-index:1;flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:12px;padding:clamp(48px,8vh,84px) clamp(22px,4vw,64px) 28px}
+.brand{margin:0;padding:0 .1em .08em;font-family:var(--serif);font-size:clamp(4.5rem,10vw,7.2rem);font-weight:600;line-height:1;letter-spacing:.2em;text-indent:.2em;background:linear-gradient(180deg,#f5eddd 5%,#d6bd8c 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 3px 22px rgba(0,0,0,.35));user-select:none}
+.tagline{margin:0;color:var(--dim);font-size:.82rem;letter-spacing:.12em;text-align:center}
+ 
+/* bento grid */
+.tool-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;width:min(100%,1120px);margin-top:clamp(22px,4vh,38px)}
+.tool-card{position:relative;display:flex;flex-direction:column;align-items:flex-start;min-height:250px;padding:27px 25px 23px;overflow:hidden;border:1px solid var(--line);border-radius:13px;background:linear-gradient(145deg,#202127 0%,#191a1f 72%,#17181d 100%);box-shadow:0 16px 38px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.035);color:inherit;text-decoration:none;transition:transform .22s,border-color .22s,box-shadow .22s}
+.tool-card.wide{grid-column:span 2}
+.tool-card>*{position:relative;z-index:1}
+.tool-card::before{content:"";position:absolute;top:0;left:25px;width:62px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);opacity:0;transition:opacity .22s}
+.tool-card::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(340px circle at var(--x,50%) var(--y,50%),rgba(199,167,107,.11),transparent 74%);transition:opacity .22s}
+a.tool-card:hover{transform:translateY(-4px);border-color:rgba(199,167,107,.34);box-shadow:0 22px 48px rgba(0,0,0,.34),0 0 22px rgba(199,167,107,.045)}
+a.tool-card:hover::before,a.tool-card:hover::after{opacity:1}
+.tool-card .ic{width:26px;height:26px;margin-bottom:18px;color:#a5a3a0;transition:color .18s}
+a.tool-card:hover .ic{color:var(--gold)}
+.tool-card h2{margin:0 0 10px;color:#ece4d3;font-family:var(--serif);font-size:1.75rem;font-weight:600;letter-spacing:.01em;line-height:1.15}
+.tool-card.wide h2{font-size:2.05rem}
+.tool-card p{margin:0;max-width:48ch;color:var(--muted);font-size:.9rem;line-height:1.7}
+.card-open{display:inline-flex;align-items:center;gap:8px;margin-top:auto;padding-top:22px;color:var(--dim);font-size:.76rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;transition:color .18s,gap .18s}
+a.tool-card:hover .card-open{gap:12px;color:#d2b77f}
+.tool-card.is-soon{opacity:.72;border-style:dashed}
+ 
+.site-footer{margin-top:auto;padding-top:34px;color:var(--dim);font-size:.7rem;letter-spacing:.1em;text-align:center;text-transform:uppercase}
+ 
+/* entrance */
+@keyframes rise{from{opacity:0;transform:translateY(14px)}}
+.brand,.tagline,.tool-card,.site-footer{animation:rise .7s cubic-bezier(.2,.7,.2,1) backwards}
+.tagline{animation-delay:.08s}
+.tool-card{animation-delay:calc(.18s + var(--i) * .07s)}
+.site-footer{animation-delay:.7s}
+ 
+:focus-visible{outline:2px solid #d8bd83;outline-offset:4px}
+::-webkit-scrollbar{width:10px;height:8px}
+::-webkit-scrollbar-track{background:#101115}
+::-webkit-scrollbar-thumb{background:#414149;border-radius:10px}
+ 
+@media(max-width:1050px){.tool-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){
+  .app-root{flex-direction:column}
+  .sidebar{position:relative;flex:none;width:100%;height:auto;flex-direction:row;align-items:center;gap:7px;padding:10px 12px;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line)}
+  .nav-label{flex:none;margin:0 8px 0 2px;padding:0;border:0;font-size:.7rem}
+  .nav-item{flex:none;min-height:36px;gap:7px;padding:0 9px;font-size:.78rem;white-space:nowrap}
+  .nav-item .ic{width:15px;height:15px}
+  .badge{display:none}
+  .home-content{padding:42px 18px 24px}
+  .brand{font-size:clamp(4rem,16vw,5.4rem)}
+  .tagline{font-size:.7rem;letter-spacing:.08em}
+  .tool-cards{grid-template-columns:1fr;gap:13px;margin-top:24px}
+  .tool-card.wide{grid-column:auto}
+  .tool-card,.tool-card.wide{min-height:200px;padding:23px 21px 20px}
+  .tool-card.wide h2{font-size:1.75rem}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
 </head>
 <body>
-  <main class="app-root">
-    <div class="animated-backdrop" aria-hidden="true"></div>
-    <nav class="sidebar" aria-label="Main navigation">
-      <p class="nav-label">Lirin Tools</p>
-      <a class="nav-item" href="/upgrade-cost"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 10l7-7 7 7"/><path d="M5 15h14"/></svg>Upgrade Cost</a>
-      <a class="nav-item" href="#special-upgrade-cost"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.2 5.3L20 10l-5.8 1.7L12 17l-2.2-5.3L4 10l5.8-1.7L12 3Z"/><path d="M19 16v5M16.5 18.5h5"/></svg>Special Upgrade Cost</a>
-      <a class="nav-item" href="#sash-absorption"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7c4-3 12-3 16 0l-2 10c-4 3-8 3-12 0L4 7Z"/><path d="M7 9c3 2 7 2 10 0M8 14c2 1 6 1 8 0"/></svg>Sash Absorption</a>
-      <a class="nav-item" href="#metin-simulator"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="m4.5 7.8 7.5 4.4 7.5-4.4M12 12.2V21"/></svg>Metin Simulator</a>
-      <a class="nav-item" href="#sample-todo"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5h12M8 12h12M8 19h12"/><path d="m3 5 1 1 2-2M3 12l1 1 2-2M3 19l1 1 2-2"/></svg>Sample Todo</a>
-      <a class="nav-item" href="#coin-calculator"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5c-.7-.8-1.8-1.2-3.2-1.2-1.6 0-2.7.8-2.7 2 0 3.2 6.1 1.2 6.1 4.5 0 1.4-1.3 2.4-3.2 2.4-1.5 0-2.8-.5-3.7-1.5M12 5.5v13"/></svg>Coin Calculator</a>
-    </nav>
-    <section class="home-content" aria-label="Homepage LIRIN">
-      <h1 class="brand">LIRIN</h1>
-      <p class="tagline">Metin2 tools, built for a more precise grind.</p>
-      <div class="tool-cards">
-        <a class="tool-card" id="upgrade-cost" href="/upgrade-cost">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 10l7-7 7 7M5 15h14"/></svg>
-          <h2>Upgrade Cost</h2>
-          <p>Pick a weapon or armour, toggle only the +0 to +9 steps you need, and see the exact materials, pity counts and Yang total.</p>
-          <span class="card-open">Open <span aria-hidden="true">→</span></span>
-        </a>
-        <a class="tool-card" id="special-upgrade-cost" href="#special-upgrade-cost">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.2 5.3L20 10l-5.8 1.7L12 17l-2.2-5.3L4 10l5.8-1.7L12 3Z"/><path d="M19 16v5M16.5 18.5h5"/></svg>
-          <h2>Special Upgrade Cost</h2>
-          <p>Work out the materials and Yang required for special equipment upgrades.</p>
-          <span class="card-open">Open <span aria-hidden="true">→</span></span>
-        </a>
-        <a class="tool-card" id="sash-absorption" href="#sash-absorption">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7c4-3 12-3 16 0l-2 10c-4 3-8 3-12 0L4 7Z"/><path d="M7 9c3 2 7 2 10 0M8 14c2 1 6 1 8 0"/></svg>
-          <h2>Sash Absorption</h2>
-          <p>Compare sash absorption values and plan the stats you want to transfer.</p>
-          <span class="card-open">Open <span aria-hidden="true">→</span></span>
-        </a>
-        <a class="tool-card" id="metin-simulator" href="#metin-simulator">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="m4.5 7.8 7.5 4.4 7.5-4.4M12 12.2V21"/></svg>
-          <h2>Metin Simulator</h2>
-          <p>Pick two metins, set your average DPS and the walk between them, then see what each of them drops and which one is worth the trip.</p>
-          <span class="card-open">Open <span aria-hidden="true">→</span></span>
-        </a>
-        <a class="tool-card" id="sample-todo" href="#sample-todo">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5h12M8 12h12M8 19h12"/><path d="m3 5 1 1 2-2M3 12l1 1 2-2M3 19l1 1 2-2"/></svg>
-          <h2>Sample Todo</h2>
-          <p>Plan your next upgrades, keep track of the materials you need, and organise your Metin farming goals in one place.</p>
-          <span class="card-open">Open <span aria-hidden="true">→</span></span>
-        </a>
-        <a class="tool-card" id="coin-calculator" href="#coin-calculator">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5c-.7-.8-1.8-1.2-3.2-1.2-1.6 0-2.7.8-2.7 2 0 3.2 6.1 1.2 6.1 4.5 0 1.4-1.3 2.4-3.2 2.4-1.5 0-2.8-.5-3.7-1.5M12 5.5v13"/></svg>
-          <h2>Coin Calculator</h2>
-          <p>Calculate coin values and compare exchange totals for your trades.</p>
-          <span class="card-open">Open <span aria-hidden="true">→</span></span>
-        </a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11 12 4l8 7"/><path d="M6 10v10h12V10"/></symbol>
+<symbol id="i-upgrade" viewBox="0 0 24 24"><path d="M12 3v18M5 10l7-7 7 7M5 15h14"/></symbol>
+<symbol id="i-special" viewBox="0 0 24 24"><path d="m12 3 2.2 5.3L20 10l-5.8 1.7L12 17l-2.2-5.3L4 10l5.8-1.7L12 3Z"/><path d="M19 16v5M16.5 18.5h5"/></symbol>
+<symbol id="i-sash" viewBox="0 0 24 24"><path d="M4 7c4-3 12-3 16 0l-2 10c-4 3-8 3-12 0L4 7Z"/><path d="M7 9c3 2 7 2 10 0M8 14c2 1 6 1 8 0"/></symbol>
+<symbol id="i-metin" viewBox="0 0 24 24"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="m4.5 7.8 7.5 4.4 7.5-4.4M12 12.2V21"/></symbol>
+<symbol id="i-todo" viewBox="0 0 24 24"><path d="M8 5h12M8 12h12M8 19h12"/><path d="m3 5 1 1 2-2M3 12l1 1 2-2M3 19l1 1 2-2"/></symbol>
+<symbol id="i-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5c-.7-.8-1.8-1.2-3.2-1.2-1.6 0-2.7.8-2.7 2 0 3.2 6.1 1.2 6.1 4.5 0 1.4-1.3 2.4-3.2 2.4-1.5 0-2.8-.5-3.7-1.5M12 5.5v13"/></symbol>
+</defs></svg>
+ 
+<a class="skip" href="#tools">Skip to tools</a>
+<div class="app-root">
+  <nav class="sidebar" aria-label="Main navigation">
+    <p class="nav-label">Lirin Tools</p>
+    <a class="nav-item is-active" href="./" aria-current="page"><svg class="ic" aria-hidden="true"><use href="#i-home"/></svg>Home</a>
+    <a class="nav-item" href="upgrade-cost"><svg class="ic" aria-hidden="true"><use href="#i-upgrade"/></svg>Upgrade Cost</a>
+    <span class="nav-item is-soon" aria-disabled="true"><svg class="ic" aria-hidden="true"><use href="#i-special"/></svg>Special Upgrade Cost<span class="badge">Soon</span></span>
+    <a class="nav-item" href="sash"><svg class="ic" aria-hidden="true"><use href="#i-sash"/></svg>Sash Absorption</a>
+    <span class="nav-item is-soon" aria-disabled="true"><svg class="ic" aria-hidden="true"><use href="#i-metin"/></svg>Metin Simulator<span class="badge">Soon</span></span>
+    <a class="nav-item" href="sample-todo"><svg class="ic" aria-hidden="true"><use href="#i-todo"/></svg>Sample Todo</a>
+    <a class="nav-item" href="coin-calculator"><svg class="ic" aria-hidden="true"><use href="#i-coin"/></svg>Coin Calculator</a>
+  </nav>
+ 
+  <main class="home-content">
+    <h1 class="brand">LIRIN</h1>
+    <p class="tagline">Metin2 tools, built for a more precise grind.</p>
+ 
+    <div class="tool-cards" id="tools">
+      <a class="tool-card wide" style="--i:0" href="upgrade-cost">
+        <svg class="ic" aria-hidden="true"><use href="#i-upgrade"/></svg>
+        <h2>Upgrade Cost</h2>
+        <p>Pick a weapon or armour, toggle only the +0 to +9 steps you need, and see the exact materials, pity counts and Yang total.</p>
+        <span class="card-open">Open <span aria-hidden="true">→</span></span>
+      </a>
+      <div class="tool-card is-soon" style="--i:1">
+        <svg class="ic" aria-hidden="true"><use href="#i-special"/></svg>
+        <h2>Special Upgrade Cost</h2>
+        <p>Work out the materials and Yang required for special equipment upgrades.</p>
+        <span class="card-open">Coming soon</span>
       </div>
-      <footer class="site-footer">© 2026 LIRIN · Metin2 Tools</footer>
-    </section>
+      <a class="tool-card" style="--i:2" href="sash">
+        <svg class="ic" aria-hidden="true"><use href="#i-sash"/></svg>
+        <h2>Sash Absorption</h2>
+        <p>Slide the absorption rate from 1% to 25% and see what a weapon’s attack value, attack speed and bonuses turn into.</p>
+        <span class="card-open">Open <span aria-hidden="true">→</span></span>
+      </a>
+      <div class="tool-card is-soon" style="--i:3">
+        <svg class="ic" aria-hidden="true"><use href="#i-metin"/></svg>
+        <h2>Metin Simulator</h2>
+        <p>Pick two metins, set your average DPS and the walk between them, then see what each of them drops and which one is worth the trip.</p>
+        <span class="card-open">Coming soon</span>
+      </div>
+      <a class="tool-card" style="--i:4" href="sample-todo">
+        <svg class="ic" aria-hidden="true"><use href="#i-todo"/></svg>
+        <h2>Sample Todo</h2>
+        <p>Track your progress chapter by chapter and level by level, tick off tasks and add your own as you go.</p>
+        <span class="card-open">Open <span aria-hidden="true">→</span></span>
+      </a>
+      <a class="tool-card wide" style="--i:5" href="coin-calculator">
+        <svg class="ic" aria-hidden="true"><use href="#i-coin"/></svg>
+        <h2>Coin Calculator</h2>
+        <p>List what a coin shop sells with each item’s cost and value, then see everything ranked by value per coin, plus the best way to spend your budget.</p>
+        <span class="card-open">Open <span aria-hidden="true">→</span></span>
+      </a>
+    </div>
+ 
+    <footer class="site-footer">© 2026 LIRIN · Metin2 Tools</footer>
   </main>
-  <script>
-    const navLinks = [...document.querySelectorAll(".nav-item")];
-    const toolCards = [...document.querySelectorAll(".tool-card")];
-
-    function setActiveNavigation(id) {
-      navLinks.forEach((link) => {
-        const active = link.getAttribute("href") === `#${id}`;
-        link.classList.toggle("is-active", active);
-        if (active) link.setAttribute("aria-current", "page");
-        else link.removeAttribute("aria-current");
-      });
-    }
-
-    navLinks.forEach((link) => {
-      link.addEventListener("click", () => setActiveNavigation(link.getAttribute("href").slice(1)));
-    });
-
-    if ("IntersectionObserver" in window) {
-      const cardObserver = new IntersectionObserver((entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible) setActiveNavigation(visible.target.id);
-      }, { rootMargin: "-18% 0px -58% 0px", threshold: [0, 0.2, 0.45, 0.7] });
-      toolCards.forEach((card) => cardObserver.observe(card));
-    }
-
-    toolCards.forEach((card) => {
-      card.addEventListener("pointermove", (event) => {
-        const bounds = card.getBoundingClientRect();
-        card.style.setProperty("--pointer-x", `${event.clientX - bounds.left}px`);
-        card.style.setProperty("--pointer-y", `${event.clientY - bounds.top}px`);
-      });
-    });
-  </script>
+</div>
+<script>
+document.querySelectorAll("a.tool-card").forEach(card=>{
+  card.addEventListener("pointermove",e=>{
+    const b=card.getBoundingClientRect();
+    card.style.setProperty("--x",(e.clientX-b.left)+"px");
+    card.style.setProperty("--y",(e.clientY-b.top)+"px");
+  });
+});
+</script>
 </body>
 </html>
+ 
