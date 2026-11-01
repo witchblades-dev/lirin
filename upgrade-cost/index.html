@@ -765,7 +765,7 @@ const ini=n=>n.split(' ').filter(w=>/^[A-Z]/.test(w)).map(w=>w[0]).join('').slic
 
 
 
-const IMGBASE=(()=>{const u=location.href.split(/[?#]/)[0];return(/\/$|\.[a-z0-9]+$/i.test(u)?u.replace(/[^\/]*$/,''):u+'/')+'image/'})();
+const IMGBASE = new URL('images/', document.baseURI).href;
 
 
 
@@ -805,8 +805,16 @@ const img = (n, c) => {
 
   if (iconFile === 'money') return '';
 
+ const img = (n, c) => {
+  const iconFile = PIC[n];
+
+  if (!iconFile || iconFile === 'money') return '';
+
   const url = iconFile.startsWith('images/')
-    ? IMGBASE + encodeURI(iconFile.substring(7))
+    ? new URL(
+        iconFile.substring(7).split('/').map(encodeURIComponent).join('/'),
+        IMGBASE
+      ).href
     : IC + iconFile;
 
   return `<img class="${c}" src="${url}" alt="${n}"
