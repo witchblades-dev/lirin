@@ -183,9 +183,20 @@ const MAT={onyx:'Onyx Crystal',ash:"Demon's Ashes",claw:'Dragon Claw',pamphlet:'
   pearl:'Shimmering Multicolor Pearl',scales:'Dragon Scales',wing:"Blue Dragon's Wing",thread:'Thin Thread',yarn:'Gray Yarn',
   pattern:'Sewing Pattern',wubba:'Wubba Insignia',flame:'Flame Stone',ice:'Ice Flame Stone',
   ruby:'Ruby Crystal',fur:'Monkey Fur',legs:'Spider Legs',white:'White Pearl',symbol:"Beast's Symbol",blue:'Blue Pearl',
-  blood:'Blood-Red Pearl',aquatic:'Aquatic Crystal'};
+  blood:'Blood-Red Pearl',aquatic:'Aquatic Crystal',amethyst:'Amethyst Crystal',clam:'Clam'};
 const ITEMS=[
-  {c:5,n:"Heaven's Tear Bracelet"},
+  {c:5,n:"Heaven's Tear Bracelet",fails:{7:1,8:1,9:2},steps:[
+    [0],                                      // Craft
+    [250e3],                                  // +1
+    [250e3],                                  // +2
+    [250e3],                                  // +3
+    [250e3],                                  // +4
+    [1e6,'amethyst',2,'clam',1],              // +5
+    [1e6,'amethyst',2,'clam',2],              // +6
+    [2.5e6,'ruby',2,'white',1,'fur',1],       // +7
+    [2.5e6,'ruby',2,'blue',1,'legs',1],       // +8
+    [5e6,'ruby',4,'blood',1,'symbol',1]       // +9
+]},
   {c:5,n:'Soul Crystal Bracelet',fails:{5:1,6:1,7:2,8:2,9:3},steps:[
     [0],                                                         // Craft
     [10e6,'ruby',5,'fur',2,'legs',1],                            // +1
