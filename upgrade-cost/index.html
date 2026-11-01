@@ -778,24 +778,24 @@ const PIC = {
   'Soul Crystal Bracelet': '14220.png',
   'Onyx Bracelet': 'images/Onyx_Bracelet.webp',
   'Onyx Crystal': 'images/Onyx_Crystal.webp',
-
+  
+  'Yang': 'money',
   'Demon\'s Ashes': '30196.png',
   'Dragon Claw': '71129.png',
   'Fencing Pamphlet': '70031.png',
   'Mithril': '30610.png',
 
-  'Azrael\'s Dye': '',
-  'Multicolor Shimmering Pearl': '',
-  'Dragon Scales': '',
-  'Blue Dragon Wing': '',
-  'Thin Thread': '',
-  'Gray Yarn': '',
-  'Sewing Pattern': '',
-  'Wubba Insignia': '',
-  'Flame Stone': '',
-  'Ice Flame Stone': ''
+  'Azrael\'s Dye': 'images/Azrael\'s Dye.webp',
+  'Multicolor Shimmering Pearl': 'images/Multicolor Shimmering Pearl.webp',
+  'Dragon Scales': '71123.png',
+  'Blue Dragon Wing': 'images/Blue Dragon Wing.webp',
+  'Thin Thread': 'images/Thin Thread.webp',
+  'Gray Yarn': 'images/Gray Yarn.webp',
+  'Sewing Pattern': '30600.png',
+  'Wubba Insignia': 'images/Wubba Insignia.webp',
+  'Flame Stone': '30524.png',
+  'Ice Flame Stone': '30525.png'
 };
-
 
 
 const img = (n, c) => {
@@ -807,9 +807,9 @@ const img = (n, c) => {
     'Onyx Crystal'
   ];
 
-  const url = localImages.includes(n)
-    ? iconFile
-    : IC + iconFile;
+  const url = iconFile.startsWith('images/')
+  ? iconFile
+  : IC + iconFile;
 
   return `<img class="${c}" src="${url}" alt="${n}"
     referrerpolicy="no-referrer"
