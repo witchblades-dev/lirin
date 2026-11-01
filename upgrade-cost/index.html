@@ -695,7 +695,11 @@ const CATS=['WEAPONS','ARMOURS','HELMETS','SHIELDS','EARRINGS','BRACELET','NECKL
 const LIST=[[], [], [], [], [], ['Heaven\'s Tear Bracelet', 'Soul Crystal Bracelet', 'Onyx Bracelet'], [], [], []];
 
 const MAT = {
-  1: 'Onyx Crystal'
+  1: 'Onyx Crystal',
+  2: "Demon's Ashes",
+  3: 'Dragon Claw',
+  4: 'Fencing Pamphlet',
+  5: 'Mithril'
 };
 
 const DATA = {};
@@ -705,16 +709,16 @@ const DATA = {};
 const E = () => ({ m: {}, y: 0 });
 
 DATA['Onyx Bracelet'] = [
-  { m: {}, y: 0 },          // Craft
-  { m: { 1: 15 }, y: 0 },   // +1
-  { m: { 1: 15 }, y: 0 },   // +2
-  { m: { 1: 15 }, y: 0 },   // +3
-  { m: { 1: 25 }, y: 0 },   // +4
-  { m: { 1: 25 }, y: 0 },   // +5
-  { m: { 1: 25 }, y: 0 },   // +6
-  { m: { 1: 30 }, y: 0 },   // +7
-  { m: { 1: 30 }, y: 0 },   // +8
-  { m: { 1: 30 }, y: 0 }    // +9
+  { m: {}, y: 0 },                         // Craft
+  { m: { 1: 15, 2: 3 }, y: 0 },            // +1
+  { m: { 1: 15, 3: 3 }, y: 0 },            // +2
+  { m: { 1: 15, 4: 1 }, y: 0 },            // +3
+  { m: { 1: 25, 5: 5 }, y: 0 },            // +4
+  { m: { 1: 25, 5: 5 }, y: 0 },            // +5
+  { m: { 1: 25, 5: 5 }, y: 0 },            // +6
+  { m: { 1: 30, 5: 7 }, y: 0 },            // +7
+  { m: { 1: 30, 5: 7 }, y: 0 },            // +8
+  { m: { 1: 30, 5: 7 }, y: 0 }             // +9
 ];
 
 
@@ -763,7 +767,12 @@ const PIC = {
   'Heaven\'s Tear Bracelet': '14200.png',
   'Soul Crystal Bracelet': '14220.png',
   'Onyx Bracelet': 'images/Onyx_Bracelet.webp',
-  'Onyx Crystal': 'images/Onyx_Crystal.webp'
+  
+  'Onyx Crystal': 'images/Onyx_Crystal.webp',
+  'Demon\'s Ashes': '30196.png',
+  'Dragon Claw': '71129.png',
+  'Fencing Pamphlet': '70031.png',
+  'Mithril': '30610.png'
 };
 
 
