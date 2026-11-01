@@ -191,7 +191,7 @@ const MAT={onyx:'Onyx Crystal',ash:"Demon's Ashes",claw:'Dragon Claw',pamphlet:'
   toughstraps:'Tough Straps',linenbelt:'Linen Belt',multicolorpearl:'Multicolored Pearl',firebirdshoes:'Fire Bird Shoes',
   soulcrystalnecklace:'Soul Crystal Necklace',heavenstearnecklace:"Heaven's Tear Necklace",soulcrystalbracelet:'Soul Crystal Bracelet',
   heavenstearbracelet:"Heaven's Tear Bracelet",soulcrystalearrings:'Soul Crystal Earrings', amethystearrings:'Amethyst Earrings',
-  falconshield:'Falcon Shield',blackroundshield:'Black Round Shield'};
+  falconshield:'Falcon Shield',blackroundshield:'Black Round Shield',ghostmasksallet:'Ghost Mask Sallet'};
 const ITEMS=[
   {c:0,n:'Battle Sword',fails:{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},steps:[
     [0],                                      // Craft
@@ -319,7 +319,7 @@ const ITEMS=[
     [200e6,'armourdesign',1,'dragonwings',2,'reddragonhorn',3,'golddye',2] // +9
   ]},
   {c:2,n:'Ghost Mask Sallet',fails:{},steps:[
-    [0],                                  // Craft
+    [5e6], // Craft
     [100e3],                              // +1
     [100e3],                              // +2
     [100e3],                              // +3
@@ -331,7 +331,7 @@ const ITEMS=[
     [1e6,'amethyst',3,'clam',3]           // +9
   ]},
   {c:2,n:'Fear Mask',fails:{7:1,8:1,9:2},steps:[
-    [0],                                           // Craft
+    [25e6,'ghostmasksallet',1,'fur',6,'legs',6,'symbol',2,'amethyst',50,'emerald',25,'white',2,'blue',2,'blood',2,'gaya',25], // Craft
     [250e3],                                       // +1
     [250e3],                                       // +2
     [250e3],                                       // +3
@@ -343,16 +343,16 @@ const ITEMS=[
     [5e6,'ruby',4,'blood',1,'symbol',1]            // +9
   ]},
   {c:2,n:'War Master Helmet',fails:{5:2,6:2,7:3,8:4,9:5},steps:[
-    [0],                                                        // Craft
-    [25e6,'aquatic',5,'ash',3,'dye',2],                        // +1
-    [25e6,'aquatic',5,'ash',4,'dye',2],                        // +2
-    [25e6,'aquatic',5,'claw',4,'scales',4],                    // +3
-    [25e6,'aquatic',5,'wing',1,'pamphlet',1],                  // +4
-    [30e6,'onyx',25,'thread',6,'pearl',3],                     // +5
-    [30e6,'onyx',25,'pearl',3,'yarn',2],                       // +6
-    [40e6,'onyx',30,'mithril',7,'pattern',1,'wubba',1],        // +7
-    [40e6,'onyx',30,'mithril',7,'flame',2,'ice',2],            // +8
-    [50e6,'onyx',30,'mithril',7,'flame',3,'ice',3]             // +9
+    [150e6,'fearmask',1,'aquatic',50,'ruby',150,'multicolorpearl',5,'pamphlet',2,'ash',6,'dye',3,'scales',5,'claw',5,'wing',2,'gaya',100], // Craft
+    [25e6,'aquatic',5,'ash',3,'dye',2], // +1
+    [25e6,'aquatic',5,'ash',4,'dye',2], // +2
+    [25e6,'aquatic',5,'claw',4,'scales',4], // +3
+    [25e6,'aquatic',5,'pamphlet',1,'wing',1], // +4
+    [30e6,'onyx',25,'thread',6,'pearl',3], // +5
+    [30e6,'onyx',25,'yarn',2,'pearl',3], // +6
+    [40e6,'onyx',30,'mithril',7,'wubba',1,'pattern',1], // +7
+    [40e6,'onyx',30,'mithril',7,'flame',2,'ice',2], // +8
+    [50e6,'onyx',30,'mithril',7,'flame',3,'ice',3] // +9
   ]},
   {c:2,n:'Dragon Steel Helm',fails:{4:4,5:4,6:5,7:6,8:7,9:8},steps:[
     [5e9,'warmasterhelmet',1,'armourdesign',5,'reddragonscale',5,'reddragonhorn',5,'dragonwings',5,'golddye',3,'titanium',10,'agate',10,'moonstone',10,'garnet',250,'gaya',250], // Craft
