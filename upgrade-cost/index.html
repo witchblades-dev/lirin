@@ -176,7 +176,7 @@ const fmt=n=>{const a=Math.abs(n),u=a>=1e9?[1e9,'kkk']:a>=1e6?[1e6,'kk']:a>=1e3?
 const full=n=>Math.round(n).toLocaleString('de-DE');
 const money=n=>full(n)+' ('+fmt(n)+')';
 const ini=n=>n.split(' ').filter(w=>/^[A-Z]/.test(w)).map(w=>w[0]).join('').slice(0,2);
-/* pictures live in upgrade-cost/images/<name>.png ; a missing file is simply skipped */
+/* pictures live in upgrade-cost/image/<name>.png ; a missing file is simply skipped */
 const img=(n,c)=>`<img class="${c}" src="image/${encodeURIComponent(n)}.png" alt="" onerror="this.remove()" onload="this.parentNode.classList.add('hi')">`;
 
 /* ===== state ===== */
