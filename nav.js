@@ -2,16 +2,16 @@
    Every page has <nav id="sidebar"></nav> followed by <script src="/nav.js"></script>.
    To add a page or change the order, edit only the NAV list below. */
 (function(){
-  const NAV=[
-    {href:'/',                 icon:'home',    label:'Home'},
-    {href:'/upgrade-cost/',    icon:'upgrade', label:'Upgrade Cost'},
-    {soon:1,                    icon:'special', label:'Special Upgrade Cost'},
-    {href:'/sash/',            icon:'sash',    label:'Sash Absorption'},
-    {soon:1,                    icon:'metin',   label:'Metin Simulator'},
-    {href:'/sample-todo/',     icon:'todo',    label:'Sample Todo'},
-    {href:'/coin-calculator/', icon:'coin',    label:'Coin Calculator'},
-    {href:'/gaya-calculator/', icon:'gaya',    label:'Gaya Calculator'}
-  ];
+const NAV=[
+  {href:'/',                 icon:'home',    label:'Home'},
+  {href:'/upgrade-cost/',    icon:'upgrade', label:'Upgrade Cost'},
+  {soon:1,                    icon:'special', label:'Special Upgrade Cost'},
+  {soon:1,                    icon:'sash',    label:'Sash Absorption'},
+  {soon:1,                    icon:'metin',   label:'Metin Simulator'},
+  {soon:1,                    icon:'todo',    label:'Sample Todo'},
+  {soon:1,                    icon:'coin',    label:'Coin Calculator'},
+  {href:'/gaya-calculator/', icon:'gaya',    label:'Gaya Calculator'}
+];
   const ICONS={
     home:'<path d="M4 11 12 4l8 7"/><path d="M6 10v10h12V10"/>',
     upgrade:'<path d="M12 3v18M5 10l7-7 7 7M5 15h14"/>',
