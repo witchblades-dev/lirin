@@ -173,7 +173,7 @@ summary:hover{background:#2a2c34}
 /* ===== DATA — add more items here: DATA['Item name']=[ten steps +0..+9, each {m:{materialId:count},y:yangFee}] ===== */
 const CATS=['WEAPONS','ARMOURS','HELMETS','SHIELDS','PVM EQ','PVP EQ','BELTS','SOME CRAFTS','SASH','ANTIQUE RUNE'];
 const NAMES='Magma Storm Armour|Hydro Armour|Dragon Pulse Armour|Dragonfire Sword|Cataclysmic Sword|Biting Cold|Solaris|Shield of Light|Angel Shield|Kunzite Helmet|Pyrite Helmet|Aquamarine Helmet|Kunzite Shoes|Pyrite Shoes|Aquamarine Shoes|Kunzite Bracelet|Pyrite Bracelet|Aquamarine Bracelet|Kunzite Earrings|Pyrite Earrings|Aquamarine Earrings|Kunzite Necklace|Pyrite Necklace|Aquamarine Necklace'.split('|');
-const LIST=[['Battle Sword','Soul Stealing Blade','Poison Sword','Triton Sword','Rune Sword'],['Dragon God Armour','Black Steel Armour','Blue Steel Armour','Devil\'s Horn Armour','Aurora Armour','Magma Glow Armour'],NAMES,[],[],[],[],[],[],[]];
+const const LIST=[['Battle Sword','Soul Stealing Blade','Poison Sword','Triton Sword','Rune Sword'],['Dragon God Armour','Black Steel Armour','Blue Steel Armour','Devil\'s Horn Armour','Aurora Armour','Magma Glow Armour'],[],[],NAMES,[],[],[],[],[]];
 const MAT={fd:'Fairy Dust',es:'Elite Soul',mp:'Midnight Potion',hb:'Hoof of the Baphomet',au:'Artifact of the Undead',fs:'Fusion Shard',bc:'Bottled Cloud',ac:'Amethyst Cristal',cl:'Clam'};
 const DATA={'Magma Storm Armour':[{m:{fd:10,es:100,mp:50},y:25000},...Array.from({length:9},(_,i)=>{const n=i+2;return{m:{hb:n,au:10*n,fs:5*n,bc:3*n},y:0}})]};
 /* Battle Sword: +0..+4 empty, +5/+6 = Amethyst Cristal + Clam (counts not set yet: use "edit material count mode") */
