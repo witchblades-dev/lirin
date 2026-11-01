@@ -53,6 +53,7 @@ h1{margin:0;text-align:center;font-family:var(--serif);font-size:clamp(2rem,4.4v
 .tile.on{border-color:var(--gold);color:#f6e9c9;background:linear-gradient(180deg,rgba(199,167,107,.2),rgba(199,167,107,.05));box-shadow:0 0 0 1px var(--gold),0 14px 34px rgba(199,167,107,.16)}
 .pic{--u:38px;position:relative;display:grid;place-items:center;width:100%;height:calc(var(--u)*2 + 22px);border:1px solid rgba(255,255,255,.05);border-radius:10px;background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.08),rgba(0,0,0,.2))}
 .pic img{height:calc(var(--u)*var(--s,1));width:auto;max-width:84%;object-fit:contain;filter:drop-shadow(0 6px 8px rgba(0,0,0,.55));transition:transform .25s,opacity .15s}
+.tn{display:flex;align-items:center;justify-content:center;min-height:2.6em}
 .pic.sq img{width:var(--u);height:var(--u);max-width:none}
 .tile:hover .pic img{transform:scale(1.08)}
 .ph{position:absolute;font-family:var(--serif);font-size:2rem;color:#5d5a52}
@@ -284,7 +285,7 @@ const P={
   tabs:()=>CATS.map((c,i)=>`<button class="tab${i===S.cat?' on':''}" data-a="cat" data-v="${i}" aria-pressed="${i===S.cat}">${c}</button>`).join(''),
   items:()=>{
     const L=ITEMS.filter(x=>x.c===S.cat);
-    return L.length?`<div class="tiles">${L.map(x=>`<button class="tile${x.n===S.item?' on':''}" data-a="item" data-v="${esc(x.n)}" aria-pressed="${x.n===S.item}"><i class="rc"></i><span class="pic${miss(x.n)}${SQUARE.includes(x.c)?' sq':''}" style="--s:${Math.min(slotsOf(x),2)}"><span class="ph">${ini(x.n)}</span>${pic(x.n,'')}</span>${esc(x.n)}</button>`).join('')}</div>`:'<p class="empty">No items in this category yet.</p>';
+    return L.length?`<div class="tiles">${L.map(x=>`<button class="tile${x.n===S.item?' on':''}" data-a="item" data-v="${esc(x.n)}" aria-pressed="${x.n===S.item}"><i class="rc"></i><span class="pic${miss(x.n)}${SQUARE.includes(x.c)?' sq':''}" style="--s:${Math.min(slotsOf(x),2)}"><span class="ph">${ini(x.n)}</span>${pic(x.n,'')}</span><span class="tn">${esc(x.n)}</span></button>`).join('')}</div>`:'<p class="empty">No items in this category yet.</p>';
   },
   steps:()=>{
     const it=cur(),allOn=STEPS.every(i=>!isOff(it,i));
