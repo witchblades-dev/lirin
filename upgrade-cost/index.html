@@ -344,11 +344,26 @@ summary:hover{background:#2a2c34}
 
 /* ===== DATA — add more items here: DATA['Item name']=[ten steps +0..+9, each {m:{materialId:count},y:yangFee}] ===== */
 
-const CATS=['WEAPONS','PVM EQ','PVP EQ','BELTS','SOME CRAFTS','SASH','ANTIQUE RUNE'];
+const CATS=['WEAPONS','ARMOURS','HELMETS','SHIELDS','EARRINGS','BRACELET','NECKLACE','SHOES','BELTS','PVM EQ','PVP EQ','SOME CRAFTS','SASH','ANTIQUE RUNE'];
 
 const NAMES='Magma Storm Armour|Hydro Armour|Dragon Pulse Armour|Dragonfire Sword|Cataclysmic Sword|Biting Cold|Solaris|Shield of Light|Angel Shield|Kunzite Helmet|Pyrite Helmet|Aquamarine Helmet|Kunzite Shoes|Pyrite Shoes|Aquamarine Shoes|Kunzite Bracelet|Pyrite Bracelet|Aquamarine Bracelet|Kunzite Earrings|Pyrite Earrings|Aquamarine Earrings|Kunzite Necklace|Pyrite Necklace|Aquamarine Necklace'.split('|');
 
-const LIST=[['Battle Sword','Soul Stealing Blade','Poison Sword','Triton Sword','Rune Sword'],NAMES,[],[],[],[],[]];
+const LIST=[
+  ['Battle Sword','Soul Stealing Blade','Poison Sword','Triton Sword','Rune Sword'], // WEAPONS
+  [], // ARMOURS (goală)
+  [], // HELMETS (goală)
+  [], // SHIELDS (goală)
+  [], // EARRINGS (goală)
+  [], // BRACELET (goală)
+  [], // NECKLACE (goală)
+  [], // SHOES (goală)
+  [], // BELTS (goală)
+  NAMES, // PVM EQ (fostul index 1)
+  [],    // PVP EQ
+  [],    // SOME CRAFTS
+  [],    // SASH
+  []     // ANTIQUE RUNE
+];
 
 const MAT={fd:'Fairy Dust',es:'Elite Soul',mp:'Midnight Potion',hb:'Hoof of the Baphomet',au:'Artifact of the Undead',fs:'Fusion Shard',bc:'Bottled Cloud',ac:'Amethyst Cristal',cl:'Clam'};
 
