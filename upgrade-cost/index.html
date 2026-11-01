@@ -183,7 +183,7 @@ const MAT={onyx:'Onyx Crystal',ash:"Demon's Ashes",claw:'Dragon Claw',pamphlet:'
   pearl:'Shimmering Multicolor Pearl',scales:'Dragon Scales',wing:"Blue Dragon's Wing",thread:'Thin Thread',yarn:'Gray Yarn',
   pattern:'Sewing Pattern',wubba:'Wubba Insignia',flame:'Flame Stone',ice:'Ice Flame Stone',
   ruby:'Ruby Crystal',fur:'Monkey Fur',legs:'Spider Legs',white:'White Pearl',symbol:"Beast's Symbol",blue:'Blue Pearl',
-  blood:'Blood-Red Pearl',aquatic:'Aquatic Crystal',amethyst:'Amethyst Crystal',clam:'Clam', talismandeath:'Talisman of Death'};
+  blood:'Blood-Red Pearl',aquatic:'Aquatic Crystal',amethyst:'Amethyst Crystal',clam:'Clam', talismandeath:'Talisman of Death',emerald:'Emerald Crystal'};
 const ITEMS=[
   {c:0,n:'Battle Sword',fails:{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},steps:[
     [0],                                      // Craft
@@ -250,7 +250,19 @@ const ITEMS=[
     [50e6,'onyx',30,'mithril',5,'flame',2,'ice',2]            // +9
   ]
 },
-  {c:2,n:'Ghost Mask Sallet'},
+  {c:2,n:'Ghost Mask Sallet',fails:{},steps:[
+    [0],                                  // Craft
+    [100e3],                              // +1
+    [100e3],                              // +2
+    [100e3],                              // +3
+    [100e3],                              // +4
+    [100e3,'emerald',1],                  // +5
+    [200e3,'emerald',1],                  // +6
+    [300e3,'amethyst',1],                 // +7
+    [500e3,'amethyst',2,'clam',2],        // +8
+    [1e6,'amethyst',3,'clam',3]           // +9
+  ]
+},
   {c:2,n:'Fear Mask'},
   {c:2,n:'War Master Helmet'},
   {c:2,n:'Dragon Steel Helm'},
