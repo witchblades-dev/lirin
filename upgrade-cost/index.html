@@ -83,6 +83,17 @@ summary:hover{background:#2a2c34}
 .mat.hi i{display:none}
 .mg{position:absolute;inset:4px;width:calc(100% - 8px);height:calc(100% - 8px);object-fit:contain}
 .ii{width:26px;height:26px;object-fit:contain;flex:none}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,190px));justify-content:center;gap:12px;width:100%}
+.tile{position:relative;display:flex;flex-direction:column;align-items:center;gap:12px;padding:34px 10px 16px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,#1d1e24,#16171c);color:#d6d3cc;font-size:.9rem;font-weight:600;line-height:1.3;text-align:center;cursor:pointer;transition:transform .2s,border-color .2s,background .2s,box-shadow .2s,color .2s}
+.tile .rc{position:absolute;top:12px;left:12px;width:18px;height:18px}
+.tile .rc::after{left:5px;top:2px;width:4px;height:8px}
+.pic{position:relative;display:grid;place-items:center;width:100%;height:118px}
+.pic img{height:100%;width:auto;max-width:100%;object-fit:contain;filter:drop-shadow(0 8px 12px rgba(0,0,0,.55));transition:transform .25s}
+.ph{position:absolute;font-family:var(--serif);font-size:2rem;color:#5d5a52}
+.pic.hi .ph{display:none}
+.tile:hover{transform:translateY(-3px);border-color:rgba(199,167,107,.45)}
+.tile:hover .pic img{transform:scale(1.08)}
+.tile.on{border-color:var(--gold);color:#f6e9c9;background:linear-gradient(180deg,rgba(199,167,107,.2),rgba(199,167,107,.05));box-shadow:0 0 0 1px var(--gold),0 14px 34px rgba(199,167,107,.16)}
 .mat.y{border-color:rgba(199,167,107,.45)}
 .mat b{position:absolute;right:-8px;bottom:-8px;min-width:21px;padding:1px 5px;border-radius:10px;background:#1f9d4c;color:#fff;font-size:.66rem;font-weight:600;text-align:center}
 .ed{display:inline-flex;align-items:center;gap:6px;color:var(--gold);font-size:.75rem;font-weight:600}
@@ -177,7 +188,12 @@ const full=n=>Math.round(n).toLocaleString('de-DE');
 const money=n=>full(n)+' ('+fmt(n)+')';
 const ini=n=>n.split(' ').filter(w=>/^[A-Z]/.test(w)).map(w=>w[0]).join('').slice(0,2);
 /* pictures live in upgrade-cost/image/<name>.png ; a missing file is simply skipped */
-const img=(n,c)=>`<img class="${c}" src="image/${encodeURIComponent(n)}.png" alt="" onerror="this.remove()" onload="this.parentNode.classList.add('hi')">`;
+const IMGBASE=(()=>{const u=location.href.split(/[?#]/)[0];return(/\/$|\.[a-z0-9]+$/i.test(u)?u.replace(/[^\/]*$/,''):u+'/')+'image/'})();
+const IC='https://metin2cms.cf/items/img/icons/';
+const PIC={'Battle Sword':IC+'00140.png','Soul Stealing Blade':IC+'03150.png','Poison Sword':IC+'00180.png','Triton Sword':IC+'00270.png','Rune Sword':IC+'00460.png'};
+const img=(n,c)=>{const loc=IMGBASE+encodeURIComponent(n)+'.png',ext=PIC[n];return `<img class="${c}" src="${ext||loc}"${ext?` data-alt="${loc}"`:''} alt="" referrerpolicy="no-referrer" onerror="imgErr(this)" onload="imgLoad(this)">`};
+function imgErr(i){if(i.dataset.alt){i.src=i.dataset.alt;delete i.dataset.alt}else{console.warn('Image not found:',i.src);i.remove()}}
+function imgLoad(i){i.parentNode.classList.add('hi');if(i.naturalHeight&&i.naturalHeight<=48)i.style.imageRendering='pixelated'}
 
 /* ===== state ===== */
 const KEY='lirinUpgradeV1';
@@ -209,12 +225,21 @@ function paint(){
   for(const k in R.c){const u=$('u-'+k),t=$('t-'+k);if(u){u.textContent=full(S.price[k]||0);t.textContent=full(R.c[k]*(S.price[k]||0))}}
 }
 
+function itemsHtml(){
+  const L=LIST[S.cat];
+  if(!L.length)return'<p class="empty">No items in this category yet.</p>';
+  const tiles=L.some(n=>PIC[n]);
+  const btn=n=>{const on=n===S.item,at=`data-a="item" data-v="${n}" aria-pressed="${on}"`;
+    return tiles?`<button class="tile${on?' on':''}" ${at}><i class="rc"></i><span class="pic"><span class="ph">${ini(n)}</span>${img(n,'tp')}</span>${n}</button>`
+    :`<button class="pill${on?' on':''}" ${at}><i class="rc"></i>${img(n,'ii')}${n}</button>`};
+  return tiles?`<div class="tiles">${L.map(btn).join('')}</div>`:L.map(btn).join('');
+}
 function render(){
   const R=calc(),idx=[...Array(10).keys()],allOn=idx.every(i=>!S.off[i]),data=DATA[S.item];
   let h=`<h1>UPGRADE COST CALCULATOR</h1><div class="line"></div>
   <p class="note">Note: In some items, the required lagers are not calculated.</p>
   <div class="tabs">${CATS.map((c,i)=>`<button class="tab${i===S.cat?' on':''}" data-a="cat" data-v="${i}" aria-pressed="${i===S.cat}">${c}</button>`).join('')}</div>
-  <div class="items"><div class="lbl">Choose item</div>${LIST[S.cat].length?LIST[S.cat].map(n=>`<button class="pill${n===S.item?' on':''}" data-a="item" data-v="${n}" aria-pressed="${n===S.item}"><i class="rc"></i>${img(n,'ii')}${n}</button>`).join(''):'<p class="empty">No items in this category yet.</p>'}</div>
+  <div class="items"><div class="lbl">Choose item</div>${itemsHtml()}</div>
   <div class="steps"><button class="sp all${allOn?' on':''}" data-a="all"><i class="rc"></i>${allOn?'Click to Deactivate All':'Click to Activate All'}</button>${idx.map(i=>`<button class="sp${S.off[i]?'':' on'}" data-a="st" data-v="${i}" aria-pressed="${!S.off[i]}"><i class="rc"></i>+${i}</button>`).join('')}</div>
   <details class="panel" data-p="d"${S.o.d?' open':''}><summary>Details</summary><div class="dc">
   <div class="tr th"><span>Name</span><span>Materials</span><span class="fl">Fail Time(s)</span></div>`;
