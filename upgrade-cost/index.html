@@ -238,8 +238,8 @@ const PIC = {
   'Gray Yarn': 'images/Gray_Yarn.webp',
   'Sewing Pattern': '30600.png',
   'Wubba Insignia': 'images/Wubba_Insignia.webp',
-  'Flame Stone': '30524.png',
-  'Ice Flame Stone': '30525.png'
+  'Flame Stone': '31006.png',
+  'Ice Flame Stone': '31005.png'
 };
 
 const img = (n, c) => {
@@ -309,80 +309,3 @@ function render(){
   <div class="tabs">${CATS.map((c,i)=>`<button class="tab${i===S.cat?' on':''}" data-a="cat" data-v="${i}" aria-pressed="${i===S.cat}">${c}</button>`).join('')}</div>
   <div class="items"><div class="lbl">Choose item</div>${itemsHtml()}</div>
   <div class="steps"><button class="sp all${allOn?' on':''}" data-a="all"><i class="rc"></i>${allOn?'Click to Deactivate All':'Click to Activate All'}</button>${idx.map(i=>`<button class="sp${S.off[i]?'':' on'}" data-a="st" data-v="${i}" aria-pressed="${!S.off[i]}"><i class="rc"></i>+${i}</button>`).join('')}</div>
-  <details class="panel" data-p="d"${S.o.d?' open':''}><summary>Details</summary><div class="dc">
-  <div class="tr th"><span>Name</span><span>Materials</span><span class="fl">Fail Time(s)</span></div>`;
-  if(!data)h+='<p class="empty">No upgrade data for this item yet.</p>';
-  else idx.forEach(i=>{
-    const s=step(i),f=S.fails[S.item+':'+i]||0;
-    let body='';
-    if(S.edit){
-      body=Object.keys(s.m).map(k=>`<label class="ed">${ini(MAT[k])}<input data-f="${i}:${k}" value="${s.m[k]}" inputmode="decimal" aria-label="${MAT[k]}"></label>`).join('');
-      if(s.base.y>0)body+=`<label class="ed">Yang<input data-f="${i}:y" value="${fmt(s.y)}" inputmode="decimal" aria-label="Yang fee"></label>`;
-    }else{
-      body=Object.keys(s.m).map(k=>`<span class="mat" title="${MAT[k]}"><i>${ini(MAT[k])}</i>${img(MAT[k],'mg')}${s.m[k]>0?`<b>${s.m[k]}</b>`:''}</span>`).join('');
-      if(s.y>0)body+=`<span class="mat y" title="Yang">${img('Yang','mg')}<b>${fmt(s.y)}</b></span>`;
-    }
-    h+=`<div class="tr${S.off[i]?' off':''}"><span class="nm">${S.item}<small>${i === 0 ? 'Craft' : '+' + i}</small></span><span class="mats">${body}</span><span class="fl">${(S.item === 'Onyx Bracelet' ? i >= 5 : i >= 7)?`<div class="fail"><button data-a="fm" data-v="${i}" aria-label="Fewer fails">−</button><b>${f}</b><button data-a="fp" data-v="${i}" aria-label="More fails">+</button></div><small>Write a fail time(s)</small>`:''}</span></div>`;
-  });
-  h+=`</div></details>
-  <details class="panel" data-p="p"${S.o.p?' open':''}><summary>Material Prices</summary><div class="dc"><div class="pbody">
-  <button class="btn" data-a="edit">${S.edit?'Close':'Open'} edit material count mode</button>`;
-  Object.keys(R.c).forEach(k=>{
-    h+=`<div class="prow"><div class="pin"><label><input data-pr="${k}" inputmode="decimal" placeholder="Write the Unit Price" value="${S.price[k]?fmt(S.price[k]):''}" aria-label="Unit price of ${MAT[k]}"><em>Yang</em></label><div class="pn">${img(MAT[k],'mi')}${R.c[k]?R.c[k]+'x ':''}${MAT[k]}</div></div>
-    <div class="pv"><div class="u">Unit : <span id="u-${k}">${full(S.price[k]||0)}</span></div><div class="t">Total : <span id="t-${k}">${full(R.c[k]*(S.price[k]||0))}</span> Lager</div></div></div>`;
-  });
-  if(!Object.keys(R.c).length)h+='<p class="empty">No materials for the selected steps.</p>';
-  h+='</div></div></details>';
-  $('app').innerHTML=h;paint();
-}
-
-document.addEventListener('click',e=>{
-  const el=e.target.closest('[data-a]');if(!el)return;
-  const a=el.dataset.a,v=el.dataset.v,k=S.item+':'+v;
-  if(a==='cat'){S.cat=+v;S.item=LIST[S.cat][0]||null}
-  else if(a==='item')S.item=v;
-  else if(a==='all'){const on=[...Array(10).keys()].every(i=>!S.off[i]);S.off={};if(on)for(let i=0;i<10;i++)S.off[i]=1}
-  else if(a==='st'){if(S.off[v])delete S.off[v];else S.off[v]=1}
-  else if(a==='fm')S.fails[k]=Math.max(0,(S.fails[k]||0)-1);
-  else if(a==='fp')S.fails[k]=Math.min(MAX_FAILS[S.item]?.[+v] ?? 99,(S.fails[k]||0)+1);
-  else if(a==='edit')S.edit=!S.edit;
-  save();render();
-});
-
-document.addEventListener('input',e=>{
-  const k=e.target.dataset&&e.target.dataset.pr;if(!k)return;
-  const t=e.target.value.trim(),v=t?parseMoney(t):0;
-  if(v===null)return;
-  S.price[k]=v;save();paint();
-});
-
-document.addEventListener('change',e=>{
-  const f=e.target.dataset&&e.target.dataset.f;if(!f)return;
-  const [i,m]=f.split(':'),key=S.item+':'+i+':'+m,v=parseMoney(e.target.value);
-  if(v===null)delete S.ov[key];else S.ov[key]=v;
-  save();render();
-});
-
-document.addEventListener('toggle',e=>{
-  const p=e.target.dataset&&e.target.dataset.p;
-  if(p){S.o[p]=e.target.open?1:0;save()}
-},true);
-
-document.addEventListener('click',e=>{
-  const sm=e.target.closest('summary');if(!sm)return;
-  e.preventDefault();
-  const d=sm.parentElement,c=d.querySelector('.dc'),opening=!d.open||d.dataset.st==='closed';
-  const h0=d.open?c.offsetHeight:0,o0=d.open?+getComputedStyle(c).opacity:0;
-  if(d._a)d._a.cancel();
-  d.dataset.st=opening?'open':'closed';
-  d.open=true;
-  const t=matchMedia('(prefers-reduced-motion: reduce)').matches?1:opening?320:220;
-  const a=c.animate({height:[h0+'px',(opening?c.scrollHeight:0)+'px'],opacity:[o0,opening?1:0]},{duration:t,easing:opening?'cubic-bezier(.2,.8,.2,1)':'cubic-bezier(.4,0,.6,1)',fill:'forwards'});
-  d._a=a;
-  a.onfinish=()=>{if(!opening)d.open=false;a.cancel();if(d._a===a)d._a=null};
-});
-
-render();
-</script>
-</body>
-</html>
