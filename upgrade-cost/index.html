@@ -188,7 +188,8 @@ const MAT={onyx:'Onyx Crystal',ash:"Demon's Ashes",claw:'Dragon Claw',pamphlet:'
   agate:'Agate',whitedye:'White Dye',dragonwings:'Dragon Wings',armourdesign:'Armour Design',reddragonscale:'Red Dragon Scale',
   golddye:'Metallic Gold Dye',moonstone:'Moonstone',reddye:'Red Dye',garnet:'Garnet Crystal',gaya:'Gaya',
   soulsbelt:'Souls Belt',shadowbelt:'Shadow Belt',onyxboots:'Onyx Boots',warmasterhelmet:'War Master Helmet',devilshornarmour:"Devil's Horn Armour",
-  toughstraps:'Tough Straps',linenbelt:'Linen Belt',multicolorpearl:'Multicolored Pearl',firebirdshoes:'Fire Bird Shoes'};
+  toughstraps:'Tough Straps',linenbelt:'Linen Belt',multicolorpearl:'Multicolored Pearl',firebirdshoes:'Fire Bird Shoes',
+  soulcrystalnecklace:'Soul Crystal Necklace'};
 const ITEMS=[
   {c:0,n:'Battle Sword',fails:{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},steps:[
     [0],                                      // Craft
@@ -520,14 +521,14 @@ const ITEMS=[
     [25e6,'aquatic',5,'pearl',2,'wing',2,'pamphlet',1]         // +9
   ]},
   {c:6,n:'Onyx Necklace',fails:{5:2,6:2,7:3,8:4,9:5},steps:[
-    [0],                                                        // Craft
+    [250e6,'soulcrystalnecklace',1,'onyx',100,'ruby',100,'mithril',25,'wubba',2,'scales',6,'claw',6,'wing',2,'thread',10,'yarn',3,'gaya',250], // Craft
     [25e6,'onyx',15,'ash',3,'dye',2,'pearl',1],                // +1
     [25e6,'onyx',15,'claw',3,'scales',3,'pearl',1],            // +2
-    [25e6,'onyx',15,'wing',2,'pamphlet',1,'pearl',2],          // +3
+    [25e6,'onyx',15,'pamphlet',1,'wing',2,'pearl',2],          // +3
     [25e6,'onyx',25,'mithril',5,'thread',3,'pearl',2],        // +4
     [30e6,'onyx',25,'mithril',5,'thread',5,'pearl',3],        // +5
-    [30e6,'onyx',25,'mithril',5,'pearl',3,'yarn',2],          // +6
-    [40e6,'onyx',30,'mithril',7,'pattern',1,'wubba',1],       // +7
+    [30e6,'onyx',25,'mithril',5,'yarn',2,'pearl',3],          // +6
+    [40e6,'onyx',30,'mithril',7,'wubba',1,'pattern',1],       // +7
     [40e6,'onyx',30,'mithril',7,'flame',3,'ice',3],           // +8
     [50e6,'onyx',30,'mithril',7,'flame',4,'ice',4]            // +9
   ]},
