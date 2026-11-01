@@ -181,10 +181,23 @@ details:not([open]) summary::before,details[data-st=closed] summary::before{tran
 const CATS=['WEAPONS','ARMOURS','HELMETS','SHIELDS','EARRINGS','BRACELET','NECKLACE','SHOES','BELTS'];
 const MAT={onyx:'Onyx Crystal',ash:"Demon's Ashes",claw:'Dragon Claw',pamphlet:'Fencing Pamphlet',mithril:'Mithril',dye:"Azrael's Dye",
   pearl:'Shimmering Multicolor Pearl',scales:'Dragon Scales',wing:"Blue Dragon's Wing",thread:'Thin Thread',yarn:'Gray Yarn',
-  pattern:'Sewing Pattern',wubba:'Wubba Insignia',flame:'Flame Stone',ice:'Ice Flame Stone'};
+  pattern:'Sewing Pattern',wubba:'Wubba Insignia',flame:'Flame Stone',ice:'Ice Flame Stone',
+  ruby:'Ruby Crystal',fur:'Monkey Fur',legs:'Spider Legs',white:'White Pearl',symbol:"Beast's Symbol",blue:'Blue Pearl',
+  blood:'Blood-Red Pearl',aquatic:'Aquatic Crystal'};
 const ITEMS=[
   {c:5,n:"Heaven's Tear Bracelet"},
-  {c:5,n:'Soul Crystal Bracelet'},
+  {c:5,n:'Soul Crystal Bracelet',fails:{5:1,6:1,7:2,8:2,9:3},steps:[
+    [0],                                                         // Craft
+    [10e6,'ruby',5,'fur',2,'legs',1],                            // +1
+    [10e6,'ruby',10,'fur',3,'legs',3],                           // +2
+    [10e6,'ruby',10,'white',2,'symbol',2],                       // +3
+    [10e6,'ruby',10,'blue',2,'ash',3],                           // +4
+    [15e6,'ruby',10,'blood',2,'ash',4],                          // +5
+    [15e6,'ruby',10,'pearl',1,'dye',2],                          // +6
+    [20e6,'aquatic',5,'pearl',2,'claw',1,'scales',1],            // +7
+    [20e6,'aquatic',5,'pearl',2,'claw',2,'scales',2],            // +8
+    [25e6,'aquatic',5,'pearl',2,'wing',2,'pamphlet',1]           // +9
+  ]},
   {c:5,n:'Onyx Bracelet',fails:{5:2,6:2,7:3,8:4,9:5},steps:[
     [0],                                                         // Craft
     [25e6,'onyx',15,'ash',3,'dye',2,'pearl',1],                  // +1
