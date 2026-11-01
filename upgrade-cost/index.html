@@ -345,19 +345,11 @@ summary:hover{background:#2a2c34}
 /* ===== DATA — add more items here: DATA['Item name']=[ten steps +0..+9, each {m:{materialId:count},y:yangFee}] ===== */
 
 const CATS=['ARMOURS','HELMETS','SHIELDS','EARRINGS','BRACELET','NECKLACE','SHOES','BELTS'];
-
-const NAMES='Magma Storm Armour|Hydro Armour|Dragon Pulse Armour|Dragonfire Sword|Cataclysmic Sword|Biting Cold|Solaris|Shield of Light|Angel Shield|Kunzite Helmet|Pyrite Helmet|Aquamarine Helmet|Kunzite Shoes|Pyrite Shoes|Aquamarine Shoes|Kunzite Bracelet|Pyrite Bracelet|Aquamarine Bracelet|Kunzite Earrings|Pyrite Earrings|Aquamarine Earrings|Kunzite Necklace|Pyrite Necklace|Aquamarine Necklace'.split('|');
-
 const LIST=[[], [], [], [], [], [], [], []];
-
 const MAT = {};
-
 const DATA = {};
 
-/* Battle Sword: +0..+4 empty, +5/+6 = Amethyst Cristal + Clam (counts not set yet: use "edit material count mode") */
-
 const E = () => ({ m: {}, y: 0 });
-const B = () => ({ m: {}, y: 0 });
 
 
 /* ===== helpers (money accepts 1450, 1.45k, 2.3kk, 3.12kkk) ===== */
@@ -380,7 +372,7 @@ const IMGBASE=(()=>{const u=location.href.split(/[?#]/)[0];return(/\/$|\.[a-z0-9
 
 const IC='https://metin2cms.cf/items/img/icons/';
 
-const PIC={'Battle Sword':IC+'00140.png','Soul Stealing Blade':IC+'03150.png','Poison Sword':IC+'00180.png','Triton Sword':IC+'00270.png','Rune Sword':IC+'00460.png'};
+const PIC={};
 
 const img=(n,c)=>{const loc=IMGBASE+encodeURIComponent(n)+'.png',ext=PIC[n];return `<img class="${c}" src="${ext||loc}"${ext?` data-alt="${loc}"`:''} alt="" referrerpolicy="no-referrer" onerror="imgErr(this)" onload="imgLoad(this)">`};
 
