@@ -185,11 +185,7 @@ const MAT={onyx:'Onyx Crystal',ash:"Demon's Ashes",claw:'Dragon Claw',pamphlet:'
   ruby:'Ruby Crystal',fur:'Monkey Fur',legs:'Spider Legs',white:'White Pearl',symbol:"Beast's Symbol",blue:'Blue Pearl',
   blood:'Blood-Red Pearl',aquatic:'Aquatic Crystal',amethyst:'Amethyst Crystal',clam:'Clam', talismandeath:'Talisman of Death'};
 const ITEMS=[
-  {
-  c:0,
-  n:'Battle Sword',
-  fails:{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},
-  steps:[
+  {c:0,n:'Battle Sword',fails:{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},steps:[
     [0],                                      // Craft
     [150e3],                                  // +1
     [180e3],                                  // +2
@@ -202,11 +198,7 @@ const ITEMS=[
     [6e6,'ruby',2,'blood',1,'talismandeath',1]     // +9
   ]
 },
-  {
-  c:0,
-  n:'Soul Stealing Blade',
-  fails:{7:1,8:2,9:3},
-  steps:[
+  {c:0,n:'Soul Stealing Blade',fails:{7:1,8:2,9:3},steps:[
     [0],                                            // Craft
     [500e3],                                        // +1
     [500e3],                                        // +2
@@ -219,7 +211,19 @@ const ITEMS=[
     [7.5e6,'ruby',4,'blood',2,'symbol',1,'talismandeath',1] // +9
   ]
 },
-  {c:0,n:'Poison Sword'},
+  {c:0,n:'Poison Sword',fails:{7:1,8:2,9:3},steps:[
+    [0],                                                   // Craft
+    [500e3],                                               // +1
+    [500e3],                                               // +2
+    [500e3,'amethyst',1],                                  // +3
+    [500e3,'amethyst',1],                                  // +4
+    [1e6,'amethyst',2,'clam',3],                           // +5
+    [2e6,'amethyst',2,'clam',6],                           // +6
+    [4e6,'ruby',2,'white',2,'fur',1,'legs',1],             // +7
+    [5e6,'ruby',3,'blue',2,'fur',2,'legs',2],              // +8
+    [7.5e6,'ruby',4,'blood',2,'symbol',1,'talismandeath',1] // +9
+  ]
+},
   {c:0,n:'Triton Sword'},
   {c:0,n:'Rune Sword'},
   {c:5,n:"Heaven's Tear Bracelet",fails:{7:1,8:1,9:2},steps:[
