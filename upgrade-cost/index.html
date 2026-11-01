@@ -798,18 +798,22 @@ const PIC = {
 };
 
 
+
 const img = (n, c) => {
   const iconFile = PIC[n];
   if (!iconFile) return '';
 
+  if (iconFile === 'money') return '';
+
   const url = iconFile.startsWith('images/')
-    ? encodeURI(iconFile)
+    ? IMGBASE + encodeURI(iconFile.substring(7))
     : IC + iconFile;
 
   return `<img class="${c}" src="${url}" alt="${n}"
     referrerpolicy="no-referrer"
-    onerror="this.remove()">`;
+    onerror="console.error('Image failed:', this.src); this.remove()">`;
 };
+
 
 
 
