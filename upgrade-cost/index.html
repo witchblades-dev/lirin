@@ -46,18 +46,20 @@ h1{margin:0;text-align:center;font-family:var(--serif);font-size:clamp(2rem,4.4v
 .tab:hover{color:#e9e2d2}.tab:hover::after{transform:scaleX(.45)}
 .tab.on{color:#f1dfb4;background:linear-gradient(180deg,transparent,rgba(199,167,107,.11))}.tab.on::after{transform:scaleX(1)}
 
-/* item tiles */
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,172px));justify-content:center;gap:12px;margin-bottom:22px}
-.tile{position:relative;display:flex;flex-direction:column;align-items:center;gap:12px;padding:34px 10px 16px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,#1d1e24,#16171c);color:#d6d3cc;font-size:.9rem;font-weight:600;line-height:1.3;text-align:center;cursor:pointer;transition:transform .2s,border-color .2s,background .2s,box-shadow .2s}
+/* item tiles: the picture height follows the inventory slots (--s) */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,138px));justify-content:center;gap:10px;margin-bottom:22px}
+.tile{position:relative;display:flex;flex-direction:column;align-items:center;gap:9px;padding:8px 8px 13px;border:1px solid var(--line);border-radius:13px;background:linear-gradient(180deg,#1d1e24,#16171c);color:#d6d3cc;font-size:.82rem;font-weight:600;line-height:1.3;text-align:center;cursor:pointer;transition:transform .2s,border-color .2s,background .2s,box-shadow .2s}
 .tile:hover{transform:translateY(-3px);border-color:rgba(199,167,107,.45)}
 .tile.on{border-color:var(--gold);color:#f6e9c9;background:linear-gradient(180deg,rgba(199,167,107,.2),rgba(199,167,107,.05));box-shadow:0 0 0 1px var(--gold),0 14px 34px rgba(199,167,107,.16)}
-.pic{position:relative;display:grid;place-items:center;width:100%;height:118px}
-.pic img{height:100%;width:auto;max-width:100%;object-fit:contain;filter:drop-shadow(0 8px 12px rgba(0,0,0,.55));transition:transform .25s}
+.pic{--u:38px;position:relative;display:grid;place-items:center;width:100%;height:calc(var(--u)*var(--s,1) + 22px);border:1px solid rgba(255,255,255,.05);border-radius:10px;background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.08),rgba(0,0,0,.2))}
+.pic img{height:calc(var(--u)*var(--s,1));width:auto;max-width:84%;object-fit:contain;filter:drop-shadow(0 6px 8px rgba(0,0,0,.55));transition:transform .25s,opacity .15s}
 .tile:hover .pic img{transform:scale(1.08)}
 .ph{position:absolute;font-family:var(--serif);font-size:2rem;color:#5d5a52}
-.hi>.ph,.hi>i{display:none}
+/* initials only show when the picture is really missing; images fade in only if they were not ready yet */
+.ph,.mat>i{display:none}.no>.ph,.mat.no>i{display:block}
+img:not(.ok){opacity:0}
 .rc{position:relative;width:15px;height:15px;flex:none;border-radius:50%;border:1.5px solid #7a7c84}
-.tile .rc{position:absolute;top:12px;left:12px;width:18px;height:18px}
+.tile .rc{position:absolute;top:15px;left:15px;width:18px;height:18px;z-index:1}
 .on>.rc{background:var(--gold);border-color:var(--gold)}
 .on>.rc::after{content:"";position:absolute;left:4px;top:1px;width:3px;height:7px;border:solid #1b1405;border-width:0 1.6px 1.6px 0;transform:rotate(45deg)}
 .tile .rc::after{left:5px;top:2px;width:4px;height:8px}
@@ -87,16 +89,19 @@ details:not([open]) summary::before,details[data-st=closed] summary::before{tran
 .tr.th{background:none!important;color:var(--dim);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase}
 .tr.off{opacity:.32}
 .nm{font-size:.88rem;font-weight:500}.nm small{display:block;margin-top:2px;color:var(--gold);font-size:.8rem}
-.mats{display:flex;flex-wrap:wrap;gap:16px}
-.mat{position:relative;display:inline-grid;place-items:center;width:38px;height:38px;border:1px solid rgba(255,255,255,.1);border-radius:9px;background:#26282f;color:#d6bd8c;font-size:.74rem;font-weight:600}
+.mats{display:flex;flex-wrap:wrap;align-items:center;gap:16px}
+.mat{--u:38px;position:relative;display:inline-grid;place-items:center;width:var(--u);height:calc(var(--u)*var(--s,1));border:1px solid rgba(255,255,255,.1);border-radius:9px;background:linear-gradient(180deg,#2b2d35,#202228);box-shadow:inset 0 1px 0 rgba(255,255,255,.05);color:#d6bd8c;font-size:.74rem;font-weight:600}
 .mat.y{border-color:rgba(199,167,107,.45)}.mat i{font-style:normal}
-.mg{position:absolute;inset:4px;width:calc(100% - 8px);height:calc(100% - 8px);object-fit:contain}
+.mg{position:absolute;inset:4px;width:calc(100% - 8px);height:calc(100% - 8px);object-fit:contain;transition:opacity .15s}
 .mat b{position:absolute;right:-8px;bottom:-8px;min-width:21px;padding:1px 5px;border-radius:10px;background:#1f9d4c;color:#fff;font-size:.66rem;font-weight:600;text-align:center}
 .fl{justify-self:end;text-align:center}.fl small{display:block;margin-top:5px;color:var(--dim);font-size:.7rem}
+.fl small.mx{margin-top:3px;color:var(--gold);font-weight:600;letter-spacing:.06em}
 .fail{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:8px;background:#1b1c22}
+.fail:focus-within{border-color:rgba(199,167,107,.55)}
 .fail button{width:34px;height:34px;border:0;background:none;font-size:1.1rem;cursor:pointer}.fail button:not(:disabled):hover{color:var(--gold)}
 .fail button:disabled{opacity:.28;cursor:not-allowed}
-.fail b{min-width:46px;text-align:center;font-weight:500}
+.fail input{width:46px;height:34px;padding:0;border:0;background:none;text-align:center;font-weight:500}
+.fail input:focus-visible{outline:0}
 .pbody{padding:16px 18px 8px}
 .btn{padding:9px 16px;border:1px solid rgba(199,167,107,.35);border-radius:8px;background:rgba(199,167,107,.08);color:#e6d2a7;font-size:.82rem;font-weight:600;cursor:pointer}.btn:hover{background:rgba(199,167,107,.15)}
 .prow{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:14px;margin-top:12px;padding:14px 16px;border-radius:9px;background:rgba(255,255,255,.035)}
@@ -106,7 +111,7 @@ details:not([open]) summary::before,details[data-st=closed] summary::before{tran
 .qe{display:flex;align-items:center;margin:0 8px 8px;border:1px solid var(--line);border-radius:8px;background:#1b1c22}
 .qe button{width:42px;height:36px;border:0;background:none;font-size:1.15rem;cursor:pointer}.qe button:hover{color:var(--gold)}
 .qe input{flex:1;min-width:0;padding:6px;text-align:center;font-weight:600}
-.pn{display:flex;align-items:center;gap:7px;padding:9px 14px;background:#1b1c22;color:var(--muted);font-size:.78rem}.pn img{width:20px;height:20px;object-fit:contain}.qn{color:var(--text);font-weight:600}
+.pn{display:flex;align-items:center;gap:7px;padding:9px 14px;background:#1b1c22;color:var(--muted);font-size:.78rem}.pn img{width:auto;max-width:40px;height:calc(12px + 8px*var(--s,1));object-fit:contain;transition:opacity .15s}.qn{color:var(--text);font-weight:600}
 .pv{font-size:.9rem;line-height:1.7}.u{color:#e0875a}.t{color:var(--green)}
 
 /* always-visible cost bar */
@@ -193,7 +198,16 @@ const firstOf=c=>(ITEMS.find(x=>x.c===c)||{}).n||null;
 
 /* pictures: only from upgrade-cost/images/ (works with or without a trailing slash in the address) */
 const IMG=(()=>{const u=location.href.split(/[?#]/)[0];return(/\/$|\.\w+$/.test(u)?u.replace(/[^/]*$/,''):u+'/')+'images/'})();
-const pic=(name,c)=>`<img class="${c}" src="${IMG}${encodeURIComponent(name.replace(/ /g,'_'))}.webp" alt="" decoding="async" onload="this.parentNode.classList.add('hi')" onerror="this.remove()">`;
+/* every picture is loaded once and kept in memory, so switching items never flashes initials or blanks */
+const IM=new Map();
+const warm=n=>{let r=IM.get(n);if(!r){r={el:new Image()};r.el.src=IMG+encodeURIComponent(n.replace(/ /g,'_'))+'.webp';IM.set(n,r)}return r};
+const imgState=n=>{const e=warm(n).el;return e.complete?(e.naturalWidth?1:-1):0};   // 1 ready, 0 still loading, -1 missing
+const miss=n=>imgState(n)<0?' no':'';
+const pic=(n,c)=>{const s=imgState(n);return s<0?'':`<img class="${c}${s>0?' ok':''}" src="${warm(n).el.src}" alt="" onload="this.classList.add('ok')" onerror="this.parentNode.classList.add('no');this.remove()">`};
+/* inventory slots (height) per category: weapons 3, armours 2, everything else 1. One item can override it with s:2 in data.js */
+const SLOTS=[3,2,1,1,1,1,1,1,1];
+const slotsOf=x=>x.s||SLOTS[x.c]||1;
+const matSlots=id=>{const x=BY.get(MAT[id]);return x?slotsOf(x):1};
 
 /* ===== state (saved in the browser, writes are batched) =====
    off   = steps switched off, kept per item      fails = fail counters per item+step
@@ -228,7 +242,8 @@ function stepInfo(it,i){
   const m=[];for(let j=1;j<raw.length;j+=2)m.push([raw[j],raw[j+1]]);
   return{m,y:raw[0]};
 }
-const maxFails=(it,i)=>it.fails?it.fails[i]:(i>=7?99:undefined);   // undefined = this step can't fail
+const pity=(it,i)=>(it.fails&&it.fails[i])||0;                     // 0 = no pity set for this step
+const maxFails=(it,i)=>i>0?pity(it,i)||99:undefined;   // undefined = Craft can't fail; steps without pity accept 0-99
 const failsOf=(it,i)=>Math.min(S.fails[it.n+'|'+i]||0,maxFails(it,i)||0);
 function calc(){
   const R={c:{},q:{},yang:0,mat:0},it=cur();
@@ -253,13 +268,21 @@ function paint(R=calc()){
     if(qi&&document.activeElement!==qi)qi.value=q;
   }
 }
+/* a fail counter changed: update only that row's numbers and buttons (pictures are not redrawn) */
+function syncRow(i){
+  const it=cur(),r=$('r'+i);if(!it||!r)return;
+  const f=failsOf(it,i),mf=maxFails(it,i),a=1+f,inp=r.querySelector('.fv');
+  r.querySelectorAll('b[data-n]').forEach(b=>{const v=+b.dataset.n*a;b.textContent=b.hasAttribute('data-y')?fmt(v):v});
+  r.querySelector('[data-a="fm"]').disabled=f<=0;r.querySelector('[data-a="fp"]').disabled=f>=mf;
+  if(document.activeElement!==inp)inp.value=f;
+}
 
 /* ===== rendering: each part is drawn on its own, so a click only redraws what changed ===== */
 const P={
   tabs:()=>CATS.map((c,i)=>`<button class="tab${i===S.cat?' on':''}" data-a="cat" data-v="${i}" aria-pressed="${i===S.cat}">${c}</button>`).join(''),
   items:()=>{
     const L=ITEMS.filter(x=>x.c===S.cat);
-    return L.length?`<div class="tiles">${L.map(x=>`<button class="tile${x.n===S.item?' on':''}" data-a="item" data-v="${esc(x.n)}" aria-pressed="${x.n===S.item}"><i class="rc"></i><span class="pic"><span class="ph">${ini(x.n)}</span>${pic(x.n,'')}</span>${esc(x.n)}</button>`).join('')}</div>`:'<p class="empty">No items in this category yet.</p>';
+    return L.length?`<div class="tiles">${L.map(x=>`<button class="tile${x.n===S.item?' on':''}" data-a="item" data-v="${esc(x.n)}" aria-pressed="${x.n===S.item}"><i class="rc"></i><span class="pic${miss(x.n)}" style="--s:${slotsOf(x)}"><span class="ph">${ini(x.n)}</span>${pic(x.n,'')}</span>${esc(x.n)}</button>`).join('')}</div>`:'<p class="empty">No items in this category yet.</p>';
   },
   steps:()=>{
     const it=cur(),allOn=STEPS.every(i=>!isOff(it,i));
@@ -270,10 +293,10 @@ const P={
     if(!it||!it.steps)return'<p class="empty">No upgrade data for this item yet.</p>';
     return STEPS.map(i=>{
       const s=stepInfo(it,i),mf=maxFails(it,i),f=failsOf(it,i),a=1+f;      // counts shown = per attempt x attempts
-      const body=s.m.map(([id,n])=>`<span class="mat" title="${esc(MAT[id])}"><i>${ini(MAT[id])}</i>${pic(MAT[id],'mg')}${n>0?`<b>${n*a}</b>`:''}</span>`).join('')
-        +(s.y>0?`<span class="mat y" title="Yang"><i>Y</i>${pic('Yang','mg')}<b>${fmt(s.y*a)}</b></span>`:'');
-      const fail=mf!==undefined?`<div class="fail"><button data-a="fm" data-v="${i}" aria-label="Fewer fails"${f<=0?' disabled':''}>−</button><b>${f}${mf<99?' / '+mf:''}</b><button data-a="fp" data-v="${i}" aria-label="More fails"${f>=mf?' disabled':''}>+</button></div><small>Write a fail time(s)</small>`:'';
-      return`<div class="tr${isOff(it,i)?' off':''}"><span class="nm">${esc(it.n)}<small>${label(i)}</small></span><span class="mats">${body}</span><span class="fl">${fail}</span></div>`;
+      const body=s.m.map(([id,n])=>`<span class="mat${miss(MAT[id])}" style="--s:${matSlots(id)}" title="${esc(MAT[id])}"><i>${ini(MAT[id])}</i>${pic(MAT[id],'mg')}${n>0?`<b data-n="${n}">${n*a}</b>`:''}</span>`).join('')
+        +(s.y>0?`<span class="mat y${miss('Yang')}" title="Yang"><i>Y</i>${pic('Yang','mg')}<b data-n="${s.y}" data-y>${fmt(s.y*a)}</b></span>`:'');
+      const fail=mf!==undefined?`<div class="fail"><button data-a="fm" data-v="${i}" aria-label="Fewer fails"${f<=0?' disabled':''}>−</button><input class="fv" data-f="${i}" inputmode="numeric" maxlength="2" value="${f}" aria-label="Fail times"><button data-a="fp" data-v="${i}" aria-label="More fails"${f>=mf?' disabled':''}>+</button></div><small>Write a fail time(s)</small>${pity(it,i)?`<small class="mx">MAX PITY : ${pity(it,i)}</small>`:''}`:'';
+      return`<div class="tr${isOff(it,i)?' off':''}" id="r${i}"><span class="nm">${esc(it.n)}<small>${label(i)}</small></span><span class="mats">${body}</span><span class="fl">${fail}</span></div>`;
     }).join('');
   },
   prices:R=>{
@@ -282,7 +305,7 @@ const P={
       const p=S.price[id]||0;
       return`<div class="prow"><div class="pin"><label><input data-pr="${id}" inputmode="decimal" placeholder="Write the Unit Price" value="${p?fmt(p):''}" aria-label="Unit price of ${esc(MAT[id])}"><em>Yang</em></label>`
         +(S.edit?`<div class="qe"><button data-a="qm" data-v="${id}" aria-label="Less">−</button><input id="q-${id}" data-q="${id}" inputmode="numeric" value="${R.q[id]}" aria-label="Quantity of ${esc(MAT[id])}"><button data-a="qp" data-v="${id}" aria-label="More">+</button></div>`:'')
-        +`<div class="pn">${S.edit?'':`<span class="qn" id="n-${id}"></span>`}${pic(MAT[id],'')}<span>${esc(MAT[id])}</span></div></div>
+        +`<div class="pn" style="--s:${matSlots(id)}">${S.edit?'':`<span class="qn" id="n-${id}"></span>`}${pic(MAT[id],'')}<span>${esc(MAT[id])}</span></div></div>
       <div class="pv"><div class="u">Unit : <span id="u-${id}"></span></div><div class="t">Total : <span id="t-${id}"></span></div></div></div>`;
     }).join(''):'<p class="empty">No materials for the selected steps.</p>';
   }
@@ -307,21 +330,28 @@ document.addEventListener('click',e=>{
     case'item':S.item=v;draw('items','steps','rows','prices');break;
     case'all':if(it){S.off[it.n]=STEPS.every(i=>!isOff(it,i))?Object.fromEntries(STEPS.map(i=>[i,1])):{}}draw('steps','rows','prices');break;
     case'st':if(it){const o=S.off[it.n]||(S.off[it.n]={});if(o[v])delete o[v];else o[v]=1}draw('steps','rows','prices');break;
-    case'fm':if(it)S.fails[k]=Math.max(0,(S.fails[k]||0)-1);draw('rows','prices');break;
-    case'fp':if(it)S.fails[k]=Math.min(maxFails(it,+v)||0,(S.fails[k]||0)+1);draw('rows','prices');break;
+    case'fm':case'fp':if(it){S.fails[k]=Math.max(0,Math.min(maxFails(it,+v)||0,failsOf(it,+v)+(a==='fp'?1:-1)));syncRow(+v);paint()}break;
     case'edit':S.edit=!S.edit;draw('prices');break;
     case'qm':case'qp':if(it){const R=calc(),d=Math.max(0,(R.q[v]||0)+(a==='qp'?1:-1))-(R.c[v]||0),key=it.n+'|'+v;if(d)S.adj[key]=d;else delete S.adj[key];paint()}break;
     default:return;
   }
   save();
 });
-document.addEventListener('input',e=>{          // unit prices: update totals live, nothing is redrawn
-  const id=e.target.dataset&&e.target.dataset.pr;if(!id)return;
+document.addEventListener('input',e=>{          // fail times and unit prices: update live, nothing is redrawn
+  const d=e.target.dataset||{},it0=cur();
+  if(d.f!==undefined){                           // fail times typed by hand (0-99, or up to the pity limit)
+    if(!it0)return;
+    const i=+d.f,raw=e.target.value.replace(/\D/g,'').slice(0,2),v=Math.min(+raw||0,maxFails(it0,i)||0),nv=raw&&String(v)!==raw?String(v):raw;
+    if(e.target.value!==nv)e.target.value=nv;
+    S.fails[it0.n+'|'+i]=v;syncRow(i);paint();save();return;
+  }
+  const id=d.pr;if(!id)return;
   const t=e.target.value.trim(),v=t?parseMoney(t):0;
   if(v===null)return;
   S.price[id]=v;save();paint();
 });
-document.addEventListener('change',e=>{         // typed quantity in edit mode
+document.addEventListener('change',e=>{         // typed quantity in edit mode / fail time field left
+  if(e.target.dataset&&e.target.dataset.f!==undefined){const i0=cur();if(i0)e.target.value=failsOf(i0,+e.target.dataset.f);return}
   const id=e.target.dataset&&e.target.dataset.q,it=cur();if(!id||!it)return;
   const v=parseMoney(e.target.value),key=it.n+'|'+id;
   if(v!==null){const d=Math.round(v)-(calc().c[id]||0);if(d)S.adj[key]=d;else delete S.adj[key];save()}
@@ -339,6 +369,9 @@ function togglePanel(d){
   d._a=a;
   a.onfinish=()=>{if(!opening)d.open=false;a.cancel();if(d._a===a)d._a=null};
 }
+
+/* after the first paint, load every picture in the background (current category first) so later clicks are instant */
+{const q=[...new Set([...ITEMS.filter(x=>x.c===S.cat).map(x=>x.n),...Object.values(MAT),...ITEMS.map(x=>x.n),'Yang'])],run=()=>{q.splice(0,12).forEach(warm);if(q.length)setTimeout(run,100)};setTimeout(run,200)}
 
 document.querySelectorAll('details[data-p]').forEach(d=>{d.open=!!S.o[d.dataset.p]});
 draw('tabs','items','steps','rows','prices');
