@@ -237,7 +237,19 @@ const ITEMS=[
     [25e6,'aquatic',5,'pearl',2,'wing',2,'pamphlet',1]
   ]
 },
-  {c:0,n:'Rune Sword'},
+  {c:0,n:'Rune Sword',fails:{5:1,6:1,7:1,8:1,9:2},steps:[
+    [0],                                                       // Craft
+    [25e6,'onyx',15,'claw',3,'scales',3,'pearl',1],           // +1
+    [25e6,'onyx',15,'wing',1,'pamphlet',1,'pearl',1],         // +2
+    [25e6,'onyx',15,'mithril',3,'pearl',1,'yarn',2],          // +3
+    [25e6,'onyx',25,'mithril',3,'thread',2,'pearl',2],        // +4
+    [30e6,'onyx',25,'mithril',3,'thread',4,'pearl',2],        // +5
+    [30e6,'onyx',25,'mithril',3,'pattern',1,'wubba',1],       // +6
+    [40e6,'onyx',30,'mithril',5,'flame',1,'ice',1],           // +7
+    [40e6,'onyx',30,'mithril',5,'flame',1,'ice',1],           // +8
+    [50e6,'onyx',30,'mithril',5,'flame',2,'ice',2]            // +9
+  ]
+},
   {c:5,n:"Heaven's Tear Bracelet",fails:{7:1,8:1,9:2},steps:[
     [0],                                      // Craft
     [250e3],                                  // +1
