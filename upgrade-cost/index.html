@@ -183,9 +183,25 @@ const MAT={onyx:'Onyx Crystal',ash:"Demon's Ashes",claw:'Dragon Claw',pamphlet:'
   pearl:'Shimmering Multicolor Pearl',scales:'Dragon Scales',wing:"Blue Dragon's Wing",thread:'Thin Thread',yarn:'Gray Yarn',
   pattern:'Sewing Pattern',wubba:'Wubba Insignia',flame:'Flame Stone',ice:'Ice Flame Stone',
   ruby:'Ruby Crystal',fur:'Monkey Fur',legs:'Spider Legs',white:'White Pearl',symbol:"Beast's Symbol",blue:'Blue Pearl',
-  blood:'Blood-Red Pearl',aquatic:'Aquatic Crystal',amethyst:'Amethyst Crystal',clam:'Clam'};
+  blood:'Blood-Red Pearl',aquatic:'Aquatic Crystal',amethyst:'Amethyst Crystal',clam:'Clam', talismandeath:'Talisman of Death'};
 const ITEMS=[
-  {c:0,n:'Battle Sword'},
+  {
+  c:0,
+  n:'Battle Sword',
+  fails:{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},
+  steps:[
+    [0],                                      // Craft
+    [150e3],                                  // +1
+    [180e3],                                  // +2
+    [225e3],                                  // +3
+    [270e3],                                  // +4
+    [360e3,'amethyst',2,'clam',3],            // +5
+    [720e3,'amethyst',2,'clam',4],            // +6
+    [1.5e6,'ruby',2,'white',1],               // +7
+    [3e6,'ruby',2,'blue',1],                  // +8
+    [6e6,'ruby',2,'blood',1,'talismandeath',1]     // +9
+  ]
+},
   {c:0,n:'Soul Stealing Blade'},
   {c:0,n:'Poison Sword'},
   {c:0,n:'Triton Sword'},
