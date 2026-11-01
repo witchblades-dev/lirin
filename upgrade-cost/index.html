@@ -803,14 +803,13 @@ const img = (n, c) => {
   if (!iconFile) return '';
 
   const url = iconFile.startsWith('images/')
-  ? iconFile
-  : IC + iconFile;
-  
+    ? encodeURI(iconFile)
+    : IC + iconFile;
+
   return `<img class="${c}" src="${url}" alt="${n}"
     referrerpolicy="no-referrer"
     onerror="this.remove()">`;
 };
-
 
 
 
@@ -1057,7 +1056,7 @@ function render(){
 
 
 
-      if(s.y>0)body+=`<span class="mat y" title="Yang"><i>Y</i><b>${fmt(s.y)}</b></span>`;
+      if(s.y>0)body+=`<span class="mat y" title="Yang">${img('Yang','mg')}<b>${fmt(s.y)}</b></span>`;
 
 
 
