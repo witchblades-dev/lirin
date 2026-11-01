@@ -190,7 +190,12 @@ const ini=n=>n.split(' ').filter(w=>/^[A-Z]/.test(w)).map(w=>w[0]).join('').slic
 /* pictures live in upgrade-cost/image/<name>.png ; a missing file is simply skipped */
 const IMGBASE=(()=>{const u=location.href.split(/[?#]/)[0];return(/\/$|\.[a-z0-9]+$/i.test(u)?u.replace(/[^\/]*$/,''):u+'/')+'image/'})();
 const IC='https://metin2cms.cf/items/img/icons/';
-const PIC={'Battle Sword':IC+'00140.png','Soul Stealing Blade':IC+'03150.png','Poison Sword':IC+'00180.png','Triton Sword':IC+'00270.png','Rune Sword':IC+'00460.png'};
+const PIC={'Battle Sword':IC+'00140.png','Soul Stealing Blade':IC+'03150.png','Poison Sword':IC+'00180.png','Triton Sword':IC+'00270.png','Rune Sword':IC+'00460.png','Dragon God Armour': IC + '11290.png',
+  'Black Steel Armour': IC + '11240.png',
+  'Blues Steel Armour': IC + '11250.png',
+  "Devil's Horn Armour": IC + '11970.png',
+  'Aurora Armour': IC + '11260.png',
+  'Magma Glow Armour': IC + '11270.png'};
 const img=(n,c)=>{const loc=IMGBASE+encodeURIComponent(n)+'.png',ext=PIC[n];return `<img class="${c}" src="${ext||loc}"${ext?` data-alt="${loc}"`:''} alt="" referrerpolicy="no-referrer" onerror="imgErr(this)" onload="imgLoad(this)">`};
 function imgErr(i){if(i.dataset.alt){i.src=i.dataset.alt;delete i.dataset.alt}else{console.warn('Image not found:',i.src);i.remove()}}
 function imgLoad(i){i.parentNode.classList.add('hi');if(i.naturalHeight&&i.naturalHeight<=48)i.style.imageRendering='pixelated'}
