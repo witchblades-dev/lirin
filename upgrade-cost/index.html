@@ -375,20 +375,21 @@ const IC = 'https://metin2cms.cf/items/img/icons/';
 const PIC = {
 'Heaven\'s Tear Bracelet': '14200.png',
   'Soul Crystal Bracelet': '14220.png',
-  'Onyx Bracelet': '14570.png'
+  'Onyx Bracelet': 'images/Onyx_Bracelet.webp'
 };
 
 const img = (n, c) => {
   const iconFile = PIC[n];
-  const url = iconFile ? IC + iconFile : '';
+  const url = iconFile
+    ? (n === 'Onyx Bracelet'
+        ? iconFile
+        : IC + iconFile)
+    : '';
+
   if (!url) return '';
+
   return `<img class="${c}" src="${url}" alt="${n}" referrerpolicy="no-referrer" onerror="this.remove()" onload="imgLoad(this)">`;
 };
-
-function imgLoad(i){
-  i.parentNode.classList.add('hi');
-  if(i.naturalHeight && i.naturalHeight <= 48) i.style.imageRendering = 'pixelated';
-}
 
 
 
