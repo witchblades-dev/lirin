@@ -694,7 +694,9 @@ const CATS=['WEAPONS','ARMOURS','HELMETS','SHIELDS','EARRINGS','BRACELET','NECKL
 
 const LIST=[[], [], [], [], [], ['Heaven\'s Tear Bracelet', 'Soul Crystal Bracelet', 'Onyx Bracelet'], [], [], []];
 
-const MAT = {};
+const MAT = {
+  1: 'Onyx Crystal'
+};
 
 const DATA = {};
 
@@ -702,7 +704,18 @@ const DATA = {};
 
 const E = () => ({ m: {}, y: 0 });
 
-
+DATA['Onyx Bracelet'] = [
+  { m: { 1: 15 }, y: 0 }, // +0 → +1
+  { m: { 1: 15 }, y: 0 }, // +1 → +2
+  { m: { 1: 15 }, y: 0 }, // +2 → +3
+  { m: { 1: 25 }, y: 0 }, // +3 → +4
+  { m: { 1: 25 }, y: 0 }, // +4 → +5
+  { m: { 1: 25 }, y: 0 }, // +5 → +6
+  { m: { 1: 30 }, y: 0 }, // +6 → +7
+  { m: { 1: 30 }, y: 0 }, // +7 → +8
+  { m: { 1: 30 }, y: 0 }, // +8 → +9
+  { m: {}, y: 0 }
+];
 
 
 
@@ -747,13 +760,10 @@ const IC = 'https://metin2cms.cf/items/img/icons/';
   
 
 const PIC = {
-
-'Heaven\'s Tear Bracelet': '14200.png',
-
+  'Heaven\'s Tear Bracelet': '14200.png',
   'Soul Crystal Bracelet': '14220.png',
-
-  'Onyx Bracelet': 'images/Onyx_Bracelet.webp'
-
+  'Onyx Bracelet': 'images/Onyx_Bracelet.webp',
+  'Onyx Crystal': 'images/Onyx_Crystal.webp'
 };
 
 
