@@ -370,15 +370,22 @@ const ini=n=>n.split(' ').filter(w=>/^[A-Z]/.test(w)).map(w=>w[0]).join('').slic
 
 const IMGBASE=(()=>{const u=location.href.split(/[?#]/)[0];return(/\/$|\.[a-z0-9]+$/i.test(u)?u.replace(/[^\/]*$/,''):u+'/')+'image/'})();
 
-const IC='https://metin2cms.cf/items/img/icons/';
+const IC = 'https://metin2cms.cf/items/img/icons/';
+  
+const ICONS = {};
 
-const PIC={};
-
-const img=(n,c)=>{const loc=IMGBASE+encodeURIComponent(n)+'.png',ext=PIC[n];return `<img class="${c}" src="${ext||loc}"${ext?` data-alt="${loc}"`:''} alt="" referrerpolicy="no-referrer" onerror="imgErr(this)" onload="imgLoad(this)">`};
-
-function imgErr(i){if(i.dataset.alt){i.src=i.dataset.alt;delete i.dataset.alt}else{console.warn('Image not found:',i.src);i.remove()}}
-
-function imgLoad(i){i.parentNode.classList.add('hi');if(i.naturalHeight&&i.naturalHeight<=48)i.style.imageRendering='pixelated'}
+const img = (n, c) => {
+  // Dacă ai pus iconița în dicționarul ICONS, o ia de pe site-ul tău; altfel o lasă goală sau folosește fallback
+  const iconFile = ICONS[n];
+  const url = iconFile ? IC + iconFile : '';
+  if (!url) return '';
+  return `<img class="${c}" src="${url}" alt="${n}" referrerpolicy="no-referrer" onerror="this.remove()" onload="imgLoad(this)">`;
+};
+  
+function imgLoad(i){
+  i.parentNode.classList.add('hi');
+  if(i.naturalHeight && i.naturalHeight <= 48) i.style.imageRendering = 'pixelated';
+}
 
 
 
