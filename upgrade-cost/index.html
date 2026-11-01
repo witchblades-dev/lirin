@@ -842,9 +842,21 @@ function step(i){
 
 }
 
+const MAX_FAILS = {
+  'Onyx Bracelet': {
+    5: 2,
+    6: 2,
+    7: 3,
+    8: 4,
+    9: 5
+  }
+};
 
-
-const att=i=>1+(i>=7?(S.fails[S.item+':'+i]||0):0);
+const att = i => {
+  const max = MAX_FAILS[S.item]?.[i] ?? (i >= 7 ? 99 : 0);
+  const fails = S.fails[S.item + ':' + i] || 0;
+  return 1 + Math.min(fails, max);
+};
 
 
 
@@ -1028,7 +1040,7 @@ function render(){
 
 
 
-    h+=`<div class="tr${S.off[i]?' off':''}"><span class="nm">${S.item}<small>${i === 0 ? 'Craft' : '+' + i}</small></span><span class="mats">${body}</span><span class="fl">${i>=7?`<div class="fail"><button data-a="fm" data-v="${i}" aria-label="Fewer fails">−</button><b>${f}</b><button data-a="fp" data-v="${i}" aria-label="More fails">+</button></div><small>Write a fail time(s)</small>`:''}</span></div>`;
+    h+=`<div class="tr${S.off[i]?' off':''}"><span class="nm">${S.item}<small>${i === 0 ? 'Craft' : '+' + i}</small></span><span class="mats">${body}</span><span class="fl">${(S.item === 'Onyx Bracelet' ? i >= 5 : i >= 7)?`<div class="fail"><button data-a="fm" data-v="${i}" aria-label="Fewer fails">−</button><b>${f}</b><button data-a="fp" data-v="${i}" aria-label="More fails">+</button></div><small>Write a fail time(s)</small>`:''}</span></div>`;
 
 
 
@@ -1116,7 +1128,7 @@ document.addEventListener('click',e=>{
 
 
 
-  else if(a==='fp')S.fails[k]=Math.min(999,(S.fails[k]||0)+1);
+  else if(a==='fp')S.fails[k]=Math.min(MAX_FAILS[S.item]?.[+v] ?? 99,(S.fails[k]||0)+1);
 
 
 
