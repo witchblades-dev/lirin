@@ -802,15 +802,10 @@ const img = (n, c) => {
   const iconFile = PIC[n];
   if (!iconFile) return '';
 
-  const localImages = [
-    'Onyx Bracelet',
-    'Onyx Crystal'
-  ];
-
   const url = iconFile.startsWith('images/')
   ? iconFile
   : IC + iconFile;
-
+  
   return `<img class="${c}" src="${url}" alt="${n}"
     referrerpolicy="no-referrer"
     onerror="this.remove()">`;
