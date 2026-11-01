@@ -156,9 +156,9 @@ summary:hover{background:#2a2c34}
 
 .nm small{display:block;margin-top:2px;color:var(--gold);font-size:.8rem}
 
-.mats{display:flex;flex-wrap:wrap;gap:16px}
+.s{display:flex;flex-wrap:wrap;gap:16px}
 
-.mat{position:relative;display:inline-grid;place-items:center;width:38px;height:38px;border:1px solid rgba(255,255,255,.1);border-radius:9px;background:#26282f;color:#d6bd8c;font-size:.74rem;font-weight:600}
+.{position:relative;display:inline-grid;place-items:center;width:38px;height:38px;border:1px solid rgba(255,255,255,.1);border-radius:9px;background:#26282f;color:#d6bd8c;font-size:.74rem;font-weight:600}
 
 .mat i{font-style:normal}
 
@@ -346,8 +346,52 @@ summary:hover{background:#2a2c34}
 
 const CATS=['WEAPONS','ARMOURS','HELMETS','SHIELDS','EARRINGS','BRACELET','NECKLACE','SHOES','BELTS'];
 const LIST=[[], [], [], [], [], ['Heaven\'s Tear Bracelet', 'Soul Crystal Bracelet', 'Onyx Bracelet'], [], [], []];
-const MAT = {};
+const MAT = {
+  slab: 'Grey Slab',
+  pot: 'Potion Flask',
+  bowl: 'Ceramic Bowl',
+  green: 'Green Crystal Piece',
+  claw: 'Monster Claw',
+  cloth: 'Blue Fabric',
+  scroll: 'Upgrade Scroll',
+  scrap: 'Fabric Scrap',
+  rope: 'White Rope',
+  spool: 'Black Spool',
+  shield: 'Shield Emblem',
+  book: 'Upgrade Book',
+  shard: 'Red Shard',
+  gem: 'Purple Gem'
+};
 const DATA = {};
+  
+DATA['Onyx Bracelet'] = [
+  // +0 -> +1
+  { m: { slab: 15, pot: 2, gem: 1 }, y: 25000000 }, // 25kk
+  
+  // +1 -> +2
+  { m: { slab: 15, bowl: 3, green: 3, gem: 1 }, y: 25000000 }, // 25kk
+  
+  // +2 -> +3
+  { m: { slab: 15, claw: 3, cloth: 2, gem: 2 }, y: 25000000 }, // 25kk
+  
+  // +3 -> +4
+  { m: { slab: 25, scroll: 1, cloth: 2, gem: 2 }, y: 25000000 }, // 25kk
+  
+  // +4 -> +5
+  { m: { slab: 25, scrap: 5, rope: 5, gem: 3 }, y: 30000000 }, // 30kk
+  
+  // +5 -> +6
+  { m: { slab: 25, scrap: 5, rope: 5, spool: 2, gem: 3 }, y: 30000000 }, // 30kk
+  
+  // +6 -> +7
+  { m: { slab: 25, scrap: 5, shield: 1, spool: 2, gem: 3 }, y: 40000000 }, // 40kk
+  
+  // +7 -> +8
+  { m: { slab: 30, scrap: 7, book: 1, shard: 3 }, y: 40000000 }, // 40kk + manual/carte de upgrade
+  
+  // +8 -> +9
+  { m: { slab: 30, scrap: 7, shard: 4, gem: 4 }, y: 50000000 }  // 50kk
+];
 
 const E = () => ({ m: {}, y: 0 });
 
