@@ -705,16 +705,16 @@ const DATA = {};
 const E = () => ({ m: {}, y: 0 });
 
 DATA['Onyx Bracelet'] = [
-  { m: { 1: 15 }, y: 0 }, // +0 → +1
-  { m: { 1: 15 }, y: 0 }, // +1 → +2
-  { m: { 1: 15 }, y: 0 }, // +2 → +3
-  { m: { 1: 25 }, y: 0 }, // +3 → +4
-  { m: { 1: 25 }, y: 0 }, // +4 → +5
-  { m: { 1: 25 }, y: 0 }, // +5 → +6
-  { m: { 1: 30 }, y: 0 }, // +6 → +7
-  { m: { 1: 30 }, y: 0 }, // +7 → +8
-  { m: { 1: 30 }, y: 0 }, // +8 → +9
-  { m: {}, y: 0 }
+  { m: {}, y: 0 },          // Craft
+  { m: { 1: 15 }, y: 0 },   // +1
+  { m: { 1: 15 }, y: 0 },   // +2
+  { m: { 1: 15 }, y: 0 },   // +3
+  { m: { 1: 25 }, y: 0 },   // +4
+  { m: { 1: 25 }, y: 0 },   // +5
+  { m: { 1: 25 }, y: 0 },   // +6
+  { m: { 1: 30 }, y: 0 },   // +7
+  { m: { 1: 30 }, y: 0 },   // +8
+  { m: { 1: 30 }, y: 0 }    // +9
 ];
 
 
@@ -769,27 +769,21 @@ const PIC = {
 
 
 const img = (n, c) => {
-
   const iconFile = PIC[n];
+  if (!iconFile) return '';
 
-  const url = iconFile
+  const localImages = [
+    'Onyx Bracelet',
+    'Onyx Crystal'
+  ];
 
-    ? (n === 'Onyx Bracelet'
+  const url = localImages.includes(n)
+    ? iconFile
+    : IC + iconFile;
 
-        ? iconFile
-
-        : IC + iconFile)
-
-    : '';
-
-
-
-  if (!url) return '';
-
-
-
-  return `<img class="${c}" src="${url}" alt="${n}" referrerpolicy="no-referrer" onerror="this.remove()" onload="imgLoad(this)">`;
-
+  return `<img class="${c}" src="${url}" alt="${n}"
+    referrerpolicy="no-referrer"
+    onerror="this.remove()">`;
 };
 
 
@@ -1034,7 +1028,7 @@ function render(){
 
 
 
-    h+=`<div class="tr${S.off[i]?' off':''}"><span class="nm">${S.item}<small>+${i}</small></span><span class="mats">${body}</span><span class="fl">${i>=7?`<div class="fail"><button data-a="fm" data-v="${i}" aria-label="Fewer fails">−</button><b>${f}</b><button data-a="fp" data-v="${i}" aria-label="More fails">+</button></div><small>Write a fail time(s)</small>`:''}</span></div>`;
+    h+=`<div class="tr${S.off[i]?' off':''}"><span class="nm">${S.item}<small>${i === 0 ? 'Craft' : '+' + i}</small></span><span class="mats">${body}</span><span class="fl">${i>=7?`<div class="fail"><button data-a="fm" data-v="${i}" aria-label="Fewer fails">−</button><b>${f}</b><button data-a="fp" data-v="${i}" aria-label="More fails">+</button></div><small>Write a fail time(s)</small>`:''}</span></div>`;
 
 
 
