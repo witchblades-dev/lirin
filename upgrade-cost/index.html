@@ -27,7 +27,7 @@ button,input{font:inherit;color:inherit}
 .nav-item.is-soon,.nav-item.is-soon:hover{color:#8d8d94;border-color:transparent;background:none;cursor:default}
 .nav-item.is-soon .ic{color:#5f6169}
 .badge{margin-left:auto;padding:2px 8px;border:1px solid rgba(255,255,255,.12);border-radius:20px;color:var(--dim);font-size:.62rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
- 
+
 .main{flex:1;min-width:0;display:flex;flex-direction:column;min-height:100svh}
 .inner{width:min(100%,1000px);margin:0 auto;padding:clamp(34px,6vh,60px) clamp(14px,3vw,30px) 40px}
 h1{margin:0;text-align:center;font-family:var(--serif);font-size:clamp(2rem,4.4vw,2.9rem);font-weight:600;letter-spacing:.1em;background:linear-gradient(180deg,#f5eddd,#d6bd8c);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
@@ -62,7 +62,7 @@ h1{margin:0;text-align:center;font-family:var(--serif);font-size:clamp(2rem,4.4v
 .sp .rc::after{left:3px;top:0;width:3px;height:6px}
 @media(max-width:1250px){.steps{flex-wrap:wrap}}
 @media(max-width:700px){.tab{padding:11px 12px;font-size:.92rem;letter-spacing:.1em}}
- 
+
 details.panel{margin-top:18px;overflow:hidden;border:1px solid var(--line);border-radius:12px;background:#16171c}
 summary{display:flex;align-items:center;gap:10px;padding:14px 18px;background:#22242b;font-weight:600;cursor:pointer;list-style:none}
 summary::-webkit-details-marker{display:none}
@@ -80,6 +80,9 @@ summary:hover{background:#2a2c34}
 .mats{display:flex;flex-wrap:wrap;gap:16px}
 .mat{position:relative;display:inline-grid;place-items:center;width:38px;height:38px;border:1px solid rgba(255,255,255,.1);border-radius:9px;background:#26282f;color:#d6bd8c;font-size:.74rem;font-weight:600}
 .mat i{font-style:normal}
+.mat.hi i{display:none}
+.mg{position:absolute;inset:4px;width:calc(100% - 8px);height:calc(100% - 8px);object-fit:contain}
+.ii{width:26px;height:26px;object-fit:contain;flex:none}
 .mat.y{border-color:rgba(199,167,107,.45)}
 .mat b{position:absolute;right:-8px;bottom:-8px;min-width:21px;padding:1px 5px;border-radius:10px;background:#1f9d4c;color:#fff;font-size:.66rem;font-weight:600;text-align:center}
 .ed{display:inline-flex;align-items:center;gap:6px;color:var(--gold);font-size:.75rem;font-weight:600}
@@ -99,17 +102,18 @@ summary:hover{background:#2a2c34}
 .pin label{display:flex;align-items:center;gap:8px;padding-right:12px;border:1px solid var(--line);border-radius:8px;background:#22242b}
 .pin input{flex:1;min-width:0;border:0;background:none}
 .pin em{color:var(--dim);font-size:.8rem;font-style:normal}
-.pn{margin-top:7px;color:var(--muted);font-size:.78rem}
+.pn{display:flex;align-items:center;gap:7px;margin-top:7px;color:var(--muted);font-size:.78rem}
+.mi{width:20px;height:20px;object-fit:contain}
 .pv{font-size:.9rem;line-height:1.7}
 .u{color:#e0875a}.t{color:var(--green)}
- 
+
 /* always-visible cost bar */
 .summary{position:sticky;bottom:0;z-index:5;margin-top:auto;display:flex;flex-wrap:wrap;justify-content:center;gap:8px clamp(18px,4vw,52px);padding:14px 20px;background:rgba(15,16,19,.94);backdrop-filter:blur(12px);border-top:1px solid rgba(199,167,107,.28);box-shadow:0 -14px 34px rgba(0,0,0,.45)}
 .summary div{display:flex;align-items:baseline;gap:10px}
 .summary span{color:var(--dim);font-size:.76rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
 .summary b{color:#e6d2a7;font-size:1rem;font-weight:600}
 .summary .tot b{color:var(--green);font-size:1.15rem}
- 
+
 :focus-visible{outline:2px solid #d8bd83;outline-offset:3px}
 @media(max-width:700px){
   .app-root{flex-direction:column}
@@ -156,12 +160,15 @@ summary:hover{background:#2a2c34}
 </div>
 <script>
 /* ===== DATA — add more items here: DATA['Item name']=[ten steps +0..+9, each {m:{materialId:count},y:yangFee}] ===== */
-const CATS=['PET ARTIFACT','PVM EQ','PVP EQ','BELTS','SOME CRAFTS','SASH','ANTIQUE RUNE'];
+const CATS=['WEAPONS','PVM EQ','PVP EQ','BELTS','SOME CRAFTS','SASH','ANTIQUE RUNE'];
 const NAMES='Magma Storm Armour|Hydro Armour|Dragon Pulse Armour|Dragonfire Sword|Cataclysmic Sword|Biting Cold|Solaris|Shield of Light|Angel Shield|Kunzite Helmet|Pyrite Helmet|Aquamarine Helmet|Kunzite Shoes|Pyrite Shoes|Aquamarine Shoes|Kunzite Bracelet|Pyrite Bracelet|Aquamarine Bracelet|Kunzite Earrings|Pyrite Earrings|Aquamarine Earrings|Kunzite Necklace|Pyrite Necklace|Aquamarine Necklace'.split('|');
-const LIST=[[],NAMES,[],[],[],[],[]];
-const MAT={fd:'Fairy Dust',es:'Elite Soul',mp:'Midnight Potion',hb:'Hoof of the Baphomet',au:'Artifact of the Undead',fs:'Fusion Shard',bc:'Bottled Cloud'};
+const LIST=[['Battle Sword','Soul Stealing Blade','Poison Sword','Triton Sword','Rune Sword'],NAMES,[],[],[],[],[]];
+const MAT={fd:'Fairy Dust',es:'Elite Soul',mp:'Midnight Potion',hb:'Hoof of the Baphomet',au:'Artifact of the Undead',fs:'Fusion Shard',bc:'Bottled Cloud',ac:'Amethyst Cristal',cl:'Clam'};
 const DATA={'Magma Storm Armour':[{m:{fd:10,es:100,mp:50},y:25000},...Array.from({length:9},(_,i)=>{const n=i+2;return{m:{hb:n,au:10*n,fs:5*n,bc:3*n},y:0}})]};
- 
+/* Battle Sword: +0..+4 empty, +5/+6 = Amethyst Cristal + Clam (counts not set yet: use "edit material count mode") */
+const E=()=>({m:{},y:0}),B=()=>({m:{ac:0,cl:0},y:0});
+DATA['Battle Sword']=[E(),E(),E(),E(),E(),B(),B(),E(),E(),E()];
+
 /* ===== helpers (money accepts 1450, 1.45k, 2.3kk, 3.12kkk) ===== */
 const $=id=>document.getElementById(id);
 const parseMoney=s=>{const m=String(s).trim().toLowerCase().replace(/\s/g,'').replace(/,/g,'.').match(/^(\d*\.?\d+|\d+\.)(k{0,3})$/);return m?+(parseFloat(m[1])*Math.pow(1000,m[2].length)).toFixed(4):null};
@@ -169,14 +176,16 @@ const fmt=n=>{const a=Math.abs(n),u=a>=1e9?[1e9,'kkk']:a>=1e6?[1e6,'kk']:a>=1e3?
 const full=n=>Math.round(n).toLocaleString('de-DE');
 const money=n=>full(n)+' ('+fmt(n)+')';
 const ini=n=>n.split(' ').filter(w=>/^[A-Z]/.test(w)).map(w=>w[0]).join('').slice(0,2);
- 
+/* pictures live in upgrade-cost/image/<name>.png ; a missing file is simply skipped */
+const img=(n,c)=>`<img class="${c}" src="image/${encodeURIComponent(n)}.png" alt="" onerror="this.remove()" onload="this.parentNode.classList.add('hi')">`;
+
 /* ===== state ===== */
 const KEY='lirinUpgradeV1';
 const def=()=>({cat:1,item:'Magma Storm Armour',off:{},fails:{},price:{},ov:{},edit:false,o:{d:1,p:1}});
 function load(){try{const r=JSON.parse(localStorage.getItem(KEY));if(r)return Object.assign(def(),r)}catch(e){}return def()}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 let S=load();
- 
+
 function step(i){
   const b=DATA[S.item]&&DATA[S.item][i];if(!b)return null;
   const g=(k,v)=>{const o=S.ov[S.item+':'+i+':'+k];return o==null?v:o},m={};
@@ -199,13 +208,13 @@ function paint(){
   $('s-l').textContent=money(R.lager);$('s-m').textContent=money(R.mat);$('s-t').textContent=money(R.total);
   for(const k in R.c){const u=$('u-'+k),t=$('t-'+k);if(u){u.textContent=full(S.price[k]||0);t.textContent=full(R.c[k]*(S.price[k]||0))}}
 }
- 
+
 function render(){
   const R=calc(),idx=[...Array(10).keys()],allOn=idx.every(i=>!S.off[i]),data=DATA[S.item];
   let h=`<h1>UPGRADE COST CALCULATOR</h1><div class="line"></div>
   <p class="note">Note: In some items, the required lagers are not calculated.</p>
   <div class="tabs">${CATS.map((c,i)=>`<button class="tab${i===S.cat?' on':''}" data-a="cat" data-v="${i}" aria-pressed="${i===S.cat}">${c}</button>`).join('')}</div>
-  <div class="items"><div class="lbl">Choose item</div>${LIST[S.cat].length?LIST[S.cat].map(n=>`<button class="pill${n===S.item?' on':''}" data-a="item" data-v="${n}" aria-pressed="${n===S.item}"><i class="rc"></i>${n}</button>`).join(''):'<p class="empty">No items in this category yet.</p>'}</div>
+  <div class="items"><div class="lbl">Choose item</div>${LIST[S.cat].length?LIST[S.cat].map(n=>`<button class="pill${n===S.item?' on':''}" data-a="item" data-v="${n}" aria-pressed="${n===S.item}"><i class="rc"></i>${img(n,'ii')}${n}</button>`).join(''):'<p class="empty">No items in this category yet.</p>'}</div>
   <div class="steps"><button class="sp all${allOn?' on':''}" data-a="all"><i class="rc"></i>${allOn?'Click to Deactivate All':'Click to Activate All'}</button>${idx.map(i=>`<button class="sp${S.off[i]?'':' on'}" data-a="st" data-v="${i}" aria-pressed="${!S.off[i]}"><i class="rc"></i>+${i}</button>`).join('')}</div>
   <details class="panel" data-p="d"${S.o.d?' open':''}><summary>Details</summary><div class="dc">
   <div class="tr th"><span>Name</span><span>Materials</span><span class="fl">Fail Time(s)</span></div>`;
@@ -217,7 +226,7 @@ function render(){
       body=Object.keys(s.m).map(k=>`<label class="ed">${ini(MAT[k])}<input data-f="${i}:${k}" value="${s.m[k]}" inputmode="decimal" aria-label="${MAT[k]}"></label>`).join('');
       if(s.base.y>0)body+=`<label class="ed">Yang<input data-f="${i}:y" value="${fmt(s.y)}" inputmode="decimal" aria-label="Yang fee"></label>`;
     }else{
-      body=Object.keys(s.m).map(k=>`<span class="mat" title="${MAT[k]}"><i>${ini(MAT[k])}</i><b>${s.m[k]}</b></span>`).join('');
+      body=Object.keys(s.m).map(k=>`<span class="mat" title="${MAT[k]}"><i>${ini(MAT[k])}</i>${img(MAT[k],'mg')}${s.m[k]>0?`<b>${s.m[k]}</b>`:''}</span>`).join('');
       if(s.y>0)body+=`<span class="mat y" title="Yang"><i>Y</i><b>${fmt(s.y)}</b></span>`;
     }
     h+=`<div class="tr${S.off[i]?' off':''}"><span class="nm">${S.item}<small>+${i}</small></span><span class="mats">${body}</span><span class="fl">${i>=7?`<div class="fail"><button data-a="fm" data-v="${i}" aria-label="Fewer fails">−</button><b>${f}</b><button data-a="fp" data-v="${i}" aria-label="More fails">+</button></div><small>Write a fail time(s)</small>`:''}</span></div>`;
@@ -226,14 +235,14 @@ function render(){
   <details class="panel" data-p="p"${S.o.p?' open':''}><summary>Material Prices</summary><div class="dc"><div class="pbody">
   <button class="btn" data-a="edit">${S.edit?'Close':'Open'} edit material count mode</button>`;
   Object.keys(R.c).forEach(k=>{
-    h+=`<div class="prow"><div class="pin"><label><input data-pr="${k}" inputmode="decimal" placeholder="Write the Unit Price" value="${S.price[k]?fmt(S.price[k]):''}" aria-label="Unit price of ${MAT[k]}"><em>Yang</em></label><div class="pn">${R.c[k]}x ${MAT[k]}</div></div>
+    h+=`<div class="prow"><div class="pin"><label><input data-pr="${k}" inputmode="decimal" placeholder="Write the Unit Price" value="${S.price[k]?fmt(S.price[k]):''}" aria-label="Unit price of ${MAT[k]}"><em>Yang</em></label><div class="pn">${img(MAT[k],'mi')}${R.c[k]?R.c[k]+'x ':''}${MAT[k]}</div></div>
     <div class="pv"><div class="u">Unit : <span id="u-${k}">${full(S.price[k]||0)}</span></div><div class="t">Total : <span id="t-${k}">${full(R.c[k]*(S.price[k]||0))}</span> Lager</div></div></div>`;
   });
-  if(!Object.keys(R.c).length)h+='<p class="empty">Select at least one step to see the materials.</p>';
+  if(!Object.keys(R.c).length)h+='<p class="empty">No materials for the selected steps.</p>';
   h+='</div></div></details>';
   $('app').innerHTML=h;paint();
 }
- 
+
 document.addEventListener('click',e=>{
   const el=e.target.closest('[data-a]');if(!el)return;
   const a=el.dataset.a,v=el.dataset.v,k=S.item+':'+v;
