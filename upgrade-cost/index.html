@@ -189,7 +189,7 @@ const MAT={onyx:'Onyx Crystal',ash:"Demon's Ashes",claw:'Dragon Claw',pamphlet:'
   golddye:'Metallic Gold Dye',moonstone:'Moonstone',reddye:'Red Dye',garnet:'Garnet Crystal',gaya:'Gaya',
   soulsbelt:'Souls Belt',shadowbelt:'Shadow Belt',onyxboots:'Onyx Boots',warmasterhelmet:'War Master Helmet',devilshornarmour:"Devil's Horn Armour",
   toughstraps:'Tough Straps',linenbelt:'Linen Belt',multicolorpearl:'Multicolored Pearl',firebirdshoes:'Fire Bird Shoes',
-  soulcrystalnecklace:'Soul Crystal Necklace'};
+  soulcrystalnecklace:'Soul Crystal Necklace',heavenstearnecklace:"Heaven's Tear Necklace"};
 const ITEMS=[
   {c:0,n:'Battle Sword',fails:{1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0},steps:[
     [0],                                      // Craft
@@ -509,16 +509,16 @@ const ITEMS=[
     [5e6,'ruby',4,'blood',1,'symbol',1]       // +9
   ]},
   {c:6,n:'Soul Crystal Necklace',fails:{5:1,6:1,7:2,8:2,9:3},steps:[
-    [0],                                                        // Craft
-    [10e6,'ruby',5,'fur',2,'legs',1],                          // +1
-    [10e6,'ruby',10,'fur',3,'legs',3],                         // +2
-    [10e6,'ruby',10,'white',2,'symbol',2],                     // +3
-    [10e6,'ruby',10,'blue',2,'ash',3],                         // +4
-    [15e6,'ruby',10,'blood',2,'ash',4],                        // +5
-    [15e6,'ruby',10,'pearl',1,'dye',2],                        // +6
-    [20e6,'aquatic',5,'pearl',2,'claw',1,'scales',1],          // +7
-    [20e6,'aquatic',5,'pearl',2,'claw',2,'scales',2],          // +8
-    [25e6,'aquatic',5,'pearl',2,'wing',2,'pamphlet',1]         // +9
+    [100e6,'heavenstearnecklace',1,'ash',5,'dye',2,'multicolorpearl',5,'ruby',100,'fur',10,'legs',10,'symbol',3,'gaya',50], // Craft
+    [10e6,'ruby',5,'fur',2,'legs',2], // +1
+    [10e6,'ruby',10,'fur',3,'legs',3], // +2
+    [10e6,'ruby',10,'symbol',2,'white',2], // +3
+    [10e6,'ruby',10,'ash',3,'blue',2], // +4
+    [15e6,'ruby',10,'ash',4,'blood',2], // +5
+    [15e6,'ruby',10,'dye',2,'multicolorpearl',1], // +6
+    [20e6,'aquatic',5,'claw',1,'scales',1,'multicolorpearl',2], // +7
+    [20e6,'aquatic',5,'claw',2,'scales',2,'multicolorpearl',2], // +8
+    [25e6,'aquatic',5,'wing',2,'pamphlet',1,'multicolorpearl',2] // +9
   ]},
   {c:6,n:'Onyx Necklace',fails:{5:2,6:2,7:3,8:4,9:5},steps:[
     [250e6,'soulcrystalnecklace',1,'onyx',100,'ruby',100,'mithril',25,'wubba',2,'scales',6,'claw',6,'wing',2,'thread',10,'yarn',3,'gaya',250], // Craft
