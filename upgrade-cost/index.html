@@ -205,7 +205,7 @@ const imgState=n=>{const e=warm(n).el;return e.complete?(e.naturalWidth?1:-1):0}
 const miss=n=>imgState(n)<0?' no':'';
 const pic=(n,c)=>{const s=imgState(n);return s<0?'':`<img class="${c}${s>0?' ok':''}" src="${warm(n).el.src}" alt="" onload="this.classList.add('ok')" onerror="this.parentNode.classList.add('no');this.remove()">`};
 /* inventory slots (height) per category: weapons 3, armours 2, everything else 1. One item can override it with s:2 in data.js */
-const SLOTS=[3,2,1,1,1,1,1,1,1];
+const SLOTS=[3,2,1,1,1,1,1,2,2];
 const slotsOf=x=>x.s||SLOTS[x.c]||1;
 const matSlots=id=>{const x=BY.get(MAT[id]);return x?slotsOf(x):1};
 
