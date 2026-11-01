@@ -1,505 +1,383 @@
-const CATS=['WEAPONS','ARMOURS','HELMETS','SHIELDS','EARRINGS','BRACELET','NECKLACE','SHOES','BELTS'];
-const MAT={onyx:'Onyx Crystal',ash:"Demon's Ashes",claw:'Dragon Claw',pamphlet:'Fencing Pamphlet',mithril:'Mithril',dye:"Azrael's Dye",
-  pearl:'Shimmering Multicolor Pearl',scales:'Dragon Scales',wing:"Blue Dragon's Wing",thread:'Thin Thread',yarn:'Gray Yarn',
-  pattern:'Sewing Pattern',wubba:'Wubba Insignia',flame:'Flame Stone',ice:'Ice Flame Stone',
-  ruby:'Ruby Crystal',fur:'Monkey Fur',legs:'Spider Legs',white:'White Pearl',symbol:"Beast's Symbol",blue:'Blue Pearl',
-  blood:'Blood-Red Pearl',aquatic:'Aquatic Crystal',amethyst:'Amethyst Crystal',clam:'Clam', talismandeath:'Talisman of Death',
-  emerald:'Emerald Crystal',titanium:'Titanium Dioxide',bluedye:'Blue Dye',reddragonhorn:'Red Dragon Horn',cords:'Sturdy Cords',
-  agate:'Agate',whitedye:'White Dye',dragonwings:'Dragon Wings',armourdesign:'Armour Design',reddragonscale:'Red Dragon Scale',
-  golddye:'Metallic Gold Dye',moonstone:'Moonstone',reddye:'Red Dye',garnet:'Garnet Crystal',gaya:'Gaya',
-  soulsbelt:'Souls Belt',shadowbelt:'Shadow Belt',onyxboots:'Onyx Boots',warmasterhelmet:'War Master Helmet',devilshornarmour:"Devil's Horn Armour",
-  toughstraps:'Tough Straps',linenbelt:'Linen Belt',multicolorpearl:'Multicolored Pearl',firebirdshoes:'Fire Bird Shoes',
-  soulcrystalnecklace:'Soul Crystal Necklace',heavenstearnecklace:"Heaven's Tear Necklace",soulcrystalbracelet:'Soul Crystal Bracelet',
-  heavenstearbracelet:"Heaven's Tear Bracelet",soulcrystalearrings:'Soul Crystal Earrings', amethystearrings:'Amethyst Earrings',
-  falconshield:'Falcon Shield',blackroundshield:'Black Round Shield',fearmask:'Fear Mask',ghostmasksallet:'Ghost Mask Sallet',
-  bluesteelarmour:'Blue Steel Armour',blacksteelarmour:'Black Steel Armour',battlesword:'Battle Sword',tritonsword:'Triton Sword',
-  phoenixshoes:'Phoenix Shoes'};
-const ITEMS=[
-  {c:0,n:'Battle Sword',fails:{},steps:[
-    [100e6,'talismandeath',1], // Craft
-    [150e3],                                  // +1
-    [180e3],                                  // +2
-    [225e3],                                  // +3
-    [270e3],                                  // +4
-    [360e3,'amethyst',2,'clam',3],            // +5
-    [720e3,'amethyst',2,'clam',4],            // +6
-    [1.5e6,'ruby',2,'white',1],               // +7
-    [3e6,'ruby',2,'blue',1],                  // +8
-    [6e6,'ruby',2,'blood',1,'talismandeath',1]     // +9
-  ]
-},
-  {c:0,n:'Soul Stealing Blade',fails:{7:1,8:2,9:2},steps:[
-    [100e6,'talismandeath',1,'dye',1], // Craft
-    [500e3],                                        // +1
-    [500e3],                                        // +2
-    [500e3,'amethyst',1],                           // +3
-    [500e3,'amethyst',1],                           // +4
-    [1e6,'amethyst',2,'clam',3],                    // +5
-    [2e6,'amethyst',2,'clam',6],                    // +6
-    [4e6,'ruby',2,'white',2,'fur',1,'legs',1],      // +7
-    [5e6,'ruby',3,'blue',2,'fur',2,'legs',2],       // +8
-    [7.5e6,'ruby',4,'blood',2,'symbol',1,'talismandeath',1] // +9
-  ]
-},
-  {c:0,n:'Poison Sword',fails:{7:1,8:2,9:2},steps:[
-    [100e6,'talismandeath',1], // Craft
-    [500e3],                                               // +1
-    [500e3],                                               // +2
-    [500e3,'amethyst',1],                                  // +3
-    [500e3,'amethyst',1],                                  // +4
-    [1e6,'amethyst',2,'clam',3],                           // +5
-    [2e6,'amethyst',2,'clam',6],                           // +6
-    [4e6,'ruby',2,'white',2,'fur',1,'legs',1],             // +7
-    [5e6,'ruby',3,'blue',2,'fur',2,'legs',2],              // +8
-    [7.5e6,'ruby',4,'blood',2,'symbol',1,'talismandeath',1] // +9
-  ]
-},
-  {c:0,n:'Triton Sword',fails:{5:1,6:1,7:1,8:1,9:2},steps:[
-    [100e6,'battlesword',1,'claw',5,'scales',5,'wing',2,'pamphlet',5,'ash',5,'dye',2,'multicolorpearl',5,'ruby',50,'gaya',100], // Craft
-    [10e6,'ruby',10,'fur',2,'legs',2],
-    [10e6,'ruby',10,'fur',3,'legs',3],
-    [10e6,'ruby',10,'symbol',2,'white',2],
-    [10e6,'ruby',10,'ash',3,'blue',2],
-    [15e6,'ruby',10,'ash',4,'blood',2],
-    [15e6,'ruby',10,'dye',2,'multicolorpearl',1],
-    [20e6,'aquatic',5,'claw',1,'scales',1,'multicolorpearl',2],
-    [20e6,'aquatic',5,'claw',2,'scales',2,'multicolorpearl',2],
-    [25e6,'aquatic',5,'wing',2,'pamphlet',1,'multicolorpearl',2]
-  ]
-},
-  {c:0,n:'Rune Sword',fails:{5:1,6:1,7:1,8:1,9:2},steps:[
-    [250e6,'tritonsword',1,'thread',5,'yarn',2,'mithril',10,'onyx',50,'ice',5,'flame',5,'pattern',2,'wubba',2,'pearl',3,'gaya',150], // Craft
-    [25e6,'onyx',15,'claw',3,'scales',3,'pearl',1],           // +1
-    [25e6,'onyx',15,'wing',1,'pamphlet',1,'pearl',1],         // +2
-    [25e6,'onyx',15,'mithril',3,'yarn',2,'pearl',1],          // +3
-    [25e6,'onyx',25,'mithril',3,'thread',2,'pearl',2],        // +4
-    [30e6,'onyx',25,'mithril',3,'thread',4,'pearl',2],        // +5
-    [30e6,'onyx',25,'mithril',3,'wubba',1,'pattern',1],       // +6
-    [40e6,'onyx',30,'mithril',5,'flame',1,'ice',1],           // +7
-    [40e6,'onyx',30,'mithril',5,'flame',1,'ice',1],           // +8
-    [50e6,'onyx',30,'mithril',5,'flame',2,'ice',2]            // +9
-  ]
-},
-  {c:1,n:'Black Steel Armour',fails:{},steps:[
-    [100e6,'talismandeath',1], // Craft
-    [150e3], // +1
-    [180e3], // +2
-    [225e3], // +3
-    [270e3], // +4
-    [360e3,'amethyst',2,'clam',3], // +5
-    [720e3,'amethyst',2,'clam',4], // +6
-    [1.5e6,'ruby',2,'white',1], // +7
-    [3e6,'ruby',3,'blue',1], // +8
-    [6e6,'ruby',4,'blood',1,'talismandeath',1] // +9
-  ]},
-  {c:1,n:'Blue Steel Armour',fails:{5:1,6:1,7:1,8:1,9:2},steps:[
-    [100e6,'blacksteelarmour',1,'claw',5,'scales',5,'wing',2,'multicolorpearl',5,'ash',5,'dye',2,'ruby',50,'gaya',100], // Craft
-    [10e6,'ruby',10,'fur',2,'legs',2], // +1
-    [10e6,'ruby',10,'fur',3,'legs',3], // +2
-    [10e6,'ruby',10,'symbol',2,'white',2], // +3
-    [10e6,'ruby',10,'ash',3,'blue',2], // +4
-    [15e6,'ruby',10,'ash',4,'blood',2], // +5
-    [15e6,'ruby',10,'dye',2,'multicolorpearl',1], // +6
-    [20e6,'aquatic',5,'claw',1,'scales',1,'multicolorpearl',2], // +7
-    [20e6,'aquatic',5,'claw',2,'scales',2,'multicolorpearl',2], // +8
-    [25e6,'aquatic',5,'wing',2,'pamphlet',1,'multicolorpearl',2] // +9
-  ]},
-  {c:1,n:"Devil's Horn Armour",fails:{5:1,6:2,7:3,8:3,9:5},steps:[
-    [500e6,'bluesteelarmour',1,'thread',10,'yarn',3,'mithril',25,'onyx',100,'ice',10,'flame',10,'pattern',3,'wubba',3,'pearl',5,'gaya',250], // Craft
-    [25e6,'onyx',15,'claw',4,'scales',4,'pearl',2], // +1
-    [25e6,'onyx',15,'wing',2,'pamphlet',1,'pearl',2], // +2
-    [25e6,'onyx',15,'mithril',5,'yarn',2,'pearl',2], // +3
-    [25e6,'onyx',25,'mithril',5,'thread',3,'pearl',3], // +4
-    [30e6,'onyx',25,'mithril',5,'thread',5,'pearl',3], // +5
-    [30e6,'onyx',25,'mithril',5,'wubba',1,'pattern',2], // +6
-    [40e6,'onyx',30,'mithril',7,'flame',2,'ice',2], // +7
-    [40e6,'onyx',30,'mithril',7,'flame',2,'ice',2], // +8
-    [50e6,'onyx',30,'mithril',7,'flame',3,'ice',3] // +9
-  ]},
-  {c:1,n:'Aurora Armour',fails:{5:3,6:3,7:4,8:5,9:6},steps:[
-    [2.5e9,'devilshornarmour',1,'flame',15,'ice',15,'pattern',5,'titanium',5,'agate',5,'moonstone',5,'golddye',1,'garnet',100,'toughstraps',15,'gaya',250], // Craft
-    [100e6,'cords',2,'titanium',2,'agate',2,'moonstone',2], // +1
-    [100e6,'cords',3,'titanium',2,'agate',2,'moonstone',2], // +2
-    [100e6,'cords',2,'titanium',2,'agate',2,'moonstone',2], // +3
-    [150e6,'cords',3,'titanium',3,'agate',3,'whitedye',3], // +4
-    [150e6,'cords',2,'titanium',2,'moonstone',2,'bluedye',2], // +5
-    [150e6,'cords',3,'agate',2,'moonstone',2,'reddye',2], // +6
-    [200e6,'armourdesign',1,'reddragonhorn',2,'reddragonscale',3,'golddye',2], // +7
-    [200e6,'armourdesign',1,'dragonwings',3,'reddragonscale',3,'golddye',2], // +8
-    [200e6,'armourdesign',1,'dragonwings',2,'reddragonhorn',3,'golddye',2] // +9
-  ]},
-  {c:1,n:'Magma Glow Armour',fails:{5:3,6:3,7:4,8:5,9:6},steps:[
-    [2.5e9,'devilshornarmour',1,'flame',15,'ice',15,'pattern',5,'titanium',5,'agate',5,'moonstone',5,'golddye',1,'garnet',100,'toughstraps',15,'gaya',250], // Craft
-    [100e6,'cords',2,'titanium',2,'agate',2,'moonstone',2], // +1
-    [100e6,'cords',3,'titanium',2,'agate',2,'moonstone',2], // +2
-    [100e6,'cords',2,'titanium',2,'agate',2,'moonstone',2], // +3
-    [150e6,'cords',3,'titanium',3,'agate',3,'whitedye',3], // +4
-    [150e6,'cords',2,'titanium',2,'moonstone',2,'bluedye',2], // +5
-    [150e6,'cords',3,'agate',2,'moonstone',2,'reddye',2], // +6
-    [200e6,'armourdesign',1,'reddragonhorn',2,'reddragonscale',3,'golddye',2], // +7
-    [200e6,'armourdesign',1,'dragonwings',3,'reddragonscale',3,'golddye',2], // +8
-    [200e6,'armourdesign',1,'dragonwings',2,'reddragonhorn',3,'golddye',2] // +9
-  ]},
-  {c:2,n:'Ghost Mask Sallet',fails:{},steps:[
-    [5e6], // Craft
-    [100e3],                              // +1
-    [100e3],                              // +2
-    [100e3],                              // +3
-    [100e3],                              // +4
-    [100e3,'emerald',1],                  // +5
-    [200e3,'emerald',1],                  // +6
-    [300e3,'amethyst',1],                 // +7
-    [500e3,'amethyst',2,'clam',2],        // +8
-    [1e6,'amethyst',3,'clam',3]           // +9
-  ]},
-  {c:2,n:'Fear Mask',fails:{7:1,8:1,9:2},steps:[
-    [25e6,'ghostmasksallet',1,'fur',6,'legs',6,'symbol',2,'amethyst',50,'emerald',25,'white',2,'blue',2,'blood',2,'gaya',25], // Craft
-    [250e3],                                       // +1
-    [250e3],                                       // +2
-    [250e3],                                       // +3
-    [250e3],                                       // +4
-    [1e6,'amethyst',2,'clam',1],                   // +5
-    [1e6,'amethyst',2,'clam',2],                   // +6
-    [2.5e6,'ruby',2,'white',1,'fur',1],            // +7
-    [2.5e6,'ruby',3,'blue',1,'legs',1],            // +8
-    [5e6,'ruby',4,'blood',1,'symbol',1]            // +9
-  ]},
-  {c:2,n:'War Master Helmet',fails:{5:2,6:2,7:3,8:4,9:5},steps:[
-    [150e6,'fearmask',1,'aquatic',50,'ruby',150,'multicolorpearl',5,'pamphlet',2,'ash',6,'dye',3,'scales',5,'claw',5,'wing',2,'gaya',100], // Craft
-    [25e6,'aquatic',5,'ash',3,'dye',2], // +1
-    [25e6,'aquatic',5,'ash',4,'dye',2], // +2
-    [25e6,'aquatic',5,'claw',4,'scales',4], // +3
-    [25e6,'aquatic',5,'pamphlet',1,'wing',1], // +4
-    [30e6,'onyx',25,'thread',6,'pearl',3], // +5
-    [30e6,'onyx',25,'yarn',2,'pearl',3], // +6
-    [40e6,'onyx',30,'mithril',7,'wubba',1,'pattern',1], // +7
-    [40e6,'onyx',30,'mithril',7,'flame',2,'ice',2], // +8
-    [50e6,'onyx',30,'mithril',7,'flame',3,'ice',3] // +9
-  ]},
-  {c:2,n:'Dragon Steel Helm',fails:{4:4,5:4,6:5,7:6,8:7,9:8},steps:[
-    [5e9,'warmasterhelmet',1,'armourdesign',5,'reddragonscale',5,'reddragonhorn',5,'dragonwings',5,'golddye',3,'titanium',10,'agate',10,'moonstone',10,'garnet',250,'gaya',250], // Craft
-    [100e6,'cords',4,'titanium',4,'reddragonhorn',3,'bluedye',4], // +1
-    [100e6,'cords',4,'titanium',4,'reddragonhorn',3,'bluedye',4], // +2
-    [100e6,'cords',4,'titanium',4,'reddragonhorn',3,'bluedye',4], // +3
-    [150e6,'armourdesign',2,'agate',3,'dragonwings',2,'whitedye',3], // +4
-    [150e6,'armourdesign',2,'agate',3,'dragonwings',2,'whitedye',3], // +5
-    [150e6,'armourdesign',2,'agate',3,'dragonwings',2,'whitedye',3], // +6
-    [200e6,'reddragonhorn',2,'dragonwings',2,'reddragonscale',2,'golddye',1], // +7
-    [200e6,'reddragonhorn',2,'dragonwings',2,'reddragonscale',2,'golddye',1], // +8
-    [200e6,'reddragonhorn',3,'dragonwings',3,'reddragonscale',3,'golddye',1] // +9
-  ]},
-  {c:3,n:'Black Round Shield',fails:{},steps:[
-    [5e6], // Craft
-    [100e3],                              // +1
-    [100e3],                              // +2
-    [100e3],                              // +3
-    [100e3],                              // +4
-    [100e3,'emerald',1],                  // +5
-    [200e3,'emerald',1],                  // +6
-    [300e3,'amethyst',1,'clam',2],        // +7
-    [500e3,'amethyst',2,'clam',2],        // +8
-    [1e6,'amethyst',3,'clam',3]           // +9
-  ]},
-  {c:3,n:'Falcon Shield',fails:{},steps:[
-    [50e6,'blackroundshield',1,'fur',6,'legs',6,'symbol',2,'amethyst',50,'emerald',25,'white',3,'blue',3,'blood',3,'gaya',25], // Craft
-    [100e3],                              // +1
-    [200e3],                              // +2
-    [250e3,'emerald',2],                  // +3
-    [300e3,'emerald',3],                  // +4
-    [400e3,'emerald',3,'clam',2],         // +5
-    [500e3,'amethyst',2,'clam',2],        // +6
-    [1e6,'amethyst',2,'clam',2],          // +7
-    [3e6,'amethyst',3,'clam',3],          // +8
-    [5e6,'amethyst',4,'clam',3]           // +9
-  ]},
-  {c:3,n:'Onyx Shield',fails:{5:2,6:2,7:3,8:4,9:5},steps:[
-    [150e6,'falconshield',1,'aquatic',50,'ruby',150,'multicolorpearl',5,'pamphlet',2,'ash',6,'dye',3,'scales',5,'claw',5,'wing',2,'gaya',100], // Craft
-    [25e6,'aquatic',5,'ash',3,'dye',2], // +1
-    [25e6,'aquatic',5,'ash',4,'dye',2], // +2
-    [25e6,'aquatic',5,'claw',4,'scales',4], // +3
-    [25e6,'aquatic',5,'pamphlet',1,'wing',1], // +4
-    [30e6,'onyx',25,'thread',6,'pearl',3], // +5
-    [30e6,'onyx',25,'yarn',2,'pearl',3], // +6
-    [40e6,'onyx',30,'mithril',7,'wubba',1,'pattern',1], // +7
-    [40e6,'onyx',30,'mithril',7,'flame',2,'ice',2], // +8
-    [50e6,'onyx',30,'mithril',7,'flame',3,'ice',3] // +9
-  ]},
-  {c:4,n:'Ebony Earrings',fails:{},steps:[
-    [0,'emerald',3], // Craft
-    [10e3],                      // +1
-    [20e3],                      // +2
-    [40e3],                      // +3
-    [60e3],                      // +4
-    [80e3],                      // +5
-    [100e3],                     // +6
-    [200e3,'emerald',1],         // +7
-    [300e3,'emerald',1],         // +8
-    [500e3,'emerald',2]          // +9
-  ]},
-  {c:4,n:'Amethyst Earrings',fails:{7:1,8:1,9:2},steps:[
-    [5e6,'amethyst',10,'symbol',1], // Craft
-    [250e3],                                  // +1
-    [250e3],                                  // +2
-    [250e3],                                  // +3
-    [250e3],                                  // +4
-    [1e6,'amethyst',2,'clam',1],              // +5
-    [1e6,'amethyst',2,'clam',2],              // +6
-    [2.5e6,'ruby',2,'white',1,'fur',1],       // +7
-    [2.5e6,'ruby',2,'blue',1,'legs',1],       // +8
-    [5e6,'ruby',4,'blood',1,'symbol',1]       // +9
-  ]},
-  {c:4,n:'Soul Crystal Earrings',fails:{5:1,6:1,7:2,8:2,9:3},steps:[
-    [100e6,'amethystearrings',1,'ash',5,'dye',2,'multicolorpearl',5,'ruby',100,'fur',10,'legs',10,'symbol',3,'gaya',50], // Craft
-    [10e6,'ruby',5,'fur',2,'legs',2], // +1
-    [10e6,'ruby',10,'fur',3,'legs',3], // +2
-    [10e6,'ruby',10,'symbol',2,'white',2], // +3
-    [10e6,'ruby',10,'ash',3,'blue',2], // +4
-    [15e6,'ruby',10,'ash',4,'blood',2], // +5
-    [15e6,'ruby',10,'dye',2,'multicolorpearl',1], // +6
-    [20e6,'aquatic',5,'claw',1,'scales',1,'multicolorpearl',2], // +7
-    [20e6,'aquatic',5,'claw',2,'scales',2,'multicolorpearl',2], // +8
-    [25e6,'aquatic',5,'wing',2,'pamphlet',1,'multicolorpearl',2] // +9
-  ]},
-  {c:4,n:'Onyx Earrings',fails:{5:2,6:2,7:3,8:4,9:5},steps:[
-    [250e6,'soulcrystalearrings',1,'onyx',100,'ruby',100,'mithril',25,'wubba',2,'scales',6,'claw',6,'wing',2,'thread',10,'yarn',3,'gaya',250], // Craft
-    [25e6,'onyx',15,'ash',3,'dye',2,'pearl',1],                // +1
-    [25e6,'onyx',15,'claw',3,'scales',3,'pearl',1],            // +2
-    [25e6,'onyx',15,'pamphlet',1,'wing',2,'pearl',2],          // +3
-    [25e6,'onyx',25,'mithril',5,'thread',3,'pearl',2],        // +4
-    [30e6,'onyx',25,'mithril',5,'thread',5,'pearl',3],        // +5
-    [30e6,'onyx',25,'mithril',5,'yarn',2,'pearl',3],          // +6
-    [40e6,'onyx',30,'mithril',7,'wubba',1,'pattern',1],       // +7
-    [40e6,'onyx',30,'mithril',7,'flame',3,'ice',3],           // +8
-    [50e6,'onyx',30,'mithril',7,'flame',4,'ice',4]            // +9
-  ]},
-  {c:5,n:"Heaven's Tear Bracelet",fails:{7:1,8:1,9:2},steps:[
-    [5e6,'amethyst',10,'symbol',1], // Craft
-    [250e3],                                  // +1
-    [250e3],                                  // +2
-    [250e3],                                  // +3
-    [250e3],                                  // +4
-    [1e6,'amethyst',2,'clam',1],              // +5
-    [1e6,'amethyst',2,'clam',2],              // +6
-    [2.5e6,'ruby',2,'white',1,'fur',1],       // +7
-    [2.5e6,'ruby',2,'blue',1,'legs',1],       // +8
-    [5e6,'ruby',4,'blood',1,'symbol',1]       // +9
-]},
-  {c:5,n:'Soul Crystal Bracelet',fails:{5:1,6:1,7:2,8:2,9:3},steps:[
-    [100e6,'heavenstearbracelet',1,'ash',5,'dye',2,'multicolorpearl',5,'ruby',100,'fur',10,'legs',10,'symbol',3,'gaya',50], // Craft
-    [10e6,'ruby',5,'fur',2,'legs',2], // +1
-    [10e6,'ruby',10,'fur',3,'legs',3], // +2
-    [10e6,'ruby',10,'symbol',2,'white',2], // +3
-    [10e6,'ruby',10,'ash',3,'blue',2], // +4
-    [15e6,'ruby',10,'ash',4,'blood',2], // +5
-    [15e6,'ruby',10,'dye',2,'multicolorpearl',1], // +6
-    [20e6,'aquatic',5,'claw',1,'scales',1,'multicolorpearl',2], // +7
-    [20e6,'aquatic',5,'claw',2,'scales',2,'multicolorpearl',2], // +8
-    [25e6,'aquatic',5,'wing',2,'pamphlet',1,'multicolorpearl',2] // +9
-  ]},
-  {c:5,n:'Onyx Bracelet',fails:{5:2,6:2,7:3,8:4,9:5},steps:[
-    [250e6,'soulcrystalbracelet',1,'onyx',100,'ruby',100,'mithril',25,'wubba',2,'scales',6,'claw',6,'wing',2,'thread',10,'yarn',3,'gaya',250], // Craft
-    [25e6,'onyx',15,'ash',3,'dye',2,'pearl',1],                // +1
-    [25e6,'onyx',15,'claw',3,'scales',3,'pearl',1],            // +2
-    [25e6,'onyx',15,'pamphlet',1,'wing',2,'pearl',2],          // +3
-    [25e6,'onyx',25,'mithril',5,'thread',3,'pearl',2],        // +4
-    [30e6,'onyx',25,'mithril',5,'thread',5,'pearl',3],        // +5
-    [30e6,'onyx',25,'mithril',5,'yarn',2,'pearl',3],          // +6
-    [40e6,'onyx',30,'mithril',7,'wubba',1,'pattern',1],       // +7
-    [40e6,'onyx',30,'mithril',7,'flame',3,'ice',3],           // +8
-    [50e6,'onyx',30,'mithril',7,'flame',4,'ice',4]            // +9
-  ]},
-  {c:6,n:'Jade Necklace',fails:{},steps:[
-    [0,'amethyst',3], // Craft
-    [10e3],                      // +1
-    [20e3],                      // +2
-    [40e3],                      // +3
-    [60e3],                      // +4
-    [80e3],                      // +5
-    [100e3],                     // +6
-    [200e3,'emerald',1],         // +7
-    [300e3,'emerald',1],         // +8
-    [500e3,'emerald',2]          // +9
-  ]},
-  {c:6,n:"Elemental Necklace",fails:{},steps:[
-    [10e6,'fur',2,'legs',2,'symbol',1,'amethyst',30,'emerald',15,'clam',25,'gaya',5], // Craft
-    [100e3], // +1
-    [100e3], // +2
-    [100e3], // +3
-    [100e3], // +4
-    [100e3,'emerald',1], // +5
-    [200e3,'emerald',1], // +6
-    [300e3,'amethyst',1], // +7
-    [500e3,'amethyst',2,'clam',2], // +8
-    [1e6,'amethyst',3,'clam',3] // +9
-  ]},
-  {c:6,n:"Heaven's Tear Necklace",fails:{7:1,8:1,9:2},steps:[
-    [5e6,'amethyst',10,'symbol',1], // Craft
-    [250e3],                                  // +1
-    [250e3],                                  // +2
-    [250e3],                                  // +3
-    [250e3],                                  // +4
-    [1e6,'amethyst',2,'clam',1],              // +5
-    [1e6,'amethyst',2,'clam',2],              // +6
-    [2.5e6,'ruby',2,'white',1,'fur',1],       // +7
-    [2.5e6,'ruby',2,'blue',1,'legs',1],       // +8
-    [5e6,'ruby',4,'blood',1,'symbol',1]       // +9
-  ]},
-  {c:6,n:'Soul Crystal Necklace',fails:{5:1,6:1,7:2,8:2,9:3},steps:[
-    [100e6,'heavenstearnecklace',1,'ash',5,'dye',2,'multicolorpearl',5,'ruby',100,'fur',10,'legs',10,'symbol',3,'gaya',50], // Craft
-    [10e6,'ruby',5,'fur',2,'legs',2], // +1
-    [10e6,'ruby',10,'fur',3,'legs',3], // +2
-    [10e6,'ruby',10,'symbol',2,'white',2], // +3
-    [10e6,'ruby',10,'ash',3,'blue',2], // +4
-    [15e6,'ruby',10,'ash',4,'blood',2], // +5
-    [15e6,'ruby',10,'dye',2,'multicolorpearl',1], // +6
-    [20e6,'aquatic',5,'claw',1,'scales',1,'multicolorpearl',2], // +7
-    [20e6,'aquatic',5,'claw',2,'scales',2,'multicolorpearl',2], // +8
-    [25e6,'aquatic',5,'wing',2,'pamphlet',1,'multicolorpearl',2] // +9
-  ]},
-  {c:6,n:'Onyx Necklace',fails:{5:2,6:2,7:3,8:4,9:5},steps:[
-    [250e6,'soulcrystalnecklace',1,'onyx',100,'ruby',100,'mithril',25,'wubba',2,'scales',6,'claw',6,'wing',2,'thread',10,'yarn',3,'gaya',250], // Craft
-    [25e6,'onyx',15,'ash',3,'dye',2,'pearl',1],                // +1
-    [25e6,'onyx',15,'claw',3,'scales',3,'pearl',1],            // +2
-    [25e6,'onyx',15,'pamphlet',1,'wing',2,'pearl',2],          // +3
-    [25e6,'onyx',25,'mithril',5,'thread',3,'pearl',2],        // +4
-    [30e6,'onyx',25,'mithril',5,'thread',5,'pearl',3],        // +5
-    [30e6,'onyx',25,'mithril',5,'yarn',2,'pearl',3],          // +6
-    [40e6,'onyx',30,'mithril',7,'wubba',1,'pattern',1],       // +7
-    [40e6,'onyx',30,'mithril',7,'flame',3,'ice',3],           // +8
-    [50e6,'onyx',30,'mithril',7,'flame',4,'ice',4]            // +9
-  ]},
-  {c:7,n:'Elemental Shoes',fails:{},steps:[
-    [10e6,'fur',2,'legs',2,'symbol',1,'amethyst',30,'emerald',15,'clam',25,'gaya',5], // Craft
-    [100e3], // +1
-    [100e3], // +2
-    [100e3], // +3
-    [100e3], // +4
-    [100e3,'emerald',1], // +5
-    [200e3,'emerald',1], // +6
-    [300e3,'amethyst',1], // +7
-    [500e3,'amethyst',2,'clam',2], // +8
-    [1e6,'amethyst',3,'clam',3] // +9
-  ]},
-  {c:7,n:'Phoenix Shoes',fails:{7:1,8:1,9:2},steps:[
-    [25e6,'amethyst',10], // Craft
-    [250e3], // +1
-    [250e3], // +2
-    [250e3], // +3
-    [250e3], // +4
-    [1e6,'amethyst',2,'clam',1], // +5
-    [1e6,'amethyst',2,'clam',2], // +6
-    [2.5e6,'ruby',2,'white',1,'fur',1], // +7
-    [2.5e6,'ruby',3,'blue',1,'legs',1], // +8
-    [5e6,'ruby',4,'blood',1,'symbol',1] // +9
-  ]
-},
-  {c:7,n:'Fire Bird Shoes',fails:{7:1,8:2,9:2},steps:[
-    [5e6,'amethyst',10,'symbol',1], // Craft
-    [500e3],                     // +1
-    [500e3],                     // +2
-    [500e3,'amethyst',1],         // +3
-    [500e3,'amethyst',1],         // +4
-    [1e6,'amethyst',2,'clam',3],  // +5
-    [2e6,'amethyst',2,'clam',6],  // +6
-    [4e6,'ruby',2,'white',2,'fur',1,'legs',1], // +7
-    [5e6,'ruby',3,'blue',2,'fur',2,'legs',2],  // +8
-    [7.5e6,'ruby',4,'blood',2,'symbol',1,'talismandeath',1] // +9
-  ]},
-  {c:7,n:'Qilin Shoes',fails:{5:1,6:1,7:1,8:1,9:2},steps:[
-    [100e6,'phoenixshoes',1,'ash',5,'dye',2,'multicolorpearl',3,'ruby',50,'fur',5,'legs',5,'symbol',2,'gaya',50], // Craft
-    [10e6,'ruby',5,'fur',1,'legs',1], // +1
-    [10e6,'ruby',10,'fur',2,'legs',2], // +2
-    [10e6,'ruby',10,'symbol',1,'white',2], // +3
-    [10e6,'ruby',10,'ash',1,'blue',2], // +4
-    [15e6,'ruby',10,'ash',2,'blood',2], // +5
-    [15e6,'ruby',10,'dye',1,'multicolorpearl',1], // +6
-    [20e6,'aquatic',5,'claw',1,'scales',1,'multicolorpearl',1], // +7
-    [20e6,'aquatic',5,'claw',2,'scales',2,'multicolorpearl',1], // +8
-    [25e6,'aquatic',5,'wing',1,'pamphlet',1,'multicolorpearl',2] // +9
-  ]
-},
-  {c:7,n:'Onyx Boots',fails:{5:2,6:2,7:3,8:4,9:5},steps:[
-    [150e6,'firebirdshoes',1,'aquatic',50,'ruby',150,'multicolorpearl',5,'pamphlet',2,'ash',6,'dye',3,'scales',5,'claw',5,'wing',2,'gaya',100], // Craft
-    [25e6,'aquatic',5,'ash',3,'dye',2], // +1
-    [25e6,'aquatic',5,'ash',4,'dye',2], // +2
-    [25e6,'aquatic',5,'claw',4,'scales',4], // +3
-    [25e6,'aquatic',5,'pamphlet',1,'wing',1], // +4
-    [30e6,'onyx',25,'thread',6,'pearl',3], // +5
-    [30e6,'onyx',25,'yarn',2,'pearl',3], // +6
-    [40e6,'onyx',30,'mithril',7,'wubba',1,'pattern',1], // +7
-    [40e6,'onyx',30,'mithril',7,'flame',2,'ice',2], // +8
-    [50e6,'onyx',30,'mithril',7,'flame',3,'ice',3] // +9
-  ]},
-  {c:7,n:'Fire Shoes',fails:{4:4,5:4,6:5,7:6,8:7,9:8},steps:[
-    [5e9,'onyxboots',1,'armourdesign',5,'reddragonscale',5,'reddragonhorn',5,'dragonwings',5,'golddye',3,'titanium',10,'agate',10,'moonstone',10,'garnet',250,'gaya',250], // Craft
-    [100e6,'armourdesign',2,'titanium',4,'reddragonhorn',2,'bluedye',4], // +1
-    [100e6,'armourdesign',2,'titanium',4,'reddragonhorn',2,'bluedye',4], // +2
-    [100e6,'armourdesign',2,'titanium',4,'reddragonhorn',2,'bluedye',4], // +3
-    [150e6,'cords',4,'moonstone',3,'reddragonscale',2,'reddye',3], // +4
-    [150e6,'cords',4,'moonstone',3,'reddragonscale',2,'reddye',3], // +5
-    [150e6,'cords',4,'moonstone',3,'reddragonscale',2,'reddye',3], // +6
-    [200e6,'reddragonhorn',2,'dragonwings',2,'reddragonscale',2,'golddye',1], // +7
-    [200e6,'reddragonhorn',2,'dragonwings',2,'reddragonscale',2,'golddye',1], // +8
-    [200e6,'reddragonhorn',2,'dragonwings',2,'reddragonscale',2,'golddye',1] // +9
-  ]},
-  {c:8,n:'Linen Belt',fails:{7:1,8:2,9:2},steps:[
-    [25e6,'fur',6,'legs',6,'symbol',2,'amethyst',50,'emerald',25,'white',3,'blue',3,'blood',3,'gaya',10], // Craft
-    [500e3], // +1
-    [500e3], // +2
-    [500e3,'amethyst',1], // +3
-    [500e3,'amethyst',1], // +4
-    [1e6,'amethyst',2,'clam',3], // +5
-    [2e6,'amethyst',2,'clam',6], // +6
-    [4e6,'ruby',2,'white',2,'fur',1,'legs',1], // +7
-    [5e6,'ruby',3,'blue',2,'fur',2,'legs',2], // +8
-    [7.5e6,'ruby',4,'blood',2,'symbol',1,'talismandeath',1] // +9
-  ]},
-  {c:8,n:'Leather Belt',fails:{5:1,6:1,7:1,8:1,9:2},steps:[
-    [100e6,'linenbelt',1,'claw',5,'scales',5,'wing',2,'multicolorpearl',5,'ash',10,'dye',3,'ruby',100,'gaya',100], // Craft
-    [10e6,'ruby',10,'fur',2,'legs',2], // +1
-    [10e6,'ruby',10,'fur',3,'legs',3], // +2
-    [10e6,'ruby',10,'symbol',2,'white',2], // +3
-    [10e6,'ruby',10,'ash',3,'blue',2], // +4
-    [15e6,'ruby',10,'ash',4,'blood',2], // +5
-    [15e6,'ruby',10,'dye',2,'multicolorpearl',1], // +6
-    [20e6,'aquatic',5,'claw',1,'scales',1,'multicolorpearl',2], // +7
-    [20e6,'aquatic',5,'claw',2,'scales',2,'multicolorpearl',2], // +8
-    [25e6,'aquatic',5,'wing',2,'pamphlet',1,'multicolorpearl',2] // +9
-  ]},
-  {c:8,n:'Shadow Belt',fails:{5:1,6:2,7:3,8:3,9:5},steps:[
-    [500e6,'linenbelt',1,'thread',10,'yarn',3,'mithril',25,'onyx',100,'ice',10,'flame',10,'pattern',3,'wubba',3,'pearl',5,'gaya',250], // Craft
-    [25e6,'onyx',15,'claw',4,'scales',4,'pearl',2], // +1
-    [25e6,'onyx',15,'wing',2,'pamphlet',1,'pearl',2], // +2
-    [25e6,'onyx',15,'mithril',5,'yarn',2,'pearl',2], // +3
-    [25e6,'onyx',25,'mithril',5,'thread',3,'pearl',3], // +4
-    [30e6,'onyx',25,'mithril',5,'thread',5,'pearl',3], // +5
-    [30e6,'onyx',25,'mithril',5,'wubba',1,'pattern',2], // +6
-    [40e6,'onyx',30,'mithril',7,'flame',2,'ice',2], // +7
-    [40e6,'onyx',30,'mithril',7,'flame',2,'ice',2], // +8
-    [50e6,'onyx',30,'mithril',7,'flame',3,'ice',3] // +9
-  ]},
-  {c:8,n:'Souls Belt',fails:{5:1,6:2,7:3,8:3,9:5},steps:[
-    [500e6,'linenbelt',1,'thread',10,'yarn',3,'mithril',25,'onyx',100,'ice',10,'flame',10,'pattern',3,'wubba',3,'pearl',5,'gaya',250], // Craft
-    [25e6,'onyx',15,'claw',4,'scales',4,'pearl',2], // +1
-    [25e6,'onyx',15,'wing',2,'pamphlet',1,'pearl',2], // +2
-    [25e6,'onyx',15,'mithril',5,'yarn',2,'pearl',2], // +3
-    [25e6,'onyx',25,'mithril',5,'thread',3,'pearl',3], // +4
-    [30e6,'onyx',25,'mithril',5,'thread',5,'pearl',3], // +5
-    [30e6,'onyx',25,'mithril',5,'wubba',1,'pattern',2], // +6
-    [40e6,'onyx',30,'mithril',7,'flame',2,'ice',2], // +7
-    [40e6,'onyx',30,'mithril',7,'flame',2,'ice',2], // +8
-    [50e6,'onyx',30,'mithril',7,'flame',3,'ice',3] // +9
-  ]},
-  {c:8,n:'Tourmaline Belt',fails:{5:3,6:3,7:4,8:5,9:6},steps:[
-    [2.5e9,'soulsbelt',1,'shadowbelt',1,'flame',15,'ice',15,'pattern',5,'titanium',6,'agate',6,'moonstone',6,'golddye',2,'garnet',100,'gaya',250], // Craft
-    [100e6,'cords',2,'titanium',2,'agate',2,'moonstone',2], // +1
-    [100e6,'cords',3,'titanium',2,'agate',2,'moonstone',2], // +2
-    [100e6,'cords',2,'titanium',2,'agate',2,'moonstone',2], // +3
-    [150e6,'cords',3,'titanium',3,'agate',3,'whitedye',3], // +4
-    [150e6,'cords',2,'titanium',2,'moonstone',2,'bluedye',2], // +5
-    [150e6,'cords',3,'agate',2,'moonstone',2,'reddye',2], // +6
-    [200e6,'armourdesign',1,'reddragonhorn',2,'reddragonscale',3,'golddye',2], // +7
-    [200e6,'armourdesign',1,'dragonwings',3,'reddragonscale',3,'golddye',2], // +8
-    [200e6,'armourdesign',1,'dragonwings',2,'reddragonhorn',3,'golddye',2] // +9
-  ]},
-];
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Upgrade Cost Calculator — LIRIN</title>
+<meta name="description" content="Pick an item, toggle the upgrade steps you need and see the exact materials and total cost.">
+<meta name="theme-color" content="#0f1013">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230f1013'/%3E%3Cpath d='M20 14v36h26' fill='none' stroke='%23c7a76b' stroke-width='5' stroke-linecap='square'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#c7a76b;--line:rgba(255,255,255,.08);--text:#f3f0e9;--muted:#a6a5a8;--dim:#8a8a92;--green:#46d081;--serif:"Cormorant Garamond",Georgia,serif;--sans:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:#0f1013;color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid #d8bd83;outline-offset:3px}
+.ic{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.app-root{display:flex;min-height:100svh;background:linear-gradient(138deg,#121318,#191a20 50%,#0e0f12)}
+
+/* sidebar */
+.sidebar{position:sticky;top:0;z-index:6;flex:0 0 260px;align-self:flex-start;height:100svh;display:flex;flex-direction:column;gap:6px;padding:34px 18px;background:#121318;border-right:1px solid var(--line)}
+.nav-label{margin:0 12px 16px;padding-bottom:13px;border-bottom:1px solid var(--line);color:#a9a7a0;font-size:.8rem;font-weight:600;letter-spacing:.17em;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:11px;min-height:46px;padding:0 14px;border:1px solid transparent;border-radius:9px;color:#aaaab0;font-size:.9rem;font-weight:500;text-decoration:none;transition:.18s}
+.nav-item .ic{width:17px;height:17px;flex:none;color:#777982}
+a.nav-item:hover,.nav-item.is-active{color:#f1e8d7;border-color:rgba(199,167,107,.16);background:rgba(199,167,107,.075)}
+a.nav-item:hover .ic,.nav-item.is-active .ic{color:var(--gold)}
+.is-soon{color:#8d8d94;cursor:default}
+.badge{margin-left:auto;padding:2px 8px;border:1px solid var(--line);border-radius:20px;color:var(--dim);font-size:.62rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+
+/* page */
+.main{flex:1;min-width:0;display:flex;flex-direction:column;min-height:100svh}
+.inner{width:min(100%,1000px);margin:0 auto;padding:clamp(34px,6vh,60px) clamp(14px,3vw,30px) 40px}
+h1{margin:0;text-align:center;font-family:var(--serif);font-size:clamp(2rem,4.4vw,2.9rem);font-weight:600;letter-spacing:.1em;background:linear-gradient(180deg,#f5eddd,#d6bd8c);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.line{width:min(420px,70%);height:1px;margin:14px auto 18px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.note{margin:0 auto 22px;max-width:560px;padding:10px 16px;border:1px solid rgba(199,167,107,.22);border-radius:9px;background:rgba(199,167,107,.06);color:#d9c59b;font-size:.84rem;text-align:center}
+.empty{width:100%;margin:14px 0;text-align:center;color:var(--dim);font-size:.9rem}
+.lbl{margin:0 0 12px;color:var(--dim);font-size:.7rem;font-weight:600;letter-spacing:.16em;text-align:center;text-transform:uppercase}
+
+/* categories: one row, scrolls instead of wrapping */
+.tabs{display:flex;justify-content:safe center;gap:2px;margin-bottom:28px;overflow-x:auto;border-bottom:1px solid var(--line);scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{position:relative;flex:none;padding:14px 13px 16px;border:0;background:none;color:#8f8e94;font-family:var(--serif);font-size:.98rem;font-weight:600;letter-spacing:.09em;cursor:pointer;transition:color .2s,background .2s}
+.tab::after{content:"";position:absolute;left:14%;right:14%;bottom:0;height:2px;background:var(--gold);box-shadow:0 0 14px rgba(199,167,107,.75);transform:scaleX(0);transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+.tab:hover{color:#e9e2d2}.tab:hover::after{transform:scaleX(.45)}
+.tab.on{color:#f1dfb4;background:linear-gradient(180deg,transparent,rgba(199,167,107,.11))}.tab.on::after{transform:scaleX(1)}
+
+/* item tiles: the picture height follows the inventory slots (--s) */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,138px));justify-content:center;gap:10px;margin-bottom:22px}
+.tile{position:relative;display:flex;flex-direction:column;align-items:center;gap:9px;padding:8px 8px 13px;border:1px solid var(--line);border-radius:13px;background:linear-gradient(180deg,#1d1e24,#16171c);color:#d6d3cc;font-size:.82rem;font-weight:600;line-height:1.3;text-align:center;cursor:pointer;transition:transform .2s,border-color .2s,background .2s,box-shadow .2s}
+.tile:hover{transform:translateY(-3px);border-color:rgba(199,167,107,.45)}
+.tile.on{border-color:var(--gold);color:#f6e9c9;background:linear-gradient(180deg,rgba(199,167,107,.2),rgba(199,167,107,.05));box-shadow:0 0 0 1px var(--gold),0 14px 34px rgba(199,167,107,.16)}
+.pic{--u:38px;position:relative;display:grid;place-items:center;width:100%;height:calc(var(--u)*2 + 22px);border:1px solid rgba(255,255,255,.05);border-radius:10px;background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.08),rgba(0,0,0,.2))}
+.pic img{height:calc(var(--u)*var(--s,1));width:auto;max-width:84%;object-fit:contain;filter:drop-shadow(0 6px 8px rgba(0,0,0,.55));transition:transform .25s,opacity .15s}
+.tn{display:flex;align-items:center;justify-content:center;min-height:2.6em}
+.pic.sq img{width:var(--u);height:var(--u);max-width:none}
+.tile:hover .pic img{transform:scale(1.08)}
+.ph{position:absolute;font-family:var(--serif);font-size:2rem;color:#5d5a52}
+/* initials only show when the picture is really missing; images fade in only if they were not ready yet */
+.ph,.mat>i{display:none}.no>.ph,.mat.no>i{display:block}
+img:not(.ok){opacity:0}
+.rc{position:relative;width:15px;height:15px;flex:none;border-radius:50%;border:1.5px solid #7a7c84}
+.tile .rc{position:absolute;top:15px;left:15px;width:18px;height:18px;z-index:1}
+.on>.rc{background:var(--gold);border-color:var(--gold)}
+.on>.rc::after{content:"";position:absolute;left:4px;top:1px;width:3px;height:7px;border:solid #1b1405;border-width:0 1.6px 1.6px 0;transform:rotate(45deg)}
+.tile .rc::after{left:5px;top:2px;width:4px;height:8px}
+
+/* steps */
+.steps{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-bottom:6px;padding:12px 14px;border:1px solid rgba(70,208,129,.22);border-radius:16px;background:rgba(70,208,129,.04)}
+@media(min-width:1340px){.steps{flex-wrap:nowrap}}
+.sp{display:inline-flex;flex:none;align-items:center;gap:6px;padding:9px 12px;border:1.5px solid rgba(255,255,255,.16);border-radius:999px;background:#14151a;color:#b9b8bd;font-size:.9rem;font-weight:700;cursor:pointer;transition:.18s}
+.sp .rc{width:12px;height:12px}.sp .rc::after{left:3px;top:0;width:3px;height:6px}
+.sp:hover{border-color:rgba(70,208,129,.55);color:#fff}
+.sp.on{border-color:var(--green);background:rgba(70,208,129,.13);color:#9af3c0;box-shadow:0 0 16px rgba(70,208,129,.2)}
+.sp.on>.rc{background:var(--green);border-color:var(--green)}
+.sp.all{margin-right:6px;padding:9px 16px;border-style:dashed;border-color:rgba(199,167,107,.55);color:#e6d2a7;font-size:.72rem;letter-spacing:.07em;text-transform:uppercase}
+.sp.all.on{border-style:solid;border-color:var(--gold);background:rgba(199,167,107,.12);color:#f1e8d7;box-shadow:none}
+.sp.all.on>.rc{background:var(--gold);border-color:var(--gold)}
+
+/* panels */
+details.panel{margin-top:18px;overflow:hidden;border:1px solid var(--line);border-radius:12px;background:#16171c}
+summary{display:flex;align-items:center;gap:10px;padding:14px 18px;background:#22242b;font-weight:600;cursor:pointer;list-style:none;transition:background .18s}
+summary::-webkit-details-marker{display:none}
+summary:hover{background:#2a2c34}
+summary::before{content:"▾";color:var(--gold);transition:transform .18s}
+details:not([open]) summary::before,details[data-st=closed] summary::before{transform:rotate(-90deg)}
+.dc{overflow:hidden}
+.tr{display:grid;grid-template-columns:minmax(120px,1.1fr) 2fr minmax(130px,.8fr);gap:14px;align-items:center;padding:14px 18px}
+#rows .tr:nth-child(odd){background:rgba(255,255,255,.03)}
+.tr.th{background:none!important;color:var(--dim);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase}
+.tr.off{opacity:.32}
+.nm{font-size:.88rem;font-weight:500}.nm small{display:block;margin-top:2px;color:var(--gold);font-size:.8rem}
+.mats{display:flex;flex-wrap:wrap;align-items:center;gap:16px}
+.mat{--u:38px;position:relative;display:inline-grid;place-items:center;width:var(--u);height:calc(var(--u)*var(--s,1));border:1px solid rgba(255,255,255,.1);border-radius:9px;background:linear-gradient(180deg,#2b2d35,#202228);box-shadow:inset 0 1px 0 rgba(255,255,255,.05);color:#d6bd8c;font-size:.74rem;font-weight:600}
+.mat.y{border-color:rgba(199,167,107,.45)}.mat i{font-style:normal}
+.mg{position:absolute;inset:4px;width:calc(100% - 8px);height:calc(100% - 8px);object-fit:contain;transition:opacity .15s}
+.mat b{position:absolute;right:-8px;bottom:-8px;min-width:21px;padding:1px 5px;border-radius:10px;background:#1f9d4c;color:#fff;font-size:.66rem;font-weight:600;text-align:center}
+.fl{justify-self:end;text-align:center}.fl small{display:block;margin-top:5px;color:var(--dim);font-size:.7rem}
+.fl small.mx{margin-top:3px;color:var(--gold);font-weight:600;letter-spacing:.06em}
+.fail{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:8px;background:#1b1c22}
+.fail:focus-within{border-color:rgba(199,167,107,.55)}
+.fail button{width:34px;height:34px;border:0;background:none;font-size:1.1rem;cursor:pointer}.fail button:not(:disabled):hover{color:var(--gold)}
+.fail button:disabled{opacity:.28;cursor:not-allowed}
+.fail input{width:46px;height:34px;padding:0;border:0;background:none;text-align:center;font-weight:500}
+.fail input:focus-visible{outline:0}
+.pbody{padding:16px 18px 8px}
+.btn{padding:9px 16px;border:1px solid rgba(199,167,107,.35);border-radius:8px;background:rgba(199,167,107,.08);color:#e6d2a7;font-size:.82rem;font-weight:600;cursor:pointer}.btn:hover{background:rgba(199,167,107,.15)}
+.prow{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:14px;margin-top:12px;padding:14px 16px;border-radius:9px;background:rgba(255,255,255,.035)}
+.pin{width:min(100%,310px);overflow:hidden;border:1px solid var(--line);border-radius:10px;background:#22242b}
+.pin label{display:flex;align-items:center;gap:8px;padding-right:14px}
+.pin input{flex:1;min-width:0;padding:12px 14px;border:0;background:none;font-size:.95rem}.pin em{color:var(--dim);font-size:.85rem;font-style:normal}
+.qe{display:flex;align-items:center;margin:0 8px 8px;border:1px solid var(--line);border-radius:8px;background:#1b1c22}
+.qe button{width:42px;height:36px;border:0;background:none;font-size:1.15rem;cursor:pointer}.qe button:hover{color:var(--gold)}
+.qe input{flex:1;min-width:0;padding:6px;text-align:center;font-weight:600}
+.pn{display:flex;align-items:center;gap:7px;padding:9px 14px;background:#1b1c22;color:var(--muted);font-size:.78rem}.pn img{width:auto;max-width:40px;height:calc(12px + 8px*var(--s,1));object-fit:contain;transition:opacity .15s}.qn{color:var(--text);font-weight:600}
+.pv{font-size:.9rem;line-height:1.7}.u{color:#e0875a}.t{color:var(--green)}
+
+/* always-visible cost bar */
+.summary{position:sticky;bottom:0;z-index:5;margin-top:auto;display:flex;flex-wrap:wrap;justify-content:center;gap:8px clamp(18px,4vw,52px);padding:14px 20px;background:rgba(15,16,19,.94);backdrop-filter:blur(12px);border-top:1px solid rgba(199,167,107,.28);box-shadow:0 -14px 34px rgba(0,0,0,.45)}
+.summary div{display:flex;align-items:baseline;gap:10px}
+.summary span{color:var(--dim);font-size:.76rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.summary b{color:#e6d2a7;font-size:1rem;font-weight:600}.summary .tot b{color:var(--green);font-size:1.15rem}.summary .who b{color:var(--gold);font-family:var(--serif);font-size:1.15rem;letter-spacing:.06em}
+
+@media(max-width:700px){
+  .app-root{flex-direction:column}
+  .sidebar{position:relative;flex:none;width:100%;height:auto;flex-direction:row;align-items:center;gap:7px;padding:10px 12px;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line)}
+  .nav-label{flex:none;margin:0 8px 0 2px;padding:0;border:0;font-size:.7rem}
+  .nav-item{flex:none;min-height:36px;gap:7px;padding:0 9px;font-size:.78rem;white-space:nowrap}.badge{display:none}
+  .tr{grid-template-columns:1fr}.tr.th{display:none}.fl{justify-self:start}
+  .summary{padding:10px 12px;gap:4px 16px}.summary div{flex-direction:column;gap:0;align-items:center}
+}
+@media(prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11 12 4l8 7"/><path d="M6 10v10h12V10"/></symbol>
+<symbol id="i-upgrade" viewBox="0 0 24 24"><path d="M12 3v18M5 10l7-7 7 7M5 15h14"/></symbol>
+<symbol id="i-special" viewBox="0 0 24 24"><path d="m12 3 2.2 5.3L20 10l-5.8 1.7L12 17l-2.2-5.3L4 10l5.8-1.7L12 3Z"/><path d="M19 16v5M16.5 18.5h5"/></symbol>
+<symbol id="i-sash" viewBox="0 0 24 24"><path d="M4 7c4-3 12-3 16 0l-2 10c-4 3-8 3-12 0L4 7Z"/><path d="M7 9c3 2 7 2 10 0M8 14c2 1 6 1 8 0"/></symbol>
+<symbol id="i-metin" viewBox="0 0 24 24"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="m4.5 7.8 7.5 4.4 7.5-4.4M12 12.2V21"/></symbol>
+<symbol id="i-todo" viewBox="0 0 24 24"><path d="M8 5h12M8 12h12M8 19h12"/><path d="m3 5 1 1 2-2M3 12l1 1 2-2M3 19l1 1 2-2"/></symbol>
+<symbol id="i-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5c-.7-.8-1.8-1.2-3.2-1.2-1.6 0-2.7.8-2.7 2 0 3.2 6.1 1.2 6.1 4.5 0 1.4-1.3 2.4-3.2 2.4-1.5 0-2.8-.5-3.7-1.5M12 5.5v13"/></symbol>
+</defs></svg>
+<div class="app-root">
+  <nav class="sidebar" aria-label="Main navigation">
+    <p class="nav-label">Lirin Tools</p>
+    <a class="nav-item" href="/"><svg class="ic" aria-hidden="true"><use href="#i-home"/></svg>Home</a>
+    <a class="nav-item is-active" href="/upgrade-cost/" aria-current="page"><svg class="ic" aria-hidden="true"><use href="#i-upgrade"/></svg>Upgrade Cost</a>
+    <span class="nav-item is-soon" aria-disabled="true"><svg class="ic" aria-hidden="true"><use href="#i-special"/></svg>Special Upgrade Cost<span class="badge">Soon</span></span>
+    <a class="nav-item" href="/sash/"><svg class="ic" aria-hidden="true"><use href="#i-sash"/></svg>Sash Absorption</a>
+    <span class="nav-item is-soon" aria-disabled="true"><svg class="ic" aria-hidden="true"><use href="#i-metin"/></svg>Metin Simulator<span class="badge">Soon</span></span>
+    <a class="nav-item" href="/sample-todo/"><svg class="ic" aria-hidden="true"><use href="#i-todo"/></svg>Sample Todo</a>
+    <a class="nav-item" href="/coin-calculator/"><svg class="ic" aria-hidden="true"><use href="#i-coin"/></svg>Coin Calculator</a>
+  </nav>
+  <main class="main">
+    <div class="inner">
+      <h1>UPGRADE COST CALCULATOR</h1><div class="line"></div>
+      <p class="note">Note: In some items, the required lagers are not calculated.</p>
+      <div class="tabs" id="tabs"></div>
+      <div class="lbl">Choose item</div>
+      <div id="items"></div>
+      <div class="steps" id="steps"></div>
+      <details class="panel" data-p="d" open><summary>Details</summary><div class="dc">
+        <div class="tr th"><span>Name</span><span>Materials</span><span class="fl">Fail Time(s)</span></div>
+        <div id="rows"></div>
+      </div></details>
+      <details class="panel" data-p="p" open><summary>Material Prices</summary><div class="dc"><div class="pbody">
+        <button class="btn" data-a="edit" id="editBtn"></button>
+        <div id="prices"></div>
+      </div></div></details>
+    </div>
+    <div class="summary" aria-live="polite">
+      <div class="who"><b id="s-i"></b></div>
+      <div><span>Yang Cost :</span><b id="s-l">0 (0)</b></div>
+      <div><span>Material Cost :</span><b id="s-m">0 (0)</b></div>
+      <div class="tot"><span>Total Cost :</span><b id="s-t">0 (0)</b></div>
+    </div>
+  </main>
+</div>
+<script src="data.js"></script>
+<script>
+if(typeof ITEMS==='undefined'){document.querySelector('.inner').insertAdjacentHTML('beforeend','<p class="empty">data.js not found next to index.html</p>');throw new Error('data.js missing')}
+
+/* ===== helpers ===== */
+const $=id=>document.getElementById(id);
+const BY=new Map(ITEMS.map(x=>[x.n,x]));
+const STEPS=[0,1,2,3,4,5,6,7,8,9];
+const REDUCE=matchMedia('(prefers-reduced-motion: reduce)');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ini=n=>(n.match(/\b[A-Z]/g)||[]).join('').slice(0,2);
+/* money input accepts 1450, 1.45k, 2.3kk, 3.12kkk (k=thousand, kk=million, kkk=billion) */
+const parseMoney=s=>{const m=String(s).trim().toLowerCase().replace(/\s/g,'').replace(/,/g,'.').match(/^(\d*\.?\d+|\d+\.)(k{0,3})$/);return m?+(parseFloat(m[1])*Math.pow(1000,m[2].length)).toFixed(4):null};
+const fmt=n=>{const a=Math.abs(n),u=a>=1e9?[1e9,'kkk']:a>=1e6?[1e6,'kk']:a>=1e3?[1e3,'k']:[1,''];return +(n/u[0]).toFixed(3)+u[1]};
+const full=n=>Math.round(n).toLocaleString('de-DE');
+const money=n=>full(n)+' ('+fmt(n)+')';
+const label=i=>i?'+'+i:'Craft';
+const firstOf=c=>(ITEMS.find(x=>x.c===c)||{}).n||null;
+
+/* pictures: only from upgrade-cost/images/ (works with or without a trailing slash in the address) */
+const IMG=(()=>{const u=location.href.split(/[?#]/)[0];return(/\/$|\.\w+$/.test(u)?u.replace(/[^/]*$/,''):u+'/')+'images/'})();
+/* every picture is loaded once and kept in memory, so switching items never flashes initials or blanks */
+const IM=new Map();
+const warm=n=>{let r=IM.get(n);if(!r){r={el:new Image()};r.el.src=IMG+encodeURIComponent(n.replace(/ /g,'_'))+'.webp';IM.set(n,r)}return r};
+const imgState=n=>{const e=warm(n).el;return e.complete?(e.naturalWidth?1:-1):0};   // 1 ready, 0 still loading, -1 missing
+const miss=n=>imgState(n)<0?' no':'';
+const pic=(n,c)=>{const s=imgState(n);return s<0?'':`<img class="${c}${s>0?' ok':''}" src="${warm(n).el.src}" alt="" onload="this.classList.add('ok')" onerror="this.parentNode.classList.add('no');this.remove()">`};
+/* inventory slots (height) per category: weapons 3, armours 2, everything else 1. One item can override it with s:2 in data.js */
+const SLOTS=[3,2,1,1,1,1,1,1,1];
+const SQUARE=[7,8];   // categories whose card picture is forced into the same square frame as Necklace (7 = SHOES, 8 = BELTS)
+const slotsOf=x=>x.s||SLOTS[x.c]||1;
+const matSlots=id=>{const x=BY.get(MAT[id]);return x?slotsOf(x):1};
+
+/* ===== state (saved in the browser, writes are batched) =====
+   off   = steps switched off, kept per item      fails = fail counters per item+step
+   price = unit price per material (shared)       adj   = quantity adjustment per item+material (edit mode) */
+const KEY='lirinUpgradeV2';
+const def=()=>({cat:5,item:'Onyx Bracelet',off:{},fails:{},price:{},adj:{},edit:false,o:{d:1,p:1}});
+function load(){
+  const s=def();
+  try{
+    localStorage.removeItem('lirinUpgradeV1');
+    const r=JSON.parse(localStorage.getItem(KEY));if(r&&typeof r==='object')Object.assign(s,r);
+  }catch(e){}
+  delete s.ov;                                                                              // old per-step edits (replaced by "adj")
+  if(!CATS[s.cat])s.cat=def().cat;
+  if(!BY.has(s.item)||BY.get(s.item).c!==s.cat)s.item=firstOf(s.cat);
+  for(const k in s.off)if(!BY.has(k)||typeof s.off[k]!=='object')delete s.off[k];            // old global format / removed items
+  for(const o of['fails','adj'])for(const k in s[o])if(!BY.has(k.split('|')[0]))delete s[o][k];
+  for(const k in s.price)if(!MAT[k])delete s.price[k];
+  return s;
+}
+let S=load(),timer;
+const flush=()=>{clearTimeout(timer);try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const save=()=>{clearTimeout(timer);timer=setTimeout(flush,250)};
+addEventListener('pagehide',flush);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)flush()});
+const cur=()=>BY.get(S.item);
+const isOff=(it,i)=>!!(it&&S.off[it.n]&&S.off[it.n][i]);
+
+/* ===== calculation (always for the selected item only) ===== */
+function stepInfo(it,i){
+  const raw=it&&it.steps&&it.steps[i];if(!raw)return null;
+  const m=[];for(let j=1;j<raw.length;j+=2)m.push([raw[j],raw[j+1]]);
+  return{m,y:raw[0]};
+}
+const pity=(it,i)=>(it.fails&&it.fails[i])||0;                     // 0 = no pity set for this step
+const maxFails=(it,i)=>i>0?pity(it,i)||99:undefined;   // undefined = Craft can't fail; steps without pity accept 0-99
+const failsOf=(it,i)=>Math.min(S.fails[it.n+'|'+i]||0,maxFails(it,i)||0);
+function calc(){
+  const R={c:{},q:{},yang:0,mat:0},it=cur();
+  if(it){
+    for(const i of STEPS){
+      const s=stepInfo(it,i);if(!s||isOff(it,i))continue;
+      const a=1+failsOf(it,i);R.yang+=s.y*a;
+      for(const[id,n]of s.m)R.c[id]=(R.c[id]||0)+n*a;
+    }
+    for(const id in R.c){R.q[id]=Math.max(0,R.c[id]+(S.adj[it.n+'|'+id]||0));R.mat+=R.q[id]*(S.price[id]||0)}
+  }
+  R.total=R.yang+R.mat;return R;
+}
+function paint(R=calc()){
+  const it=cur();
+  $('s-i').textContent=it?it.n:'';
+  $('s-l').textContent=money(R.yang);$('s-m').textContent=money(R.mat);$('s-t').textContent=money(R.total);
+  for(const id in R.q){
+    const p=S.price[id]||0,q=R.q[id],u=$('u-'+id),n=$('n-'+id),qi=$('q-'+id);
+    if(u){u.textContent=fmt(p);$('t-'+id).textContent=fmt(q*p)}
+    if(n)n.textContent=q+'x';
+    if(qi&&document.activeElement!==qi)qi.value=q;
+  }
+}
+/* a fail counter changed: update only that row's numbers and buttons (pictures are not redrawn) */
+function syncRow(i){
+  const it=cur(),r=$('r'+i);if(!it||!r)return;
+  const f=failsOf(it,i),mf=maxFails(it,i),a=1+f,inp=r.querySelector('.fv');
+  r.querySelectorAll('b[data-n]').forEach(b=>{const v=+b.dataset.n*a;b.textContent=b.hasAttribute('data-y')?fmt(v):v});
+  r.querySelector('[data-a="fm"]').disabled=f<=0;r.querySelector('[data-a="fp"]').disabled=f>=mf;
+  if(document.activeElement!==inp)inp.value=f;
+}
+
+/* ===== rendering: each part is drawn on its own, so a click only redraws what changed ===== */
+const P={
+  tabs:()=>CATS.map((c,i)=>`<button class="tab${i===S.cat?' on':''}" data-a="cat" data-v="${i}" aria-pressed="${i===S.cat}">${c}</button>`).join(''),
+  items:()=>{
+    const L=ITEMS.filter(x=>x.c===S.cat);
+    return L.length?`<div class="tiles">${L.map(x=>`<button class="tile${x.n===S.item?' on':''}" data-a="item" data-v="${esc(x.n)}" aria-pressed="${x.n===S.item}"><i class="rc"></i><span class="pic${miss(x.n)}${SQUARE.includes(x.c)?' sq':''}" style="--s:${Math.min(slotsOf(x),2)}"><span class="ph">${ini(x.n)}</span>${pic(x.n,'')}</span><span class="tn">${esc(x.n)}</span></button>`).join('')}</div>`:'<p class="empty">No items in this category yet.</p>';
+  },
+  steps:()=>{
+    const it=cur(),allOn=STEPS.every(i=>!isOff(it,i));
+    return`<button class="sp all${allOn?' on':''}" data-a="all"><i class="rc"></i>${allOn?'Click to Deactivate All':'Click to Activate All'}</button>`+STEPS.map(i=>`<button class="sp${isOff(it,i)?'':' on'}" data-a="st" data-v="${i}" aria-pressed="${!isOff(it,i)}"><i class="rc"></i>${label(i)}</button>`).join('');
+  },
+  rows:()=>{
+    const it=cur();
+    if(!it||!it.steps)return'<p class="empty">No upgrade data for this item yet.</p>';
+    return STEPS.map(i=>{
+      const s=stepInfo(it,i),mf=maxFails(it,i),f=failsOf(it,i),a=1+f;      // counts shown = per attempt x attempts
+      const body=s.m.map(([id,n])=>`<span class="mat${miss(MAT[id])}" style="--s:${matSlots(id)}" title="${esc(MAT[id])}"><i>${ini(MAT[id])}</i>${pic(MAT[id],'mg')}${n>0?`<b data-n="${n}">${n*a}</b>`:''}</span>`).join('')
+        +(s.y>0?`<span class="mat y${miss('Yang')}" title="Yang"><i>Y</i>${pic('Yang','mg')}<b data-n="${s.y}" data-y>${fmt(s.y*a)}</b></span>`:'');
+      const fail=mf!==undefined?`<div class="fail"><button data-a="fm" data-v="${i}" aria-label="Fewer fails"${f<=0?' disabled':''}>−</button><input class="fv" data-f="${i}" inputmode="numeric" maxlength="2" value="${f}" aria-label="Fail times"><button data-a="fp" data-v="${i}" aria-label="More fails"${f>=mf?' disabled':''}>+</button></div><small>Write a fail time(s)</small>${pity(it,i)?`<small class="mx">MAX PITY : ${pity(it,i)}</small>`:''}`:'';
+      return`<div class="tr${isOff(it,i)?' off':''}" id="r${i}"><span class="nm">${esc(it.n)}<small>${label(i)}</small></span><span class="mats">${body}</span><span class="fl">${fail}</span></div>`;
+    }).join('');
+  },
+  prices:R=>{
+    const ids=Object.keys(R.c);
+    return ids.length?ids.map(id=>{
+      const p=S.price[id]||0;
+      return`<div class="prow"><div class="pin"><label><input data-pr="${id}" inputmode="decimal" placeholder="Write the Unit Price" value="${p?fmt(p):''}" aria-label="Unit price of ${esc(MAT[id])}"><em>Yang</em></label>`
+        +(S.edit?`<div class="qe"><button data-a="qm" data-v="${id}" aria-label="Less">−</button><input id="q-${id}" data-q="${id}" inputmode="numeric" value="${R.q[id]}" aria-label="Quantity of ${esc(MAT[id])}"><button data-a="qp" data-v="${id}" aria-label="More">+</button></div>`:'')
+        +`<div class="pn" style="--s:${matSlots(id)}">${S.edit?'':`<span class="qn" id="n-${id}"></span>`}${pic(MAT[id],'')}<span>${esc(MAT[id])}</span></div></div>
+      <div class="pv"><div class="u">Unit : <span id="u-${id}"></span></div><div class="t">Total : <span id="t-${id}"></span></div></div></div>`;
+    }).join(''):'<p class="empty">No materials for the selected steps.</p>';
+  }
+};
+function draw(...parts){
+  const a=document.activeElement,d=a&&a.dataset,
+        keep=d&&d.a?`[data-a="${d.a}"]`+(d.v!==undefined?`[data-v="${CSS.escape(d.v)}"]`:''):null,R=calc();
+  for(const k of parts)$(k).innerHTML=P[k](R);
+  $('editBtn').textContent=(S.edit?'Close':'Open')+' edit material count mode';
+  paint(R);
+  if(keep){const f=document.querySelector(keep);if(f&&f!==a)f.focus({preventScroll:true})}
+}
+
+/* ===== events ===== */
+document.addEventListener('click',e=>{
+  const sm=e.target.closest('summary');
+  if(sm){e.preventDefault();return togglePanel(sm.parentElement)}
+  const el=e.target.closest('[data-a]');if(!el||el.disabled)return;
+  const a=el.dataset.a,v=el.dataset.v,it=cur(),k=it&&it.n+'|'+v;
+  switch(a){
+    case'cat':S.cat=+v;S.item=firstOf(S.cat);draw('tabs','items','steps','rows','prices');break;
+    case'item':S.item=v;draw('items','steps','rows','prices');break;
+    case'all':if(it){S.off[it.n]=STEPS.every(i=>!isOff(it,i))?Object.fromEntries(STEPS.map(i=>[i,1])):{}}draw('steps','rows','prices');break;
+    case'st':if(it){const o=S.off[it.n]||(S.off[it.n]={});if(o[v])delete o[v];else o[v]=1}draw('steps','rows','prices');break;
+    case'fm':case'fp':if(it){S.fails[k]=Math.max(0,Math.min(maxFails(it,+v)||0,failsOf(it,+v)+(a==='fp'?1:-1)));syncRow(+v);paint()}break;
+    case'edit':S.edit=!S.edit;draw('prices');break;
+    case'qm':case'qp':if(it){const R=calc(),d=Math.max(0,(R.q[v]||0)+(a==='qp'?1:-1))-(R.c[v]||0),key=it.n+'|'+v;if(d)S.adj[key]=d;else delete S.adj[key];paint()}break;
+    default:return;
+  }
+  save();
+});
+document.addEventListener('input',e=>{          // fail times and unit prices: update live, nothing is redrawn
+  const d=e.target.dataset||{},it0=cur();
+  if(d.f!==undefined){                           // fail times typed by hand (0-99, or up to the pity limit)
+    if(!it0)return;
+    const i=+d.f,raw=e.target.value.replace(/\D/g,'').slice(0,2),v=Math.min(+raw||0,maxFails(it0,i)||0),nv=raw&&String(v)!==raw?String(v):raw;
+    if(e.target.value!==nv)e.target.value=nv;
+    S.fails[it0.n+'|'+i]=v;syncRow(i);paint();save();return;
+  }
+  const id=d.pr;if(!id)return;
+  const t=e.target.value.trim(),v=t?parseMoney(t):0;
+  if(v===null)return;
+  S.price[id]=v;save();paint();
+});
+document.addEventListener('change',e=>{         // typed quantity in edit mode / fail time field left
+  if(e.target.dataset&&e.target.dataset.f!==undefined){const i0=cur();if(i0)e.target.value=failsOf(i0,+e.target.dataset.f);return}
+  const id=e.target.dataset&&e.target.dataset.q,it=cur();if(!id||!it)return;
+  const v=parseMoney(e.target.value),key=it.n+'|'+id;
+  if(v!==null){const d=Math.round(v)-(calc().c[id]||0);if(d)S.adj[key]=d;else delete S.adj[key];save()}
+  paint();e.target.value=calc().q[id];
+});
+
+/* open / close animation for the two panels (open state is remembered) */
+function togglePanel(d){
+  const c=d.querySelector('.dc'),opening=!d.open||d.dataset.st==='closed';
+  const h0=d.open?c.offsetHeight:0,o0=d.open?+getComputedStyle(c).opacity:0;
+  if(d._a)d._a.cancel();
+  d.dataset.st=opening?'open':'closed';d.open=true;
+  S.o[d.dataset.p]=opening?1:0;save();
+  const a=c.animate({height:[h0+'px',(opening?c.scrollHeight:0)+'px'],opacity:[o0,opening?1:0]},{duration:REDUCE.matches?1:opening?320:220,easing:opening?'cubic-bezier(.2,.8,.2,1)':'cubic-bezier(.4,0,.6,1)',fill:'forwards'});
+  d._a=a;
+  a.onfinish=()=>{if(!opening)d.open=false;a.cancel();if(d._a===a)d._a=null};
+}
+
+/* after the first paint, load every picture in the background (current category first) so later clicks are instant */
+{const q=[...new Set([...ITEMS.filter(x=>x.c===S.cat).map(x=>x.n),...Object.values(MAT),...ITEMS.map(x=>x.n),'Yang'])],run=()=>{q.splice(0,12).forEach(warm);if(q.length)setTimeout(run,100)};setTimeout(run,200)}
+
+document.querySelectorAll('details[data-p]').forEach(d=>{d.open=!!S.o[d.dataset.p]});
+draw('tabs','items','steps','rows','prices');
+</script>
+</body>
+</html>
