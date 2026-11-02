@@ -42,3 +42,18 @@ window.lirinImg=n=>'/images/'+encodeURIComponent(KEEP_SPACES.includes(n)?n:Strin
   const el=document.getElementById('sidebar');
   if(el)el.outerHTML='<nav class="sidebar" aria-label="Main navigation"><p class="nav-label">Lirin Tools</p>'+NAV.map(item).join('')+'</nav>';
 })();
+
+/* skip link on every page that has none, and a prefetch of the other pages so navigating feels instant */
+document.addEventListener('DOMContentLoaded',()=>{
+  const m=document.querySelector('main');
+  if(m&&!document.querySelector('.skip')){
+    m.id=m.id||'main';m.tabIndex=-1;
+    const a=document.createElement('a');a.className='skip';a.href='#'+m.id;a.textContent='Skip to content';
+    document.body.prepend(a);
+  }
+});
+if(window.HTMLScriptElement&&HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules')&&!(navigator.connection&&navigator.connection.saveData)){
+  const s=document.createElement('script');s.type='speculationrules';
+  s.textContent=JSON.stringify({prefetch:[{where:{href_matches:'/*'},eagerness:'moderate'}]});   // prefetch only (never runs the other page early)
+  document.head.appendChild(s);
+}
