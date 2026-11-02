@@ -79,7 +79,7 @@ td small{display:block;font-size:.68rem}
   <main class="main">
     <div class="inner">
       <h1>METIN SIMULATOR</h1><div class="line"></div>
-      <p class="note">Every drop is rolled at random, so each run is a little different. Lv. 70, Lv. 90 and Lv. 105 are available for now.</p>
+      <p class="note">Every drop is rolled at random, so each run is a little different. All four metins are available.</p>
       <section class="panel"><h2>Your Character</h2><div class="pbody">
         <div class="chars">
           <div class="cb"><div class="qe"><button data-k="dps" data-s="-1" aria-label="Less">−</button><input data-k="dps" inputmode="numeric" maxlength="7" aria-label="Average DPS"><button data-k="dps" data-s="1" aria-label="More">+</button></div><span>Average DPS</span></div>
@@ -89,7 +89,7 @@ td small{display:block;font-size:.68rem}
         <button class="btn" data-a="roll">Roll again</button>
       </div></section>
       <section class="panel"><h2>Pick a Metin</h2><div class="pbody"><div class="mt" id="pick"></div>
-        <p class="hint">Pick up to two metins and each gets its own result. More metins are on the way.</p></div></section>
+        <p class="hint">Pick up to two metins and each gets its own result.</p></div></section>
       <div id="sims"></div>
       <section class="panel"><h2>Material Prices</h2><div class="pbody" id="prices"></div></section>
     </div>
@@ -127,7 +127,15 @@ const METINS=[
     ['Fragment of Dark Continent',15,1,1,'e',{to:"Dark Continent's Rock"}],
     ['Cor Draconis',15,1,1,'e'],
     ['Blessing Scroll',8,1,1,'l']]},
-  {id:'forest',name:'Lv. 110 Metin of the Forests',hp:4000000,soon:1}
+  {id:'forest',name:'Lv. 110 Metin of the Forests',hp:4000000,drops:[
+    ['Enchant Item',100,4,6,'g'],
+    ['Yang Coupon 100000',100,4,6,'g',{yang:100000}],
+    ['Garnet Fragment',100,1,1,'g',{to:'Garnet Crystal'}],
+    ['Cor Draconis',25,1,1,'r'],
+    ['Glimmer Dust',25,1,1,'r'],
+    ['Enchant Item+',15,1,1,'e'],
+    ['Fragment of the Trees',15,1,1,'e',{to:'Rock of the Trees'}],
+    ['Shard of the Forest',15,1,1,'e']]}
 ];
 const TIER={g:'Guaranteed',c:'Common',r:'Rare',e:'Epic',l:'Legendary',m:'Mystic'};
 const FRAG=10;
@@ -144,6 +152,7 @@ const fmt=n=>{const a=Math.abs(n),u=a>=1e9?[1e9,'kkk']:a>=1e6?[1e6,'kk']:a>=1e3?
 const full=n=>Math.round(n).toLocaleString('de-DE');
 const money=n=>full(n)+' ('+fmt(n)+')';
 const slot=n=>`<span class="slot"><i>${ini(n)}</i><img src="${lirinImg(n)}" alt="" onload="this.classList.add('ok')" onerror="this.parentNode.classList.add('no');this.remove()"></span>`;
+const tfmt=s=>{if(s<60)return s.toFixed(1)+'s';const t=Math.round(s);return Math.floor(t/60)+'m '+t%60+'s'};
 const clamp=(k,v)=>Math.min(LIM[k][1],Math.max(LIM[k][0],Math.round(v)||0));
 
 /* ===== state (saved in the browser) ===== */
@@ -179,8 +188,8 @@ const rollAll=()=>{RUN={};metins().forEach(m=>RUN[m.id]=roll(m))};
 function drawInputs(){document.querySelectorAll('input[data-k]').forEach(i=>{if(document.activeElement!==i)i.value=S[i.dataset.k]})}
 function drawPick(){
   $('pick').innerHTML=METINS.map(m=>{
-    const t=(m.hp/S.dps).toFixed(1);
-    const body=`<b>${m.name}</b>Health: ${full(m.hp)}<br>Time to destroy: ${t}s`;
+    const t=tfmt(m.hp/S.dps);
+    const body=`<b>${m.name}</b>Health: ${full(m.hp)}<br>Time to destroy: ${t}`;
     return m.soon?`<div class="mtile soon">${body}<br>Coming soon</div>`:`<button class="mtile${S.sel.includes(m.id)?' on':''}" data-id="${m.id}" aria-pressed="${S.sel.includes(m.id)}">${body}</button>`;
   }).join('');
 }
@@ -192,7 +201,7 @@ function drawSims(){
       else if(x&&x.to){const l=c%FRAG;tf=`<span class="nm">${slot(x.to)}${full(Math.floor(c/FRAG))}× ${x.to}</span>${l?`<small>+${l} left over</small>`:''}`}
       return`<tr><td><span class="nm">${slot(d)}${d}</span></td><td>${ch}% (${lo}-${hi})<small class="t-${t}">${TIER[t]}</small></td><td class="b">${full(c)}</td><td>${(c*60/S.min).toFixed(2)}</td><td class="tf">${tf}</td></tr>`}).join('');
     return`<section class="panel"><h2>${m.name}</h2><div class="pbody">
-      <div class="stats"><div><span>Health</span><b>${full(m.hp)}</b></div><div><span>Time to destroy</span><b>${(m.hp/S.dps).toFixed(1)}s</b></div><div><span>Travel time</span><b>${S.trv}s</b></div><div><span>Destroyed metins</span><b>${full(r.n)}</b></div></div>
+      <div class="stats"><div><span>Health</span><b>${full(m.hp)}</b></div><div><span>Time to destroy</span><b>${tfmt(m.hp/S.dps)}</b></div><div><span>Travel time</span><b>${S.trv}s</b></div><div><span>Destroyed metins</span><b>${full(r.n)}</b></div></div>
       <div class="tw"><table><thead><tr><th>Item</th><th>Chance</th><th>This run</th><th>Per hour</th><th>Transform</th></tr></thead><tbody>${rows}</tbody></table></div>
       <div class="vals"><div class="vb"><span>Materials value</span><b id="mv-${m.id}"></b></div><div class="vb g"><span>Total gain (materials + Yang)</span><b id="tg-${m.id}"></b></div></div>
     </div></section>`}).join('');
