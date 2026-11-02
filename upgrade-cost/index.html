@@ -11,9 +11,10 @@
 <meta name="twitter:card" content="summary">
 <meta name="theme-color" content="#0f1013">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="/fonts/inter-400.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="/fonts/inter-500.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="/fonts/inter-600.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="/fonts/cormorant-600.woff" as="font" type="font/woff" crossorigin>
 <link rel="stylesheet" href="/common.css?v=3">
 <script defer src="data.js?v=1"></script>
 <style>
@@ -53,7 +54,7 @@
 /* steps */
 .steps{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-bottom:6px;padding:12px 14px;border:1px solid rgba(70,208,129,.22);border-radius:16px;background:rgba(70,208,129,.04)}
 @media(min-width:1340px){.steps{flex-wrap:nowrap}}
-.sp{display:inline-flex;flex:none;align-items:center;gap:6px;padding:9px 12px;border:1.5px solid rgba(255,255,255,.16);border-radius:999px;background:#14151a;color:#b9b8bd;font-size:.9rem;font-weight:700;cursor:pointer;transition:.18s}
+.sp{display:inline-flex;flex:none;align-items:center;gap:6px;padding:9px 12px;border:1.5px solid rgba(255,255,255,.16);border-radius:999px;background:#14151a;color:#b9b8bd;font-size:.9rem;font-weight:700;cursor:pointer;transition:border-color .18s,background .18s,color .18s,box-shadow .18s}
 .sp .rc{width:12px;height:12px}.sp .rc::after{left:3px;top:0;width:3px;height:6px}
 .sp:hover{border-color:rgba(70,208,129,.55);color:#fff}
 .sp.on{border-color:var(--green);background:rgba(70,208,129,.13);color:#9af3c0;box-shadow:0 0 16px rgba(70,208,129,.2)}
@@ -134,18 +135,11 @@ details:not([open]) summary::before,details[data-st=closed] summary::before{tran
 </div>
 <script src="/common.js?v=3"></script>
 <script>
-/* data.js is started from <head> (defer), so it is ready before the first paint of the page.
-   If it is missing next to this page, the one in the site root is tried. */
+/* data.js is started from <head> (defer), so it is ready before DOMContentLoaded. */
 const dataOk=()=>typeof ITEMS!=='undefined'&&typeof CATS!=='undefined'&&typeof MAT!=='undefined';
-function showError(){
-  document.querySelector('.inner').insertAdjacentHTML('beforeend','<p class="empty">data.js not found (or incomplete: ITEMS, CATS and MAT are required)</p>');
-}
 document.addEventListener('DOMContentLoaded',()=>{
   if(dataOk())return main();
-  const s=document.createElement('script');s.src='/data.js';
-  s.onload=()=>dataOk()?main():showError();
-  s.onerror=showError;
-  document.head.appendChild(s);
+  document.querySelector('.inner').insertAdjacentHTML('beforeend','<p class="empty">data.js not found (or incomplete: ITEMS, CATS and MAT are required)</p>');
 });
 
 function main(){
@@ -298,6 +292,7 @@ function draw(...parts){
   $('editBtn').textContent=(S.edit?'Close':'Open')+' edit material count mode';
   $('adjBtn').hidden=!S.edit;
   paint(R);
+  if(parts.includes('tabs')){const t=document.querySelector('.tab.on');if(t)t.scrollIntoView({inline:'center',block:'nearest'})}   // phones: the chosen category is always visible
   if(keep){const f=document.querySelector(keep);if(f&&f!==a)f.focus({preventScroll:true})}
 }
 
