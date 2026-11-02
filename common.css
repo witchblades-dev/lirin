@@ -1,5 +1,12 @@
 /* LIRIN — shared styles (included by every page: <link rel="stylesheet" href="/common.css">) */
-:root{--gold:#c7a76b;--bg:#0f1013;--line:rgba(255,255,255,.08);--text:#f3f0e9;--muted:#a6a5a8;--dim:#8a8a92;--green:#46d081;--serif:"Cormorant Garamond",Georgia,"Times New Roman",serif;--sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:dark}
+/* fonts live on the site itself (/fonts): no Google request, no render-blocking CSS from another domain */
+@font-face{font-family:"Inter";font-weight:400;font-style:normal;font-display:swap;src:url(/fonts/inter-400.woff) format("woff")}
+@font-face{font-family:"Inter";font-weight:500;font-style:normal;font-display:swap;src:url(/fonts/inter-500.woff) format("woff")}
+@font-face{font-family:"Inter";font-weight:600;font-style:normal;font-display:swap;src:url(/fonts/inter-600.woff) format("woff")}
+@font-face{font-family:"Cormorant Garamond";font-weight:600;font-style:normal;font-display:swap;src:url(/fonts/cormorant-600.woff) format("woff")}
+/* while Inter loads, Arial is stretched to Inter's size, so the layout does not move when the real font appears */
+@font-face{font-family:"Inter Fallback";src:local("Arial");size-adjust:107.6%;ascent-override:90.2%;descent-override:22.5%;line-gap-override:0%}
+:root{--gold:#c7a76b;--bg:#0f1013;--line:rgba(255,255,255,.08);--text:#f3f0e9;--muted:#a6a5a8;--dim:#8a8a92;--green:#46d081;--serif:"Cormorant Garamond",Georgia,"Times New Roman",serif;--sans:"Inter","Inter Fallback",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:dark}
 *{box-sizing:border-box}
 html{background:var(--bg)}
 body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased}
