@@ -79,7 +79,7 @@ td small{display:block;font-size:.68rem}
   <main class="main">
     <div class="inner">
       <h1>METIN SIMULATOR</h1><div class="line"></div>
-      <p class="note">Every drop is rolled at random, so each run is a little different. Only Lv. 70 is available for now.</p>
+      <p class="note">Every drop is rolled at random, so each run is a little different. Lv. 70 and Lv. 90 are available for now.</p>
       <section class="panel"><h2>Your Character</h2><div class="pbody">
         <div class="chars">
           <div class="cb"><div class="qe"><button data-k="dps" data-s="-1" aria-label="Less">−</button><input data-k="dps" inputmode="numeric" maxlength="7" aria-label="Average DPS"><button data-k="dps" data-s="1" aria-label="More">+</button></div><span>Average DPS</span></div>
@@ -109,7 +109,16 @@ const METINS=[
     ['Blessing Scroll',8,1,1,'l'],
     ['Stone Shard',4,1,2,'m'],
     ['Soul Stone',4,1,1,'m']]},
-  {id:'jeon',name:'Lv. 90 Metin Jeon-Un',hp:905000,soon:1},
+  {id:'jeon',name:'Lv. 90 Metin Jeon-Un',hp:905000,drops:[
+    ['Yang Coupon 40000',100,3,5,'g',{yang:40000}],
+    ['Enchant Item',100,2,2,'g'],
+    ['Ruby Fragment',100,1,1,'g',{to:'Ruby Crystal'}],
+    ['Torn Page',50,1,2,'c'],
+    ['Glimmer Dust',50,1,2,'c'],
+    ['Forest Fragment',25,1,1,'r',{to:'Forest Rock'}],
+    ['Blessing Scroll',8,1,1,'l'],
+    ['Stone Shard',4,1,2,'m'],
+    ['Soul Stone',4,1,1,'m']]},
   {id:'manti',name:'Lv. 105 Manticore Metin',hp:1800000,soon:1},
   {id:'forest',name:'Lv. 110 Metin of the Forests',hp:4000000,soon:1}
 ];
