@@ -1,6 +1,10 @@
 /* LIRIN — shared sidebar.
    Every page has <nav id="sidebar"></nav> followed by <script src="/nav.js"></script>.
    To add a page or change the order, edit only the NAV list below. */
+/* Pictures: every page asks lirinImg('Item Name') and gets /images/item-name.webp
+   (lower case, every run of other characters becomes one hyphen). */
+window.lirinImg=n=>'/images/'+String(n).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')+'.webp';
+
 (function(){
   const NAV=[
     {href:'/',                 icon:'home',    label:'Home'},
