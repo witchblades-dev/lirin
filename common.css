@@ -1,8 +1,10 @@
 /* LIRIN — shared styles (included by every page: <link rel="stylesheet" href="/common.css">) */
 :root{--gold:#c7a76b;--bg:#0f1013;--line:rgba(255,255,255,.08);--text:#f3f0e9;--muted:#a6a5a8;--dim:#8a8a92;--green:#46d081;--serif:"Cormorant Garamond",Georgia,"Times New Roman",serif;--sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:dark}
 *{box-sizing:border-box}
+html{background:var(--bg)}
 body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased}
 button,input{font:inherit;color:inherit}
+button{touch-action:manipulation}
 :focus-visible{outline:2px solid #d8bd83;outline-offset:3px}
 .ic{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .app-root{display:flex;min-height:100svh;background:linear-gradient(138deg,#121318,#191a20 50%,#0e0f12)}
@@ -68,3 +70,17 @@ a.nav-item:hover .ic,.nav-item.is-active .ic{color:var(--gold)}
   .summary div{flex-direction:column;gap:0;align-items:center}
 }
 @media(prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}}
+
+/* skip link (added by /nav.js on the tool pages) */
+.skip{position:absolute;left:-9999px;top:8px;z-index:20;padding:8px 14px;border-radius:6px;background:var(--gold);color:#17130d;font-weight:600;text-decoration:none}
+.skip:focus{left:8px}
+main:focus{outline:none}
+
+/* smooth page changes: the sidebar stays put, the content cross-fades (browsers without support just navigate normally) */
+@view-transition{navigation:auto}
+.sidebar{view-transition-name:sidebar}
+::view-transition-group(root){animation-duration:.2s}
+@media(prefers-reduced-motion:reduce){@view-transition{navigation:none}}
+
+/* phones: inputs under 16px make iOS Safari zoom the page when you tap them */
+@media(hover:none) and (pointer:coarse){.app-root input{font-size:16px!important}}
