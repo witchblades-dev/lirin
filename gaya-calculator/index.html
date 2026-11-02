@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gaya Calculator — LIRIN</title>
+<meta name="description" content="Enter the price of a Glimmerstone and of Glimmer Dust and see exactly what one Gaya costs to make.">
+<meta name="theme-color" content="#0f1013">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/common.css?v=2">
+<style>
+.pbody{padding:6px 18px 18px}
+.warn{margin:0;padding:12px 18px;color:#e0875a;font-size:.84rem}
+.tr,.pv{font-variant-numeric:tabular-nums}
+
+/* amount */
+.qe{display:flex;align-items:center;width:min(100%,220px);margin-top:12px;border:1px solid var(--line);border-radius:8px;background:#1b1c22}
+.qe button{width:46px;height:40px;border:0;background:none;font-size:1.2rem;cursor:pointer}.qe button:hover{color:var(--gold)}
+.qe input{flex:1;min-width:0;padding:6px;border:0;background:none;text-align:center;font-weight:600}
+
+/* breakdown */
+.tr{display:grid;grid-template-columns:minmax(170px,1.4fr) 1fr 1fr;gap:14px;align-items:center;padding:14px 18px}
+#rows .tr:nth-child(odd){background:rgba(255,255,255,.03)}
+#rows .tr.sum{background:rgba(70,208,129,.07);font-weight:600}
+.nm{display:flex;align-items:center;gap:10px;font-size:.9rem;font-weight:500}
+.fl{justify-self:end;text-align:right}
+.tr.sum .fl{color:var(--green);font-size:1.05rem}
+
+@media(max-width:700px){
+  .tr{grid-template-columns:1fr;gap:6px}.fl{justify-self:start;text-align:left}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app-root">
+  <nav id="sidebar"></nav>
+  <script src="/nav.js?v=2"></script>
+  <main class="main">
+    <div class="inner">
+      <h1>GAYA CALCULATOR</h1><div class="line"></div>
+      <p class="note" id="note"></p>
+      <section class="panel"><h2>Material Prices</h2><div class="pbody"><div id="prices"></div></div></section>
+      <section class="panel"><h2>How many Gaya?</h2><div class="pbody">
+        <div class="qe"><button data-a="qm" aria-label="Less">−</button><input id="qty" inputmode="numeric" maxlength="4" aria-label="Number of Gaya"><button data-a="qp" aria-label="More">+</button></div>
+      </div></section>
+      <section class="panel"><h2>Cost per Gaya</h2>
+        <p class="warn" id="warn" hidden>Enter the material prices above: until then only the NPC fee is counted.</p>
+        <div id="rows"></div></section>
+    </div>
+    <div class="summary">
+      <div><span>Materials :</span><b id="s-m">0 (0)</b></div>
+      <div><span>NPC Fee :</span><b id="s-f">0 (0)</b></div>
+      <div class="tot"><span>Cost per Gaya :</span><b id="s-t">0 (0)</b></div>
+      <div><span id="s-ql">Total ×1 :</span><b id="s-n">0 (0)</b></div>
+    </div>
+    <div class="sr" id="live" aria-live="polite"></div>
+  </main>
+</div>
+<script src="/common.js?v=2"></script>
+<script>
+/* ===== recipe: change the numbers here ===== */
+/* n = how many per 1 Gaya */
+const RECIPE=[{id:'gs',name:'Glimmerstone',n:1},{id:'gd',name:'Glimmer Dust',n:10}];
+const FEE=250e3;                                      // Yang taken by the NPC for every Gaya
+/* pictures: /images/<name>.webp, see lirinImg() in /nav.js. Exact file names (capitals matter on Cloudflare):
+   Glimmerstone.webp, "Glimmer Dust.webp" (with a space), Gaya.webp, Yang.webp */
+
+/* ===== helpers ($, ini, okNum, slot, money helpers, persist ... come from /common.js) ===== */
+const clampQty=v=>Math.min(9999,Math.max(1,parseInt(v,10)||1));
+
+/* ===== state (saved in the browser, every value is checked on load) ===== */
+const KEY='lirinGayaV1';
+let S={price:{},qty:1};
+try{
+  const r=JSON.parse(localStorage.getItem(KEY));
+  if(r&&typeof r==='object'){
+    if(r.price&&typeof r.price==='object'&&!Array.isArray(r.price))for(const x of RECIPE)if(okNum(r.price[x.id]))S.price[x.id]=r.price[x.id];
+    S.qty=clampQty(r.qty);
+  }
+}catch(e){}
+const{save}=persist(KEY,()=>S);
+
+/* ===== draw the static parts once, so typing never redraws pictures ===== */
+$('prices').innerHTML=RECIPE.map(r=>`<div class="prow"><div class="pin"><label><input data-pr="${r.id}" inputmode="text" placeholder="Write the Unit Price" value="${S.price[r.id]?fmt(S.price[r.id],6):''}" aria-label="Unit price of ${r.name}"><em>Yang</em></label><div class="er" hidden>Format: 1450, 1.45k, 2.3kk</div><div class="pn">${slot(r.name)}<span>${r.name}</span><span class="qn">×${r.n}</span></div></div><div class="pv"><div class="u">Unit : <span id="u-${r.id}"></span></div><div class="t">Total : <span id="t-${r.id}"></span></div></div></div>`).join('');
+$('note').textContent='1 Gaya = '+RECIPE.map(r=>r.n+' '+r.name).join(' + ')+' + '+fmt(FEE)+' Yang (NPC fee)';
+$('rows').innerHTML=RECIPE.map(r=>`<div class="tr"><span class="nm">${slot(r.name)}${r.name}</span><span id="a-${r.id}"></span><span class="fl" id="c-${r.id}"></span></div>`).join('')
+  +`<div class="tr"><span class="nm">${slot('Yang')}NPC fee</span><span>1 × ${fmt(FEE)}</span><span class="fl">${money(FEE)}</span></div>`
+  +`<div class="tr sum"><span class="nm">${slot('Gaya')}Cost per Gaya</span><span></span><span class="fl" id="c-one"></span></div>`
+  +`<div class="tr sum" id="r-all"><span class="nm">Total for <span id="n-q"></span> Gaya</span><span></span><span class="fl" id="c-all"></span></div>`;
+$('qty').value=S.qty;
+
+/* ===== calculation ===== */
+/* screen readers hear the result once, shortly after you stop typing, not after every key */
+const announce=deb(()=>{$('live').textContent='Cost per Gaya '+$('s-t').textContent+(S.qty>1?', total for '+S.qty+' '+$('s-n').textContent:'')},700);
+function paint(){
+  let mats=0;
+  for(const r of RECIPE){
+    const p=S.price[r.id]||0,t=p*r.n;mats+=t;
+    $('u-'+r.id).textContent=fmt(p);$('t-'+r.id).textContent=fmt(t);
+    $('a-'+r.id).textContent=r.n+' × '+fmt(p);$('c-'+r.id).textContent=money(t);
+  }
+  const one=mats+FEE,all=one*S.qty;
+  $('c-one').textContent=money(one);$('c-all').textContent=money(all);$('n-q').textContent=S.qty;
+  $('r-all').hidden=S.qty===1;
+  $('warn').hidden=RECIPE.some(r=>S.price[r.id]>0);   // shown only while NO price is set
+  $('s-m').textContent=money(mats);$('s-f').textContent=money(FEE);$('s-t').textContent=money(one);
+  $('s-ql').textContent='Total ×'+S.qty+' :';$('s-n').textContent=money(all);
+  announce();
+}
+
+/* ===== events ===== */
+document.addEventListener('input',e=>{
+  const t=e.target,id=t.dataset.pr;
+  if(id){                                            // unit price: accepts 1450, 1.45k, 2.3kk ...
+    const v=t.value.trim()?parseMoney(t.value):0,box=t.closest('.pin');
+    box.classList.toggle('bad',v===null);box.querySelector('.er').hidden=v!==null;
+    if(v===null)return;
+    S.price[id]=v;save();paint();
+  }else if(t.id==='qty'){                            // number of Gaya typed by hand
+    S.qty=clampQty(t.value.replace(/\D/g,''));save();paint();
+  }
+});
+document.addEventListener('change',e=>{if(e.target.id==='qty')e.target.value=S.qty});
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-a]');if(!b)return;
+  S.qty=clampQty(S.qty+(b.dataset.a==='qp'?1:-1));
+  $('qty').value=S.qty;save();paint();
+});
+paint();
+</script>
+</body>
+</html>
