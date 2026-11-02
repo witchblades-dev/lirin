@@ -5,7 +5,7 @@
    (same naming as before: spaces become underscores, capitals are kept).
    Files whose name keeps its spaces are listed in KEEP_SPACES. */
 const KEEP_SPACES=['Glimmer Dust'];
-/* Pictures are cached by the browser for 30 days (see _headers). When you REPLACE a picture under the same name,
+/* Pictures are cached by the browser for 1 year, immutable (see _headers). When you REPLACE a picture under the same name,
    raise IMG_V by one: every visitor then downloads the new version. */
 const IMG_V=1;
 window.lirinImg=n=>'/images/'+encodeURIComponent(KEEP_SPACES.includes(n)?n:String(n).replace(/ /g,'_'))+'.webp?v='+IMG_V;
