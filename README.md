@@ -1,2 +1,2 @@
 # lirin
-lirin eazy life
+lirin tools c 2026
