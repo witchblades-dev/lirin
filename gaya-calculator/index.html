@@ -5,12 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gaya Calculator — LIRIN</title>
 <meta name="description" content="Enter the price of a Glimmerstone and of Glimmer Dust and see exactly what one Gaya costs to make.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Gaya Calculator — LIRIN">
+<meta property="og:description" content="Enter the price of a Glimmerstone and of Glimmer Dust and see exactly what one Gaya costs to make.">
+<meta name="twitter:card" content="summary">
 <meta name="theme-color" content="#0f1013">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/common.css?v=2">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/common.css?v=3">
 <style>
 .pbody{padding:6px 18px 18px}
 .warn{margin:0;padding:12px 18px;color:#e0875a;font-size:.84rem}
@@ -38,7 +42,7 @@
 <body>
 <div class="app-root">
   <nav id="sidebar"></nav>
-  <script src="/nav.js?v=2"></script>
+  <script src="/nav.js?v=3"></script>
   <main class="main">
     <div class="inner">
       <h1>GAYA CALCULATOR</h1><div class="line"></div>
@@ -60,7 +64,7 @@
     <div class="sr" id="live" aria-live="polite"></div>
   </main>
 </div>
-<script src="/common.js?v=2"></script>
+<script src="/common.js?v=3"></script>
 <script>
 /* ===== recipe: change the numbers here ===== */
 /* n = how many per 1 Gaya */
@@ -95,7 +99,7 @@ $('qty').value=S.qty;
 
 /* ===== calculation ===== */
 /* screen readers hear the result once, shortly after you stop typing, not after every key */
-const announce=deb(()=>{$('live').textContent='Cost per Gaya '+$('s-t').textContent+(S.qty>1?', total for '+S.qty+' '+$('s-n').textContent:'')},700);
+const announce=deb(()=>{if(!USED)return;$('live').textContent='Cost per Gaya '+$('s-t').textContent+(S.qty>1?', total for '+S.qty+' '+$('s-n').textContent:'')},700);
 function paint(){
   let mats=0;
   for(const r of RECIPE){
@@ -116,8 +120,8 @@ function paint(){
 document.addEventListener('input',e=>{
   const t=e.target,id=t.dataset.pr;
   if(id){                                            // unit price: accepts 1450, 1.45k, 2.3kk ...
-    const v=t.value.trim()?parseMoney(t.value):0,box=t.closest('.pin');
-    box.classList.toggle('bad',v===null);box.querySelector('.er').hidden=v!==null;
+    const v=t.value.trim()?parseMoney(t.value):0;
+    flagBad(t,v===null);
     if(v===null)return;
     S.price[id]=v;save();paint();
   }else if(t.id==='qty'){                            // number of Gaya typed by hand
