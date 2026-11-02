@@ -149,11 +149,10 @@ const money=n=>full(n)+' ('+fmt(n)+')';
 const label=i=>i?'+'+i:'Craft';
 const firstOf=c=>(ITEMS.find(x=>x.c===c)||{}).n||null;
 
-/* pictures: only from upgrade-cost/images/ (works with or without a trailing slash in the address) */
-const IMG=(()=>{const u=location.href.split(/[?#]/)[0];return(/\/$|\.\w+$/.test(u)?u.replace(/[^/]*$/,''):u+'/')+'images/'})();
+/* pictures: /images/<name>.webp, see lirinImg() in /nav.js */
 /* every picture is loaded once and kept in memory, so switching items never flashes initials or blanks */
 const IM=new Map();
-const warm=n=>{let r=IM.get(n);if(!r){r={el:new Image()};r.el.src=IMG+encodeURIComponent(n.replace(/ /g,'_'))+'.webp';IM.set(n,r)}return r};
+const warm=n=>{let r=IM.get(n);if(!r){r={el:new Image()};r.el.src=lirinImg(n);IM.set(n,r)}return r};
 const imgState=n=>{const e=warm(n).el;return e.complete?(e.naturalWidth?1:-1):0};   // 1 ready, 0 still loading, -1 missing
 const miss=n=>imgState(n)<0?' no':'';
 const pic=(n,c)=>{const s=imgState(n);return s<0?'':`<img class="${c}${s>0?' ok':''}" src="${warm(n).el.src}" alt="" onload="this.classList.add('ok')" onerror="this.parentNode.classList.add('no');this.remove()">`};
