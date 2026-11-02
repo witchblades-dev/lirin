@@ -11,9 +11,10 @@
 <meta property="og:description" content="Refined Metin2 tools for upgrades, farming and planning.">
 <meta name="twitter:card" content="summary">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="/fonts/inter-400.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="/fonts/inter-500.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="/fonts/inter-600.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="/fonts/cormorant-600.woff" as="font" type="font/woff" crossorigin>
 <link rel="stylesheet" href="/common.css?v=3">
 <style>
 html{scroll-behavior:smooth;scrollbar-color:#414149 #101115}
@@ -49,10 +50,10 @@ a.tool-card:hover .card-open{gap:12px;color:#d2b77f}
 
 /* entrance */
 @keyframes rise{from{opacity:0;transform:translateY(14px)}}
-.brand,.tagline,.tool-card,.site-footer{animation:rise .7s cubic-bezier(.2,.7,.2,1) backwards}
-.tagline{animation-delay:.08s}
-.tool-card{animation-delay:calc(.18s + var(--i) * .07s)}
-.site-footer{animation-delay:.7s}
+.brand,.tagline,.tool-card,.site-footer{animation:rise .45s cubic-bezier(.2,.7,.2,1) backwards}
+.tagline{animation-delay:.05s}
+.tool-card{animation-delay:calc(.1s + var(--i) * .045s)}
+.site-footer{animation-delay:.4s}
 
 ::-webkit-scrollbar{width:10px;height:8px}
 ::-webkit-scrollbar-track{background:#101115}
