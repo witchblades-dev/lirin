@@ -53,7 +53,7 @@ td small{display:block;font-size:.68rem}
 .nm{display:flex;align-items:center;gap:10px;font-weight:500}
 .b{color:#e6d2a7;font-weight:600}
 .tf{color:var(--green)}.tf .nm{justify-content:flex-end}
-.t-g{color:var(--dim)}.t-c{color:var(--green)}.t-r{color:#6fb1ff}.t-l{color:#e0a64a}.t-m{color:#ff6b6b}
+.t-g{color:var(--dim)}.t-c{color:var(--green)}.t-r{color:#6fb1ff}.t-e{color:#b57cff}.t-l{color:#e0a64a}.t-m{color:#ff6b6b}
 .vals{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
 .vb{padding:12px 16px;border:1px solid var(--line);border-radius:10px;background:#1b1c22}
 .vb b{color:#e6d2a7;font-size:1.3rem}.vb.g b{color:var(--green)}
@@ -79,7 +79,7 @@ td small{display:block;font-size:.68rem}
   <main class="main">
     <div class="inner">
       <h1>METIN SIMULATOR</h1><div class="line"></div>
-      <p class="note">Every drop is rolled at random, so each run is a little different. Lv. 70 and Lv. 90 are available for now.</p>
+      <p class="note">Every drop is rolled at random, so each run is a little different. Lv. 70, Lv. 90 and Lv. 105 are available for now.</p>
       <section class="panel"><h2>Your Character</h2><div class="pbody">
         <div class="chars">
           <div class="cb"><div class="qe"><button data-k="dps" data-s="-1" aria-label="Less">−</button><input data-k="dps" inputmode="numeric" maxlength="7" aria-label="Average DPS"><button data-k="dps" data-s="1" aria-label="More">+</button></div><span>Average DPS</span></div>
@@ -119,10 +119,17 @@ const METINS=[
     ['Blessing Scroll',8,1,1,'l'],
     ['Stone Shard',4,1,2,'m'],
     ['Soul Stone',4,1,1,'m']]},
-  {id:'manti',name:'Lv. 105 Manticore Metin',hp:1800000,soon:1},
+  {id:'manti',name:'Lv. 105 Manticore Metin',hp:1800000,drops:[
+    ['Enchant Item',100,3,4,'g'],
+    ['Yang Coupon 100000',100,2,4,'g',{yang:100000}],
+    ['Onyx Fragment',100,1,1,'g',{to:'Onyx Crystal'}],
+    ['Glimmer Dust',25,1,1,'r'],
+    ['Fragment of Dark Continent',15,1,1,'e',{to:"Dark Continent's Rock"}],
+    ['Cor Draconis',15,1,1,'e'],
+    ['Blessing Scroll',8,1,1,'l']]},
   {id:'forest',name:'Lv. 110 Metin of the Forests',hp:4000000,soon:1}
 ];
-const TIER={g:'Guaranteed',c:'Common',r:'Rare',l:'Legendary',m:'Mystic'};
+const TIER={g:'Guaranteed',c:'Common',r:'Rare',e:'Epic',l:'Legendary',m:'Mystic'};
 const FRAG=10;
 const LIM={dps:[1,9999999],min:[1,1440],trv:[0,600]},STEP={dps:1000,min:10,trv:1};
 /* pictures: /images/<name>.webp, see lirinImg() in /nav.js */
