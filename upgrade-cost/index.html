@@ -5,12 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Upgrade Cost Calculator — LIRIN</title>
 <meta name="description" content="Pick an item, toggle the upgrade steps you need and see the exact materials and total cost.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Upgrade Cost Calculator — LIRIN">
+<meta property="og:description" content="Pick an item, toggle the upgrade steps you need and see the exact materials and total cost.">
+<meta name="twitter:card" content="summary">
 <meta name="theme-color" content="#0f1013">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/common.css?v=2">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/common.css?v=3">
 <script defer src="data.js?v=1"></script>
 <style>
 .note{max-width:560px}
@@ -101,7 +105,7 @@ details:not([open]) summary::before,details[data-st=closed] summary::before{tran
 <body>
 <div class="app-root">
   <nav id="sidebar"></nav>
-  <script src="/nav.js?v=2"></script>
+  <script src="/nav.js?v=3"></script>
   <main class="main">
     <div class="inner">
       <h1>UPGRADE COST CALCULATOR</h1><div class="line"></div>
@@ -128,7 +132,7 @@ details:not([open]) summary::before,details[data-st=closed] summary::before{tran
     <div class="sr" id="live" aria-live="polite"></div>
   </main>
 </div>
-<script src="/common.js?v=2"></script>
+<script src="/common.js?v=3"></script>
 <script>
 /* data.js is started from <head> (defer), so it is ready before the first paint of the page.
    If it is missing next to this page, the one in the site root is tried. */
@@ -217,7 +221,7 @@ function calc(){
   R.total=R.yang+R.mat;return R;
 }
 /* screen readers hear the total once, shortly after you stop clicking, not after every key */
-const announce=deb(()=>{$('live').textContent='Total cost '+money(calc().total)},700);
+const announce=deb(()=>{if(!USED)return;$('live').textContent='Total cost '+money(calc().total)},700);
 function paint(R=calc()){
   const it=cur();
   $('s-i').textContent=it?it.n:'';
@@ -325,8 +329,8 @@ document.addEventListener('input',e=>{          // fail times and unit prices: u
     S.fails[it0.n+'|'+i]=v;syncRow(i);paintD();save();return;
   }
   const id=d.pr;if(!id)return;
-  const t=e.target.value.trim(),v=t?parseMoney(t):0,box=e.target.closest('.pin');
-  box.classList.toggle('bad',v===null);box.querySelector('.er').hidden=v!==null;
+  const t=e.target.value.trim(),v=t?parseMoney(t):0;
+  flagBad(e.target,v===null);
   if(v===null)return;
   S.price[id]=v;save();paintD();
 });
