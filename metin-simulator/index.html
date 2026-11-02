@@ -5,12 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Metin Simulator — LIRIN</title>
 <meta name="description" content="Set your DPS and session length and see what a metin drops, what it transforms into and what it is worth.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Metin Simulator — LIRIN">
+<meta property="og:description" content="Set your DPS and session length and see what a metin drops, what it transforms into and what it is worth.">
+<meta name="twitter:card" content="summary">
 <meta name="theme-color" content="#0f1013">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/common.css?v=2">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/common.css?v=3">
 <style>
 /* shared parts (.note .panel .pbody .sr .slot .btn .prow .pin .pn ...) live in /common.css; only the differences are here */
 .slot{width:34px;height:34px;box-shadow:none;font-size:.7rem}
@@ -69,7 +73,7 @@ tr.best td{color:var(--green);font-weight:600}
 <body>
 <div class="app-root">
   <nav id="sidebar"></nav>
-  <script src="/nav.js?v=2"></script>
+  <script src="/nav.js?v=3"></script>
   <main class="main">
     <div class="inner">
       <h1>METIN SIMULATOR</h1><div class="line"></div>
@@ -92,7 +96,7 @@ tr.best td{color:var(--green);font-weight:600}
     <div class="sr" id="live" aria-live="polite"></div>
   </main>
 </div>
-<script src="/common.js?v=2"></script>
+<script src="/common.js?v=3"></script>
 <script>
 /* ===== data: add a metin by copying the Murder block (drop = [name, chance %, min, max, tier, extra]) ===== */
 const METINS=[
@@ -227,10 +231,11 @@ function drawPrices(){
   $('prices').innerHTML=NAMES.map((n,i)=>`<div class="prow"><div class="pin"><label><input data-pr="${i}" inputmode="text" placeholder="Write the Unit Price" value="${S.price[n]?fmt(S.price[n],6):''}" aria-label="Unit price of ${n}"><em>Yang</em></label><div class="er" hidden>Format: 1450, 1.45k, 2.3kk</div><div class="pn">${slot(n)}<span>${n}</span></div></div>
     <div class="pv"><div class="u">Unit : <span id="u${i}"></span></div>${ms.map((m,k)=>`<div class="t">${tag(m)}<span id="q${k}_${i}"></span>× = <span id="t${k}_${i}"></span></div>`).join('')}</div></div>`).join('');
 }
+const lacks=m=>m.drops.some(([d,,,,,x])=>!(x&&x.yang)&&!(S.price[(x&&x.to)||d]>0));   // a drop of this metin has no price yet
 function paintRank(){
-  const rows=METINS.filter(m=>!m.soon).map(m=>({m,kh:perHour(m),yh:expect(m,perHour(m)).mean})).sort((a,b)=>b.yh-a.yh);
+  const rows=METINS.filter(m=>!m.soon).map(m=>({m,kh:perHour(m),yh:expect(m,perHour(m)).mean,u:lacks(m)})).sort((a,b)=>b.yh-a.yh);
   const priced=Object.values(S.price).some(v=>v>0);
-  $('rank').innerHTML=`<div class="tw"><table><thead><tr><th>#</th><th>Metin</th><th>Metins / hour</th><th>Yang / hour</th></tr></thead><tbody>${rows.map((r,i)=>`<tr class="${i?'':'best'}"><td>${i+1}</td><td>${r.m.name}</td><td>${r.kh.toFixed(1)}</td><td>${money(r.yh)}</td></tr>`).join('')}</tbody></table></div>${priced?'':'<p class="hint">No material prices set yet: only Yang coupons are counted.</p>'}`;
+  $('rank').innerHTML=`<div class="tw"><table><thead><tr><th>#</th><th>Metin</th><th>Metins / hour</th><th>Yang / hour</th></tr></thead><tbody>${rows.map((r,i)=>`<tr class="${i?'':'best'}"><td>${i+1}</td><td>${r.m.name}</td><td>${r.kh.toFixed(1)}</td><td>${money(r.yh)}${r.u&&priced?' *':''}</td></tr>`).join('')}</tbody></table></div>${priced?(rows.some(r=>r.u)?'<p class="hint">* Some drops of this metin have no price yet, so its value is undercounted. Select it to set them.</p>':''):'<p class="hint">No material prices set yet: only Yang coupons are counted.</p>'}`;
 }
 function paint(){
   let sum='',cMat=0,cTot=0,cHr=0;
@@ -271,8 +276,8 @@ document.addEventListener('input',e=>{
   const t=e.target,k=t.dataset.k;
   if(k){const v=parseMoney(t.value);if(v===null)return;S[k]=clamp(k,v||LIM[k][0]);refreshD();save();return}   // typed DPS / session / travel (accepts 90k)
   if(t.dataset.pr===undefined)return;                                                                          // unit price: 1450, 1.45k, 2.3kk ...
-  const v=t.value.trim()?parseMoney(t.value):0,box=t.closest('.pin');
-  box.classList.toggle('bad',v===null);box.querySelector('.er').hidden=v!==null;
+  const v=t.value.trim()?parseMoney(t.value):0;
+  flagBad(t,v===null);
   if(v===null)return;
   S.price[NAMES[+t.dataset.pr]]=v;save();paint();
 });
