@@ -3,10 +3,14 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
   X-Frame-Options: DENY
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'inline-speculation-rules' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://cloudflareinsights.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'inline-speculation-rules' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://cloudflareinsights.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
 
 # pictures are versioned with ?v=IMG_V in nav.js: replace a picture => raise IMG_V by 1
 /images/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# fonts never change under the same name (a new font = a new file name)
+/fonts/*
   Cache-Control: public, max-age=31536000, immutable
 
 # code is always checked with the server (a tiny 304 answer when unchanged), so a deploy is live at once and ?v= can never leave old code behind
