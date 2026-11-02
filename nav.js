@@ -1,9 +1,11 @@
 /* LIRIN — shared sidebar.
    Every page has <nav id="sidebar"></nav> followed by <script src="/nav.js"></script>.
    To add a page or change the order, edit only the NAV list below. */
-/* Pictures: every page asks lirinImg('Item Name') and gets /images/item-name.webp
-   (lower case, every run of other characters becomes one hyphen). */
-window.lirinImg=n=>'/images/'+String(n).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')+'.webp';
+/* Pictures: every page asks lirinImg('Item Name') and gets /images/Item_Name.webp
+   (same naming as before: spaces become underscores, capitals are kept).
+   Files whose name keeps its spaces are listed in KEEP_SPACES. */
+const KEEP_SPACES=['Glimmer Dust'];
+window.lirinImg=n=>'/images/'+encodeURIComponent(KEEP_SPACES.includes(n)?n:String(n).replace(/ /g,'_'))+'.webp';
 
 (function(){
   const NAV=[
