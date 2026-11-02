@@ -13,12 +13,10 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/common.css?v=2">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/common.css?v=3">
 <style>
 html{scroll-behavior:smooth;scrollbar-color:#414149 #101115}
-.skip{position:absolute;left:-9999px;top:8px;z-index:20;padding:8px 14px;border-radius:6px;background:var(--gold);color:#17130d;font-weight:600}
-.skip:focus{left:8px}
 .app-root{position:relative;isolation:isolate;overflow:clip}
 .app-root::after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E")}
 /* the home page keeps its own sidebar depth (under the grain) and shadow */
@@ -88,7 +86,7 @@ a.tool-card:hover .card-open{gap:12px;color:#d2b77f}
 <a class="skip" href="#tools">Skip to tools</a>
 <div class="app-root">
   <nav id="sidebar"></nav>
-  <script src="/nav.js?v=2"></script>
+  <script src="/nav.js?v=3"></script>
 
   <main class="home-content">
     <h1 class="brand">LIRIN</h1>
@@ -144,10 +142,12 @@ a.tool-card:hover .card-open{gap:12px;color:#d2b77f}
 </div>
 <script>
 document.querySelectorAll("a.tool-card").forEach(card=>{
+  let f=0,ev;
   card.addEventListener("pointermove",e=>{
-    const b=card.getBoundingClientRect();
-    card.style.setProperty("--x",(e.clientX-b.left)+"px");
-    card.style.setProperty("--y",(e.clientY-b.top)+"px");
+    ev=e;if(f)return;                       // at most one style update per frame
+    f=requestAnimationFrame(()=>{f=0;const b=card.getBoundingClientRect();
+      card.style.setProperty("--x",(ev.clientX-b.left)+"px");
+      card.style.setProperty("--y",(ev.clientY-b.top)+"px")});
   });
 });
 </script>
