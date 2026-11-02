@@ -74,10 +74,10 @@ img:not(.ok){opacity:0}
 </div>
 <script>
 /* ===== recipe: change the numbers here ===== */
-/* n = how many per 1 Gaya; img = picture file name (without .webp) when it differs from the name with underscores */
-const RECIPE=[{id:'gs',name:'Glimmerstone',n:1},{id:'gd',name:'Glimmer Dust',n:10,img:'Glimmer Dust'}];
+/* n = how many per 1 Gaya */
+const RECIPE=[{id:'gs',name:'Glimmerstone',n:1},{id:'gd',name:'Glimmer Dust',n:10}];
 const FEE=250e3;                                      // Yang taken by the NPC for every Gaya
-const IMG='/upgrade-cost/images/';                    // pictures are shared with Upgrade Cost (Glimmerstone.webp, "Glimmer Dust.webp", Gaya.webp, Yang.webp)
+/* pictures: /images/<name>.webp, see lirinImg() in /nav.js (glimmerstone.webp, glimmer-dust.webp, gaya.webp, yang.webp) */
 
 /* ===== helpers ===== */
 const $=id=>document.getElementById(id);
@@ -87,7 +87,7 @@ const parseMoney=s=>{const m=String(s).trim().toLowerCase().replace(/\s/g,'').re
 const fmt=n=>{const a=Math.abs(n),u=a>=1e9?[1e9,'kkk']:a>=1e6?[1e6,'kk']:a>=1e3?[1e3,'k']:[1,''];return +(n/u[0]).toFixed(3)+u[1]};
 const full=n=>Math.round(n).toLocaleString('de-DE');
 const money=n=>full(n)+' ('+fmt(n)+')';
-const slot=(name,file)=>`<span class="slot"><i>${ini(name)}</i><img src="${IMG}${encodeURIComponent(file||name.replace(/ /g,'_'))}.webp" alt="" onload="this.classList.add('ok')" onerror="this.parentNode.classList.add('no');this.remove()"></span>`;
+const slot=name=>`<span class="slot"><i>${ini(name)}</i><img src="${lirinImg(name)}" alt="" onload="this.classList.add('ok')" onerror="this.parentNode.classList.add('no');this.remove()"></span>`;
 
 /* ===== state (saved in the browser) ===== */
 const KEY='lirinGayaV1';
@@ -100,8 +100,8 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden)flush()});
 
 /* ===== draw the static parts once, so typing never redraws pictures ===== */
 $('note').textContent='1 Gaya = '+RECIPE.map(r=>r.n+' '+r.name).join(' + ')+' + '+fmt(FEE)+' Yang (NPC fee)';
-$('prices').innerHTML=RECIPE.map(r=>`<div class="prow"><div class="pin"><label><input data-pr="${r.id}" inputmode="decimal" placeholder="Write the Unit Price" value="${S.price[r.id]?fmt(S.price[r.id]):''}" aria-label="Unit price of ${r.name}"><em>Yang</em></label><div class="pn">${slot(r.name,r.img)}<span>${r.name}</span><span class="qn">×${r.n}</span></div></div><div class="pv"><div class="u">Unit : <span id="u-${r.id}"></span></div><div class="t">Total : <span id="t-${r.id}"></span></div></div></div>`).join('');
-$('rows').innerHTML=RECIPE.map(r=>`<div class="tr"><span class="nm">${slot(r.name,r.img)}${r.name}</span><span id="a-${r.id}"></span><span class="fl" id="c-${r.id}"></span></div>`).join('')
+$('prices').innerHTML=RECIPE.map(r=>`<div class="prow"><div class="pin"><label><input data-pr="${r.id}" inputmode="decimal" placeholder="Write the Unit Price" value="${S.price[r.id]?fmt(S.price[r.id]):''}" aria-label="Unit price of ${r.name}"><em>Yang</em></label><div class="pn">${slot(r.name)}<span>${r.name}</span><span class="qn">×${r.n}</span></div></div><div class="pv"><div class="u">Unit : <span id="u-${r.id}"></span></div><div class="t">Total : <span id="t-${r.id}"></span></div></div></div>`).join('');
+$('rows').innerHTML=RECIPE.map(r=>`<div class="tr"><span class="nm">${slot(r.name)}${r.name}</span><span id="a-${r.id}"></span><span class="fl" id="c-${r.id}"></span></div>`).join('')
   +`<div class="tr"><span class="nm">${slot('Yang')}NPC fee</span><span>1 × ${fmt(FEE)}</span><span class="fl">${money(FEE)}</span></div>`
   +`<div class="tr sum"><span class="nm">${slot('Gaya')}Cost per Gaya</span><span></span><span class="fl" id="c-one"></span></div>`
   +`<div class="tr sum" id="r-all"><span class="nm">Total for <span id="n-q"></span> Gaya</span><span></span><span class="fl" id="c-all"></span></div>`;
