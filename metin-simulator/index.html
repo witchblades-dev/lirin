@@ -116,7 +116,7 @@ const METINS=[
 const TIER={g:'Guaranteed',c:'Common',r:'Rare',l:'Legendary',m:'Mystic'};
 const FRAG=10;
 const LIM={dps:[1,9999999],min:[1,1440],trv:[0,600]},STEP={dps:1000,min:10,trv:1};
-const IMG='/upgrade-cost/images/',FILE={'Glimmer Dust':'Glimmer Dust'};   // picture name = item name with underscores, unless listed in FILE
+/* pictures: /images/<name>.webp, see lirinImg() in /nav.js */
 
 /* ===== helpers ===== */
 const $=id=>document.getElementById(id);
@@ -127,7 +127,7 @@ const parseMoney=s=>{const m=String(s).trim().toLowerCase().replace(/\s/g,'').re
 const fmt=n=>{const a=Math.abs(n),u=a>=1e9?[1e9,'kkk']:a>=1e6?[1e6,'kk']:a>=1e3?[1e3,'k']:[1,''];return +(n/u[0]).toFixed(3)+u[1]};
 const full=n=>Math.round(n).toLocaleString('de-DE');
 const money=n=>full(n)+' ('+fmt(n)+')';
-const slot=n=>`<span class="slot"><i>${ini(n)}</i><img src="${IMG}${encodeURIComponent(FILE[n]||n.replace(/ /g,'_'))}.webp" alt="" onload="this.classList.add('ok')" onerror="this.parentNode.classList.add('no');this.remove()"></span>`;
+const slot=n=>`<span class="slot"><i>${ini(n)}</i><img src="${lirinImg(n)}" alt="" onload="this.classList.add('ok')" onerror="this.parentNode.classList.add('no');this.remove()"></span>`;
 const clamp=(k,v)=>Math.min(LIM[k][1],Math.max(LIM[k][0],Math.round(v)||0));
 
 /* ===== state (saved in the browser) ===== */
