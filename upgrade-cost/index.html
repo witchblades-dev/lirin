@@ -137,6 +137,7 @@ details:not([open]) summary::before,details[data-st=closed] summary::before{tran
     <div class="sr" id="live" aria-live="polite"></div>
   </main>
 </div>
+<script src="/common.js"></script>
 <script>
 /* data.js is tried next to this page first, then from the site root */
 function loadData(srcs,ok,fail){
@@ -161,20 +162,9 @@ const REDUCE=matchMedia('(prefers-reduced-motion: reduce)');
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const ini=n=>(String(n).match(/\b[A-Z]/g)||[]).join('').slice(0,2);
 const matName=id=>MAT[id]||String(id);                 // unknown material ids never crash the page
-const deb=(f,ms)=>{let t;return()=>{clearTimeout(t);t=setTimeout(f,ms)}};
 const isObj=o=>!!o&&typeof o==='object'&&!Array.isArray(o);
 const num=v=>typeof v==='number'&&Number.isFinite(v);
 const toInt=v=>(typeof v==='number'||(typeof v==='string'&&v.trim()!==''))&&Number.isInteger(+v)?+v:null;
-/* money input: 1450, 1.45k, 2.3kk, 3.12kkk. "1,450" / "1.450" (groups of 3, no suffix) = thousands separator; otherwise comma = decimal */
-const parseMoney=s=>{
-  s=String(s).trim().toLowerCase().replace(/\s/g,'');
-  if(/^\d{1,3}([.,]\d{3})+$/.test(s))s=s.replace(/[.,]/g,'');
-  s=s.replace(/,/g,'.');
-  const m=s.match(/^(\d*\.?\d+|\d+\.)(k{0,3})$/);
-  return m?+(parseFloat(m[1])*Math.pow(1000,m[2].length)).toFixed(4):null};
-const fmt=(n,d=3)=>{const a=Math.abs(n),u=a>=1e9?[1e9,'kkk']:a>=1e6?[1e6,'kk']:a>=1e3?[1e3,'k']:[1,''];return +(n/u[0]).toFixed(d)+u[1]};
-const full=n=>Math.round(n).toLocaleString('de-DE');
-const money=n=>full(n)+' ('+fmt(n)+')';
 const label=i=>i?'+'+i:'Craft';
 const firstOf=c=>(ITEMS.find(x=>x.c===c)||{}).n||null;
 
@@ -312,7 +302,7 @@ const P={
     const ids=Object.keys(R.c);
     return ids.length?ids.map(id=>{
       const p=S.price[id]||0;
-      return`<div class="prow"><div class="pin"><label><input data-pr="${esc(id)}" inputmode="decimal" placeholder="Write the Unit Price" value="${p?fmt(p,6):''}" aria-label="Unit price of ${esc(matName(id))}"><em>Yang</em></label><div class="er" hidden>Format: 1450, 1.45k, 2.3kk</div>`
+      return`<div class="prow"><div class="pin"><label><input data-pr="${esc(id)}" inputmode="text" placeholder="Write the Unit Price" value="${p?fmt(p,6):''}" aria-label="Unit price of ${esc(matName(id))}"><em>Yang</em></label><div class="er" hidden>Format: 1450, 1.45k, 2.3kk</div>`
         +(S.edit?`<div class="qe"><button data-a="qm" data-v="${esc(id)}" aria-label="Less">−</button><input id="q-${esc(id)}" data-q="${esc(id)}" inputmode="numeric" value="${R.q[id]}" aria-label="Quantity of ${esc(matName(id))}"><button data-a="qp" data-v="${esc(id)}" aria-label="More">+</button></div>`:'')
         +`<div class="pn" style="--s:${matSlots(id)}">${S.edit?'':`<span class="qn" id="n-${esc(id)}"></span>`}${pic(matName(id),'')}<span>${esc(matName(id))}</span></div></div>
       <div class="pv"><div class="u">Unit : <span id="u-${esc(id)}"></span></div><div class="t">Total : <span id="t-${esc(id)}"></span></div></div></div>`;
