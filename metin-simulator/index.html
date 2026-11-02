@@ -22,12 +22,12 @@
 img:not(.ok){opacity:0}
 
 /* character */
-.chars{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.cb{display:flex;flex-direction:column;gap:7px}
+.chars{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
+.cb{display:flex;flex-direction:column;gap:7px;min-width:0}
 .cb>span{color:var(--dim);font-size:.7rem;font-weight:600;letter-spacing:.14em;text-align:center;text-transform:uppercase}
 .qe{display:flex;align-items:center;border:1px solid var(--line);border-radius:8px;background:#1b1c22}
-.qe button{width:44px;height:42px;border:0;background:none;font-size:1.2rem;cursor:pointer}.qe button:hover{color:var(--gold)}
-.qe input{flex:1;min-width:0;padding:6px;border:0;background:none;text-align:center;font-size:1.05rem;font-weight:600}
+.qe button{flex:none;width:38px;height:42px;border:0;background:none;font-size:1.2rem;cursor:pointer}.qe button:hover{color:var(--gold)}
+.qe input{flex:1;width:0;min-width:0;padding:6px;border:0;background:none;text-align:center;font-size:1.05rem;font-weight:600}
 .btn{margin-top:14px;padding:9px 16px;border:1px solid rgba(199,167,107,.35);border-radius:8px;background:rgba(199,167,107,.08);color:#e6d2a7;font-size:.82rem;font-weight:600;cursor:pointer}.btn:hover{background:rgba(199,167,107,.15)}
 
 /* metin picker */
@@ -53,7 +53,7 @@ td small{display:block;font-size:.68rem}
 .nm{display:flex;align-items:center;gap:10px;font-weight:500}
 .b{color:#e6d2a7;font-weight:600}
 .tf{color:var(--green)}.tf .nm{justify-content:flex-end}
-.t-g{color:var(--dim)}.t-c{color:#9bb4c9}.t-r{color:#6fb1ff}.t-l{color:#e0a64a}.t-m{color:#c58bff}
+.t-g{color:var(--dim)}.t-c{color:var(--green)}.t-r{color:#6fb1ff}.t-l{color:#e0a64a}.t-m{color:#ff6b6b}
 .vals{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
 .vb{padding:12px 16px;border:1px solid var(--line);border-radius:10px;background:#1b1c22}
 .vb b{color:#e6d2a7;font-size:1.3rem}.vb.g b{color:var(--green)}
@@ -69,7 +69,7 @@ td small{display:block;font-size:.68rem}
 .pv{font-size:.9rem;line-height:1.7}.u{color:#e0875a}.t{color:var(--green)}
 .summary .who b{color:var(--gold);font-family:var(--serif);font-size:1.1rem}
 
-@media(max-width:700px){.chars{grid-template-columns:1fr}.vals{grid-template-columns:1fr}}
+@media(max-width:700px){.vals{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -83,8 +83,8 @@ td small{display:block;font-size:.68rem}
       <section class="panel"><h2>Your Character</h2><div class="pbody">
         <div class="chars">
           <div class="cb"><div class="qe"><button data-k="dps" data-s="-1" aria-label="Less">−</button><input data-k="dps" inputmode="numeric" maxlength="7" aria-label="Average DPS"><button data-k="dps" data-s="1" aria-label="More">+</button></div><span>Average DPS</span></div>
-          <div class="cb"><div class="qe"><button data-k="min" data-s="-1" aria-label="Less">−</button><input data-k="min" inputmode="numeric" maxlength="4" aria-label="Session in minutes"><button data-k="min" data-s="1" aria-label="More">+</button></div><span>Session (minutes)</span></div>
-          <div class="cb"><div class="qe"><button data-k="trv" data-s="-1" aria-label="Less">−</button><input data-k="trv" inputmode="numeric" maxlength="3" aria-label="Travel time in seconds"><button data-k="trv" data-s="1" aria-label="More">+</button></div><span>Travel time (seconds)</span></div>
+          <div class="cb"><div class="qe"><button data-k="min" data-s="-1" aria-label="Less">−</button><input data-k="min" inputmode="numeric" maxlength="4" aria-label="Session in minutes"><button data-k="min" data-s="1" aria-label="More">+</button></div><span>Session (min)</span></div>
+          <div class="cb"><div class="qe"><button data-k="trv" data-s="-1" aria-label="Less">−</button><input data-k="trv" inputmode="numeric" maxlength="3" aria-label="Travel time in seconds"><button data-k="trv" data-s="1" aria-label="More">+</button></div><span>Travel time (sec)</span></div>
         </div>
         <button class="btn" data-a="roll">Roll again</button>
       </div></section>
@@ -99,7 +99,7 @@ td small{display:block;font-size:.68rem}
 <script>
 /* ===== data: add a metin by copying the Murder block (drop = [name, chance %, min, max, tier, extra]) ===== */
 const METINS=[
-  {id:'murder',name:'Lv. 70 Metin of Murder',hp:296600,drops:[
+  {id:'murder',name:'Lv. 70 Metin of Murder',hp:296550,drops:[
     ['Torn Page',100,1,2,'g'],
     ['Yang Coupon 40000',100,1,2,'g',{yang:40000}],            // each coupon = 40.000 Yang
     ['Amethyst Fragment',100,1,1,'g',{to:'Amethyst Crystal'}],  // FRAG fragments = 1 crystal
