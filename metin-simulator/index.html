@@ -61,7 +61,6 @@ td small{display:block;font-size:.68rem}
 .vb{padding:12px 16px;border:1px solid var(--line);border-radius:10px;background:#1b1c22}
 .vb b{color:#e6d2a7;font-size:1.3rem}.vb.g b{color:var(--green)}
 .vb small{display:block;margin-top:4px;color:var(--dim);font-size:.72rem}
-tr.best td{color:var(--green);font-weight:600}
 
 /* prices: see common.css */
 .prow:first-child{margin-top:0}
@@ -85,12 +84,11 @@ tr.best td{color:var(--green);font-weight:600}
           <div class="cb"><div class="qe"><button data-k="min" data-s="-1" aria-label="Less">−</button><input data-k="min" inputmode="numeric" maxlength="4" aria-label="Session in minutes"><button data-k="min" data-s="1" aria-label="More">+</button></div><span>Session (min)</span></div>
           <div class="cb"><div class="qe"><button data-k="trv" data-s="-1" aria-label="Less">−</button><input data-k="trv" inputmode="numeric" maxlength="3" aria-label="Travel time in seconds"><button data-k="trv" data-s="1" aria-label="More">+</button></div><span>Travel time (sec)</span></div>
         </div>
-        <div class="btns"><button class="btn" data-a="roll">Roll again</button><button class="btn" data-a="share">Copy share link</button></div>
+        <div class="btns"><button class="btn" data-a="roll">Roll again</button></div>
       </div></section>
       <section class="panel"><h2>Pick a Metin</h2><div class="pbody"><div class="mt" id="pick"></div>
         <p class="hint">Pick up to two metins and each gets its own result.</p></div></section>
       <div id="sims"></div>
-      <section class="panel"><h2>Profitability ranking (expected Yang / hour)</h2><div class="pbody" id="rank"></div></section>
       <section class="panel"><h2>Material Prices</h2><div class="pbody"><div id="prices"></div><button class="btn" data-a="reset">Reset prices</button></div></section>
     </div>
     <div class="summary" id="sum"></div>
@@ -166,7 +164,7 @@ function sumUniform(c,lo,hi,R){                      // sum of c integers unifor
   return Math.max(c*lo,Math.min(c*hi,Math.round(c*(lo+hi)/2+Math.sqrt(c*(w*w-1)/12)*gauss(R))));
 }
 
-/* ===== state (saved in the browser + share link) ===== */
+/* ===== state (saved in the browser) ===== */
 const KEY='lirinMetinV1';
 let S={dps:90000,min:150,trv:0,sel:['murder'],price:{}},RUN={},NAMES=[],SEED=newSeed();
 function apply(r){
@@ -176,10 +174,7 @@ function apply(r){
   if(r.price&&typeof r.price==='object'){S.price={};for(const n in r.price)if(okNum(r.price[n]))S.price[n]=r.price[n]}
 }
 try{apply(JSON.parse(localStorage.getItem(KEY)))}catch(e){}
-try{const p=new URLSearchParams(location.hash.slice(1));
-  if(p.has('dps')||p.has('min')||p.has('trv')||p.has('sel'))apply({dps:p.get('dps'),min:p.get('min'),trv:p.get('trv'),sel:p.get('sel')?p.get('sel').split(','):null})}catch(e){}
-const hashStr=()=>`#dps=${S.dps}&min=${S.min}&trv=${S.trv}&sel=${S.sel.join(',')}`;
-const{flush,save}=persist(KEY,()=>S,()=>history.replaceState(null,'',hashStr()));   // also puts the share link in the address bar
+const{save}=persist(KEY,()=>S);
 
 /* ===== simulation ===== */
 function roll(m){
@@ -190,18 +185,33 @@ function roll(m){
 function derive(m,r){                              // items you can sell + Yang from coupons
   const items={};let yang=0;
   for(const[d,,,,,x]of m.drops){const c=r.cnt[d];
-    if(x&&x.yang)yang+=c*x.yang;else if(x&&x.to)items[x.to]=Math.floor(c/FRAG);else items[d]=c}
+    if(x&&x.yang)yang+=c*x.yang;else if(x&&x.to)items[x.to]=(items[x.to]||0)+Math.floor(c/FRAG);else items[d]=(items[d]||0)+c}
   return{items,yang};
 }
-/* expected Yang value (and std-dev) for `kills` metins; fragments valued as price/FRAG (ignores the small leftover rounding) */
+/* fragments that do not make a whole crystal are lost: how many fragments are expected to be left over after `kills` metins
+   (X mod FRAG). Exact when the number of fragments is certain or small, otherwise the leftover is spread evenly (FRAG-1)/2 */
+function leftover(kills,p,lo,hi){
+  if(p>=1&&lo===hi)return(kills*lo)%FRAG;
+  const sd=Math.sqrt(kills*p*(1-p));
+  if(lo===1&&hi===1&&sd<6&&kills<=1000){          // few drops: add up the exact binomial chances
+    let q=Math.pow(1-p,kills),t=0;
+    for(let k=0;k<=kills;k++){t+=q*(k%FRAG);q*=(kills-k)/(k+1)*p/(1-p)}
+    return t;
+  }
+  return(FRAG-1)/2;
+}
+/* expected Yang value (and std-dev) for `kills` metins; fragments count only as whole crystals */
 function expect(m,kills){
   let mean=0,v=0;
   for(const[d,ch,lo,hi,,x]of m.drops){
-    const u=x&&x.yang?x.yang:x&&x.to?(S.price[x.to]||0)/FRAG:(S.price[d]||0),p=ch/100,w=hi-lo+1,e=(lo+hi)/2;
-    mean+=kills*p*e*u;v+=kills*(p*((w*w-1)/12+e*e)-p*p*e*e)*u*u}
+    const p=ch/100,w=hi-lo+1,e=(lo+hi)/2,tot=kills*p*e;
+    let u;
+    if(x&&x.yang){u=x.yang;mean+=tot*u}
+    else if(x&&x.to){const pc=S.price[x.to]||0;u=pc/FRAG;mean+=pc*Math.max(0,tot-leftover(kills,p,lo,hi))/FRAG}
+    else{u=S.price[d]||0;mean+=tot*u}
+    v+=kills*(p*((w*w-1)/12+e*e)-p*p*e*e)*u*u}
   return{mean,sd:Math.sqrt(v)};
 }
-const perHour=m=>3600/(m.hp/S.dps+S.trv);
 const metins=()=>S.sel.map(id=>BY[id]);
 const rollAll=()=>{RUN={};metins().forEach(m=>RUN[m.id]=roll(m))};
 
@@ -232,28 +242,21 @@ function drawPrices(){
   $('prices').innerHTML=NAMES.map((n,i)=>`<div class="prow"><div class="pin"><label><input data-pr="${i}" inputmode="text" placeholder="Write the Unit Price" value="${S.price[n]?fmt(S.price[n],6):''}" aria-label="Unit price of ${n}"><em>Yang</em></label><div class="er" hidden>Format: 1450, 1.45k, 2.3kk</div><div class="pn">${slot(n)}<span>${n}</span></div></div>
     <div class="pv"><div class="u">Unit : <span id="u${i}"></span></div>${ms.map((m,k)=>`<div class="t">${tag(m)}<span id="q${k}_${i}"></span>× = <span id="t${k}_${i}"></span></div>`).join('')}</div></div>`).join('');
 }
-const lacks=m=>m.drops.some(([d,,,,,x])=>!(x&&x.yang)&&!(S.price[(x&&x.to)||d]>0));   // a drop of this metin has no price yet
-function paintRank(){
-  const rows=METINS.filter(m=>!m.soon).map(m=>({m,kh:perHour(m),yh:expect(m,perHour(m)).mean,u:lacks(m)})).sort((a,b)=>b.yh-a.yh);
-  const priced=Object.values(S.price).some(v=>v>0);
-  $('rank').innerHTML=`<div class="tw"><table><thead><tr><th>#</th><th>Metin</th><th>Metins / hour</th><th>Yang / hour</th></tr></thead><tbody>${rows.map((r,i)=>`<tr class="${i?'':'best'}"><td>${i+1}</td><td>${r.m.name}</td><td>${r.kh.toFixed(1)}</td><td>${money(r.yh)}${r.u&&priced?' *':''}</td></tr>`).join('')}</tbody></table></div>${priced?(rows.some(r=>r.u)?'<p class="hint">* Some drops of this metin have no price yet, so its value is undercounted. Select it to set them.</p>':''):'<p class="hint">No material prices set yet: only Yang coupons are counted.</p>'}`;
-}
 function paint(){
-  let sum='',cMat=0,cTot=0,cHr=0;
+  let sum='',cMat=0,cTot=0;
   metins().forEach((m,k)=>{
     const r=RUN[m.id],d=derive(m,r);let mat=0;
     for(const n in d.items)mat+=d.items[n]*(S.price[n]||0);
-    const e=expect(m,r.n),hr=expect(m,perHour(m)).mean;
-    cMat+=mat;cTot+=mat+d.yang;cHr+=hr;
+    const e=expect(m,r.n);
+    cMat+=mat;cTot+=mat+d.yang;
     $('mv-'+m.id).textContent=money(mat);$('tg-'+m.id).textContent=money(mat+d.yang);
     $('ev-'+m.id).textContent=`Expected ${fmt(e.mean)} · P10–P90: ${fmt(Math.max(0,e.mean-Z*e.sd))} – ${fmt(e.mean+Z*e.sd)}`;
-    sum+=`<div class="who"><b>${m.name}</b></div><div><span>Destroyed :</span><b>${full(r.n)}</b></div><div><span>Materials :</span><b>${money(mat)}</b></div><div class="tot"><span>Total gain :</span><b>${money(mat+d.yang)}</b></div><div><span>Yang / hour :</span><b>${money(hr)}</b></div>`;
+    sum+=`<div class="who"><b>${m.name}</b></div><div><span>Destroyed :</span><b>${full(r.n)}</b></div><div><span>Materials :</span><b>${money(mat)}</b></div><div class="tot"><span>Total gain :</span><b>${money(mat+d.yang)}</b></div>`;
     NAMES.forEach((n,i)=>{const q=d.items[n]||0,p=S.price[n]||0;$(`q${k}_${i}`).textContent=full(q);$(`t${k}_${i}`).textContent=fmt(q*p)});
   });
   if(S.sel.length>1)sum+=`<div class="who"><b>Combined</b></div><div><span>Materials :</span><b>${money(cMat)}</b></div><div class="tot"><span>Total gain :</span><b>${money(cTot)}</b></div>`;
   NAMES.forEach((n,i)=>$('u'+i).textContent=fmt(S.price[n]||0));
   $('sum').innerHTML=sum;
-  paintRank();
 }
 const refresh=()=>{rollAll();drawPick();drawSims();paint()};
 const refreshD=deb(refresh,100);
@@ -264,9 +267,7 @@ document.addEventListener('click',e=>{
   if(b.dataset.k){const k=b.dataset.k;S[k]=clamp(k,S[k]+(+b.dataset.s)*STEP[k]);drawInputs();refresh();save()}
   else if(b.dataset.a==='roll'){SEED=newSeed();refresh();
     $('live').textContent='New roll. '+metins().map(m=>m.name+': '+money(derive(m,RUN[m.id]).yang)+' Yang from coupons').join('. ')}
-  else if(b.dataset.a==='share'){flush();const u=location.href,old=b.textContent;
-    (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>b.textContent='Link copied!',()=>prompt('Copy this link:',u)).finally(()=>setTimeout(()=>b.textContent=old,1500))}
-  else if(b.dataset.a==='reset'){S.price={};drawPrices();paint();save()}
+  else if(b.dataset.a==='reset'){NAMES.forEach(n=>delete S.price[n]);drawPrices();paint();save()}   // only the prices shown now (the selected metin or both metins)
   else if(b.dataset.id){
     const id=b.dataset.id,i=S.sel.indexOf(id);
     if(i>=0){if(S.sel.length>1)S.sel.splice(i,1)}else{S.sel.push(id);if(S.sel.length>2)S.sel.shift()}
