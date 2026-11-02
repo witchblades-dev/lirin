@@ -11,9 +11,10 @@
 <meta name="twitter:card" content="summary">
 <meta name="theme-color" content="#0f1013">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="/fonts/inter-400.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="/fonts/inter-500.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="/fonts/inter-600.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="/fonts/cormorant-600.woff" as="font" type="font/woff" crossorigin>
 <link rel="stylesheet" href="/common.css?v=3">
 <style>
 /* shared parts (.note .panel .pbody .sr .slot .btn .prow .pin .pn ...) live in /common.css; only the differences are here */
@@ -66,7 +67,7 @@ tr.best td{color:var(--green);font-weight:600}
 .prow:first-child{margin-top:0}
 .summary .who b{color:var(--gold);font-family:var(--serif);font-size:1.1rem}
 
-@media(max-width:700px){.vals{grid-template-columns:1fr}}
+@media(max-width:700px){.vals{grid-template-columns:1fr}.summary{max-height:38svh;overflow-y:auto;overscroll-behavior:contain}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
